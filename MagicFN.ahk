@@ -104,7 +104,7 @@ spotifyKey(key)  {
 }
 -------------------------------------------------------------
 ; Stremio
-#IfWinExist, Stremio 
+#IfWinExist, Stremio
 {
 	*Volume_Up::
 	{
@@ -118,9 +118,9 @@ spotifyKey(key)  {
 		Return
 	}
 
-	CapsLock & Media_Play_Pause::
+	*Media_Play_Pause::
 	{
-		SendKey("{Space}") ; Volume Down
+		SendKey("{Space}") ; Play/Pause
 		Return
 	}
 
