@@ -45,7 +45,7 @@ If (GetKeyState(CapsLock,"p")) {
 SendKey(Key)
 {
     ControlFocus
-    ControlSend ahk_parent, % "{" Key "}"
+    ControlSend ahk_parent, % Key
 	Return
 }
 
@@ -72,25 +72,31 @@ spotifyKey(key)  {
 {
 	*Volume_Up::
 	{
-		SendKey("Up") ; Volume Up
+		SendKey("{Up}") ; Volume Up
 		Return
 	}
 
 	*Volume_Down::
 	{
-		SendKey("Down") ; Volume Down
+		SendKey("{Down}") ; Volume Down
 		Return
 	}
 
 	RAlt & Volume_Up::
 	{
-		SendKey("Right") ; Seek forwards
+		SendKey("{Right}") ; Seek forwards
 		Return
 	}
 		
 	RAlt & Volume_Down::
 	{
-		SendKey("Left") ; Seek backward
+		SendKey("{Left}") ; Seek backward
+		Return
+	}
+
+	RAlt & Right::
+	{
+		SendKey("+{N}") ; Next video
 		Return
 	}
 
@@ -102,31 +108,37 @@ spotifyKey(key)  {
 {
 	*Volume_Up::
 	{
-		SendKey("Up") ; Volume Up
+		SendKey("{Up}") ; Volume Up
 		Return
 	}
 
 	*Volume_Down::
 	{
-		SendKey("Down") ; Volume Down
+		SendKey("{Down}") ; Volume Down
 		Return
 	}
 
 	CapsLock & Media_Play_Pause::
 	{
-		SendKey("Space") ; Volume Down
+		SendKey("{Space}") ; Volume Down
 		Return
 	}
 
 	RAlt & Volume_Up::
 	{
-		SendKey("Right") ; Seek forwards
+		SendKey("{Right}") ; Seek forwards
 		Return
 	}
 		
 	RAlt & Volume_Down::
 	{
-		SendKey("Left") ; Seek backward
+		SendKey("{Left}") ; Seek backward
+		Return
+	}
+	
+	RAlt & Right::
+	{
+		SendKey("+{N}") ; Next video
 		Return
 	}
 
