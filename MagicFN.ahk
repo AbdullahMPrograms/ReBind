@@ -1,8 +1,10 @@
 #NoEnv
 #MaxHotkeysPerInterval,50000
 #SingleInstance Force
+#MenuMaskKey vkE8 ; Replace default mask key Ctrl with vkE8 (Unused) 
 SetTitleMatchMode 2
 DetectHiddenWindows, On
+SendMode Input
 
 ;disable numlock and capslock
 SetNumLockState, AlwaysOff
@@ -10,13 +12,11 @@ SetCapsLockState, AlwaysOff
 
 ;reload program in case of edge case failure
 ^!r::Reload
-;close program
-^!e::ExitApp
 
 ;core rebind
 CapsLock & 1:: F1
-CapsLock & 3:: F3
 CapsLock & 2:: F2
+CapsLock & 3:: F3
 CapsLock & 4:: F4 
 CapsLock & 5:: F5
 CapsLock & 6:: F6
@@ -33,20 +33,17 @@ CapsLock & Esc:: `
 *Volume_Down::Return
 -------------------------------------------------------------
 ; If FN (CapsLock) is pressed Next Media
-If (GetKeyState(CapsLock,"p")) {
+While (GetKeyState(CapsLock,"p")) {
 	; fn + wheel to skip and go back on media
 	CapsLock & Volume_Up::Media_Next
 	CapsLock & Volume_Down::Media_Prev
 }
 -------------------------------------------------------------
-; Universal Methods
--------------------------------------------------------------
 ; SendKey Method
-SendKey(Key)
-{
-    ControlFocus
-    ControlSend ahk_parent, % Key
-	Return
+SendKey(Key) {
+	ControlFocus
+	ControlSend ahk_parent, % Key
+	Return 									; clear buffer for edge case failure
 }
 
 ; Get the HWND of the Spotify main window.
@@ -65,113 +62,139 @@ spotifyKey(key)  {
 	Return
 }
 -------------------------------------------------------------
+; Universal Game Keybinds
+-------------------------------------------------------------
+;Rapid Fire 
+~XButton1 & LButton::
+	While(GetKeyState("LButton","P") And GetKeyState("XButton1","P")) {
+		send {LButton down}
+		Sleep 7
+		send {LButton up}
+		Sleep 7
+}
+
+;CapsLock & l::
+;{
+;	WinGetTitle, title, A
+;	MsgBox, "%title%"
+;	return
+;}
+
+;Screenshot
+<!Delete:: 
+{
+	Send {PrintScreen}
+	Return
+}	
+-------------------------------------------------------------
 ; App specific keybinds
 -------------------------------------------------------------
 ; YouTube
-#IfWinExist, YouTube
+#If WinExist("YouTube")
 {
+	
+	*RShift::Return
+	
 	*Volume_Up::
 	{
 		SendKey("{Up}") ; Volume Up
 		Return
 	}
-
+	
 	*Volume_Down::
 	{
 		SendKey("{Down}") ; Volume Down
 		Return
 	}
-
-	RAlt & Volume_Up::
+	
+	RShift & Volume_Up::
 	{
-		SendKey("{Right}") ; Seek forwards
+		SendKey("{l}") ; Seek forwards
 		Return
 	}
-		
-	RAlt & Volume_Down::
+	
+	RShift & Volume_Down::
 	{
-		SendKey("{Left}") ; Seek backward
+		SendKey("{j}") ; Seek backward
 		Return
 	}
-
-	RAlt & Right::
+	
+	RShift & Right::
 	{
 		SendKey("+{N}") ; Next video
 		Return
 	}
-
+	
+	RShift & Left::
+	{
+		SendKey("!{Left}") ; Previous Tab/Last Video
+		Return
+	}
+	
+	RShift & PgUp::
+	{
+		SendKey("{f}") ; Activate Mini-Player
+		Return
+	}
+	
+	RShift & PgDn::
+	{
+		SendKey("{i}") ; Fullscreen to focus player
+		Return
+	}
+	
 	^!a::MsgBox YouTube Detected
 }
 -------------------------------------------------------------
 ; Stremio
-#IfWinExist, Stremio
+#If WinExist("Stremio")
 {
 	*Volume_Up::
 	{
 		SendKey("{Up}") ; Volume Up
 		Return
 	}
-
+	
 	*Volume_Down::
 	{
 		SendKey("{Down}") ; Volume Down
 		Return
 	}
-
-	*Media_Play_Pause::
+	
+	CapsLock & Media_Play_Pause::
 	{
 		SendKey("{Space}") ; Play/Pause
 		Return
 	}
-
-	RAlt & Volume_Up::
+	
+	RShift & Volume_Up::
 	{
 		SendKey("{Right}") ; Seek forwards
 		Return
 	}
-		
-	RAlt & Volume_Down::
+	
+	RShift & Volume_Down::
 	{
 		SendKey("{Left}") ; Seek backward
 		Return
 	}
 	
-	RAlt & Right::
+	RShift & Right::
 	{
 		SendKey("+{N}") ; Next video
 		Return
 	}
-
+	
 	^!a::MsgBox Stremio Detected
 }
 -------------------------------------------------------------
-; Spotify
-#IfWinExist, Spotify
+; OneNote
+#If WinExist("abdullah's Notebook")
 {
-	*Volume_Up::
+	<!XButton1::
 	{
-		spotifyKey("^{Up}") ; Volume Up
+		Send {PrintScreen}
 		Return
 	}
-
-	*Volume_Down::
-	{
-		spotifyKey("^{Down}") ; Volume Down
-		Return
-	}
-
-	RAlt & Volume_Up::
-	{
-		spotifyKey("+{Right}") ; Seek forwards
-		Return
-	}
-		
-	RAlt & Volume_Down::
-	{
-		spotifyKey("+{Left}") ; Seek backward
-		Return
-	}
-
-	^!a::MsgBox Spotify Detected
 }
 -------------------------------------------------------------
