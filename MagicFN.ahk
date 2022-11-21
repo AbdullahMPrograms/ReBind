@@ -2,6 +2,7 @@
 #MaxHotkeysPerInterval,50000
 #SingleInstance Force
 #MenuMaskKey vkE8 ; Replace default mask key Ctrl with vkE8 (Unused) 
+;^ MenuMaskKey does not fix misinput in games
 SetTitleMatchMode 2
 DetectHiddenWindows, On
 SendMode Input
@@ -47,20 +48,20 @@ SendKey(Key) {
 }
 
 ; Get the HWND of the Spotify main window.
-getSpotifyHwnd() {
-	WinGet, spotifyHwnd, ID, ahk_exe spotify.exe
-	Return spotifyHwnd
-}
+;getSpotifyHwnd() {
+;	WinGet, spotifyHwnd, ID, ahk_exe spotify.exe
+;	Return spotifyHwnd
+;}
 
 ; Send a key to Spotify.
-spotifyKey(key)  { 
-	spotifyHwnd := getSpotifyHwnd()
+;spotifyKey(key)  { 
+;	spotifyHwnd := getSpotifyHwnd()
 	; Chromium ignores keys when it isn't focused.
 	; Focus the document window without bringing the app to the foreground.
-	ControlFocus, Chrome_RenderWidgetHostHWND1, ahk_id %spotifyHwnd%
-	ControlSend, , %key%, ahk_id %spotifyHwnd%
-	Return
-}
+;	ControlFocus, Chrome_RenderWidgetHostHWND1, ahk_id %spotifyHwnd%
+;	ControlSend, , %key%, ahk_id %spotifyHwnd%
+;	Return
+;}
 -------------------------------------------------------------
 ; Universal Game Keybinds
 -------------------------------------------------------------
@@ -191,7 +192,7 @@ spotifyKey(key)  {
 ; OneNote
 #If WinExist("abdullah's Notebook")
 {
-	<!XButton1::
+	<!XButton1::		;LAlt + Mouse1
 	{
 		Send {PrintScreen}
 		Return
