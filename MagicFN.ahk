@@ -40,38 +40,34 @@ While (GetKeyState(CapsLock,"p")) {
 	CapsLock & Volume_Down::Media_Prev
 }
 -------------------------------------------------------------
+; Methods
+-------------------------------------------------------------
+; RapidFire Method
+RapidFire() {
+	While(GetKeyState("LButton","P") And GetKeyState("XButton1","P")) 
+	{
+		send {LButton down}
+		Sleep 7
+		send {LButton up}
+		Sleep 7
+	}
+}
+
 ; SendKey Method
 SendKey(Key) {
 	ControlFocus
 	ControlSend ahk_parent, % Key
-	Return 									; clear buffer for edge case failure
+	Return 									; clear buffer
 }
 
-; Get the HWND of the Spotify main window.
-;getSpotifyHwnd() {
-;	WinGet, spotifyHwnd, ID, ahk_exe spotify.exe
-;	Return spotifyHwnd
-;}
-
-; Send a key to Spotify.
-;spotifyKey(key)  { 
-;	spotifyHwnd := getSpotifyHwnd()
-	; Chromium ignores keys when it isn't focused.
-	; Focus the document window without bringing the app to the foreground.
-;	ControlFocus, Chrome_RenderWidgetHostHWND1, ahk_id %spotifyHwnd%
-;	ControlSend, , %key%, ahk_id %spotifyHwnd%
-;	Return
-;}
 -------------------------------------------------------------
 ; Universal Game Keybinds
 -------------------------------------------------------------
 ;Rapid Fire 
 ~XButton1 & LButton::
-	While(GetKeyState("LButton","P") And GetKeyState("XButton1","P")) {
-		send {LButton down}
-		Sleep 7
-		send {LButton up}
-		Sleep 7
+{
+	RapidFire()
+	Return
 }
 
 ;CapsLock & l::
@@ -147,6 +143,18 @@ SendKey(Key) {
 	^!a::MsgBox YouTube Detected
 }
 -------------------------------------------------------------
+; OneNote
+#If WinExist("abdullah's Notebook") 
+{
+	XButton2 & LButton::	;LAlt + Mouse1
+	{
+		Send {PrintScreen}
+		Return
+	}
+	
+	^!a::MsgBox Notebook Detected
+}
+-------------------------------------------------------------
 ; Stremio
 #If WinExist("Stremio")
 {
@@ -187,15 +195,5 @@ SendKey(Key) {
 	}
 	
 	^!a::MsgBox Stremio Detected
-}
--------------------------------------------------------------
-; OneNote
-#If WinExist("abdullah's Notebook")
-{
-	<!XButton1::		;LAlt + Mouse1
-	{
-		Send {PrintScreen}
-		Return
-	}
 }
 -------------------------------------------------------------
