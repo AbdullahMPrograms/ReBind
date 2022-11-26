@@ -119,14 +119,14 @@ SendKey(Key, Program) {
 	RShift & Right::
 	{
 		SendKey("+{N}", "YouTube") ; Next video
-		send {Volume_Up}	; Trigger windows volume OSD
+		send {Volume_Up 5}	; Trigger windows volume OSD
 		Return
 	}
 	
 	RShift & Left::
 	{
 		SendKey("!{Left}", "YouTube") ; Previous Tab/Last Video
-		send {Volume_Up}	; Trigger windows volume OSD
+		send {Volume_Up 5}	; Trigger windows volume OSD
 		Return
 	}
 	
