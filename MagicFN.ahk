@@ -29,9 +29,12 @@ CapsLock & -:: F11
 CapsLock & =:: F12
 CapsLock & Esc:: `
 -------------------------------------------------------------
-; De-activate volume wheel
+; Deactivate volume wheel
 *Volume_Up::Return
 *Volume_Down::Return
+
+;Deactivate RShift
+*RShift::Return
 -------------------------------------------------------------
 ; If FN (CapsLock) is pressed Next Media
 While (GetKeyState(CapsLock,"p")) {
@@ -54,9 +57,9 @@ RapidFire() {
 }
 
 ; SendKey Method
-SendKey(Key) {
+SendKey(Key, Program) {
 	ControlFocus
-	ControlSend ahk_parent, % Key
+	ControlSend ahk_parent, % Key, % Program
 	Return 									; clear buffer
 }
 
@@ -68,7 +71,7 @@ SendKey(Key) {
 {
 	RapidFire()
 	Return
-}
+}	
 
 ;CapsLock & l::
 ;{
@@ -89,54 +92,53 @@ SendKey(Key) {
 ; YouTube
 #If WinExist("YouTube")
 {
-	
-	*RShift::Return
-	
 	*Volume_Up::
 	{
-		SendKey("{Up}") ; Volume Up
+		SendKey("{Up}", "YouTube") ; Volume Up
 		Return
 	}
 	
 	*Volume_Down::
 	{
-		SendKey("{Down}") ; Volume Down
+		SendKey("{Down}", "YouTube") ; Volume Down
 		Return
 	}
 	
 	RShift & Volume_Up::
 	{
-		SendKey("{l}") ; Seek forwards
+		SendKey("{l}", "YouTube") ; Seek forwards
 		Return
 	}
 	
 	RShift & Volume_Down::
 	{
-		SendKey("{j}") ; Seek backward
+		SendKey("{j}", "YouTube") ; Seek backward
 		Return
 	}
 	
 	RShift & Right::
 	{
-		SendKey("+{N}") ; Next video
+		SendKey("+{N}", "YouTube") ; Next video
+		send {Volume_Up}	; Trigger windows volume OSD
 		Return
 	}
 	
 	RShift & Left::
 	{
-		SendKey("!{Left}") ; Previous Tab/Last Video
+		SendKey("!{Left}", "YouTube") ; Previous Tab/Last Video
+		send {Volume_Up}	; Trigger windows volume OSD
 		Return
 	}
 	
 	RShift & PgUp::
 	{
-		SendKey("{f}") ; Activate Mini-Player
+		SendKey("{f}", "YouTube") ; Activate Mini-Player
 		Return
 	}
 	
 	RShift & PgDn::
 	{
-		SendKey("{i}") ; Fullscreen to focus player
+		SendKey("{i}", "YouTube") ; Fullscreen to focus player
 		Return
 	}
 	
@@ -160,37 +162,37 @@ SendKey(Key) {
 {
 	*Volume_Up::
 	{
-		SendKey("{Up}") ; Volume Up
+		SendKey("{Up}", "Stremio") ; Volume Up
 		Return
 	}
 	
 	*Volume_Down::
 	{
-		SendKey("{Down}") ; Volume Down
+		SendKey("{Down}", "Stremio") ; Volume Down
 		Return
 	}
 	
 	CapsLock & Media_Play_Pause::
 	{
-		SendKey("{Space}") ; Play/Pause
+		SendKey("{Space}", "Stremio") ; Play/Pause
 		Return
 	}
 	
 	RShift & Volume_Up::
 	{
-		SendKey("{Right}") ; Seek forwards
+		SendKey("{Right}", "Stremio") ; Seek forwards
 		Return
 	}
 	
 	RShift & Volume_Down::
 	{
-		SendKey("{Left}") ; Seek backward
+		SendKey("{Left}", "Stremio") ; Seek backward
 		Return
 	}
 	
 	RShift & Right::
 	{
-		SendKey("+{N}") ; Next video
+		SendKey("+{N}", "Stremio") ; Next video
 		Return
 	}
 	
