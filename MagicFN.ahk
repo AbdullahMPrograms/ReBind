@@ -104,39 +104,39 @@ SendKey(Key, Program) {
 		Return
 	}
 	
-	RShift & Volume_Up::
+	>+Volume_Up::
 	{
 		SendKey("{l}", "YouTube") ; Seek forwards
 		Return
 	}
 	
-	RShift & Volume_Down::
+	>+Volume_Down::
 	{
 		SendKey("{j}", "YouTube") ; Seek backward
 		Return
 	}
 	
-	RShift & Right::
+	>+Right::
 	{
 		SendKey("+{N}", "YouTube") ; Next video
-		send {Volume_Up 5}	; Trigger windows volume OSD
+		send {Volume_Up 1}	; Trigger windows volume OSD
 		Return
 	}
 	
-	RShift & Left::
+	>+Left::
 	{
 		SendKey("!{Left}", "YouTube") ; Previous Tab/Last Video
-		send {Volume_Up 5}	; Trigger windows volume OSD
+		send {Volume_Up 1}	; Trigger windows volume OSD
 		Return
 	}
 	
-	RShift & PgUp::
+	>+PgUp::
 	{
 		SendKey("{f}", "YouTube") ; Activate Mini-Player
 		Return
 	}
 	
-	RShift & PgDn::
+	>+PgDn::
 	{
 		SendKey("{i}", "YouTube") ; Fullscreen to focus player
 		Return
@@ -178,19 +178,19 @@ SendKey(Key, Program) {
 		Return
 	}
 	
-	RShift & Volume_Up::
+	>+Volume_Up::
 	{
 		SendKey("{Right}", "Stremio") ; Seek forwards
 		Return
 	}
 	
-	RShift & Volume_Down::
+	>+Volume_Down::
 	{
 		SendKey("{Left}", "Stremio") ; Seek backward
 		Return
 	}
 	
-	RShift & Right::
+	>+Right::
 	{
 		SendKey("+{N}", "Stremio") ; Next video
 		Return
