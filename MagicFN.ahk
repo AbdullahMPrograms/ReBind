@@ -64,7 +64,7 @@ SendKey(Key, Program) {
 }
 
 -------------------------------------------------------------
-; Universal Game Keybinds
+; Universal Keybinds
 -------------------------------------------------------------
 ;Rapid Fire 
 ~XButton1 & LButton::
@@ -148,7 +148,7 @@ SendKey(Key, Program) {
 ; OneNote
 #If WinExist("abdullah's Notebook") 
 {
-	XButton2 & LButton::	;LAlt + Mouse1
+	<!LButton::	;LAlt + Mouse1
 	{
 		Send {PrintScreen}
 		Return
