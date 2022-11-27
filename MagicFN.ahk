@@ -148,7 +148,7 @@ SendKey(Key, Program) {
 ; OneNote
 #If WinExist("abdullah's Notebook") 
 {
-	<!LButton::	;LAlt + Mouse1
+	^<!LButton::	;LAlt + Mouse1
 	{
 		Send {PrintScreen}
 		Return
