@@ -34,7 +34,9 @@ CapsLock & Esc:: `
 *Volume_Down::Return
 
 ;Deactivate RShift
-*RShift::Return
+;*RShift::Return
+;Deactivate RAlt
+*RAlt::Return
 -------------------------------------------------------------
 ; If FN (CapsLock) is pressed Next Media
 While (GetKeyState(CapsLock,"p")) {
@@ -63,6 +65,12 @@ SendKey(Key, Program) {
 	Return 									; clear buffer
 }
 
+; Trigger VolumeOSD Method
+TriggerVolumeOSD() {
+	send {Volume_Up 1}
+	Return
+}
+
 -------------------------------------------------------------
 ; Universal Keybinds
 -------------------------------------------------------------
@@ -72,26 +80,12 @@ SendKey(Key, Program) {
 	RapidFire()
 	Return
 }	
-
-;CapsLock & l::
-;{
-;	WinGetTitle, title, A
-;	MsgBox, "%title%"
-;	return
-;}
-
-;Screenshot
-<!Delete:: 
-{
-	Send {PrintScreen}
-	Return
-}	
 -------------------------------------------------------------
 ; App specific keybinds
 -------------------------------------------------------------
 ; YouTube
-#If WinExist("YouTube")
-{
+#If WinExist("YouTube") 
+	
 	*Volume_Up::
 	{
 		SendKey("{Up}", "YouTube") ; Volume Up
@@ -116,17 +110,17 @@ SendKey(Key, Program) {
 		Return
 	}
 	
-	>+Right::
+	>!Right::
 	{
-		SendKey("+{N}", "YouTube") ; Next video
-		send {Volume_Up 1}	; Trigger windows volume OSD
+		SendKey("{RShift}{N}", "YouTube") ; Next video			;here it sends lshift to focused program as well as rshift to browser (why?)
+		TriggerVolumeOSD()
 		Return
 	}
 	
-	>+Left::
+	>!Left::
 	{
 		SendKey("!{Left}", "YouTube") ; Previous Tab/Last Video
-		send {Volume_Up 1}	; Trigger windows volume OSD
+		TriggerVolumeOSD()
 		Return
 	}
 	
@@ -143,11 +137,10 @@ SendKey(Key, Program) {
 	}
 	
 	^!a::MsgBox YouTube Detected
-}
 -------------------------------------------------------------
 ; OneNote
 #If WinExist("abdullah's Notebook") 
-{
+	
 	^<!LButton::	;LAlt + Mouse1
 	{
 		Send {PrintScreen}
@@ -155,11 +148,10 @@ SendKey(Key, Program) {
 	}
 	
 	^!a::MsgBox Notebook Detected
-}
 -------------------------------------------------------------
 ; Stremio
 #If WinExist("Stremio")
-{
+	
 	*Volume_Up::
 	{
 		SendKey("{Up}", "Stremio") ; Volume Up
@@ -190,12 +182,11 @@ SendKey(Key, Program) {
 		Return
 	}
 	
-	>+Right::
+	>!Right::
 	{
 		SendKey("+{N}", "Stremio") ; Next video
 		Return
 	}
 	
 	^!a::MsgBox Stremio Detected
-}
 -------------------------------------------------------------
