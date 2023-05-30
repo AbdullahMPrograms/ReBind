@@ -7,6 +7,11 @@ SetTitleMatchMode 2
 DetectHiddenWindows, On
 SendMode Input
 
+toggle := false ; Set the toggle variable to true
+Menu, Tray, Add, Set Microphone Volume, MicVolume ; Add a menu item named "Set Microphone Volume" that calls the subroutine "MicVolume"
+Menu, Tray, Default, Set Microphone Volume ; Make the menu item the default action when the icon is clicked
+GoSub MicVolume ; Call the subroutine once to start the loop and check the menu item
+
 ;disable numlock and capslock
 SetNumLockState, AlwaysOff
 SetCapsLockState, AlwaysOff
@@ -24,10 +29,11 @@ CapsLock & 6:: F6
 CapsLock & 7:: F7
 CapsLock & 8:: F8
 CapsLock & 9:: F9
-CapsLock & 0:: F10
 CapsLock & -:: F11
+CapsLock & 0:: F10
 CapsLock & =:: F12
 CapsLock & Esc:: `
+CapsLock & Delete:: Numpad1
 -------------------------------------------------------------
 ; Deactivate volume wheel
 *Volume_Up::Return
@@ -58,8 +64,8 @@ RapidFire() {
 	}
 }
 
-; SendKey Method
 SendKey(Key, Program) {
+; SendKey Method
 	ControlFocus
 	ControlSend ahk_parent, % Key, % Program
 	Return 									; clear buffer
@@ -98,8 +104,8 @@ TriggerVolumeOSD() {
 		Return
 	}
 	
-	>+Volume_Up::
 	{
+	>+Volume_Up::
 		SendKey("{l}", "YouTube") ; Seek forwards
 		Return
 	}
@@ -112,7 +118,7 @@ TriggerVolumeOSD() {
 	
 	>!Right::
 	{
-		SendKey("{RShift}{N}", "YouTube") ; Next video			;here it sends lshift to focused program as well as rshift to browser (why?)
+		SendKey("+{N}", "YouTube") ; Next video			;here it sends lshift to focused program as well as rshift to browser (why?)
 		TriggerVolumeOSD()
 		Return
 	}
@@ -186,7 +192,27 @@ TriggerVolumeOSD() {
 	{
 		SendKey("+{N}", "Stremio") ; Next video
 		Return
+}
+
+^!a::MsgBox Stremio Detected
+-------------------------------------------------------------
+MicVolume:
+If (toggle := !toggle) ; Toggle a variable between true and false
+{
+	Menu, Tray, Check, Set Microphone Volume
+	running := true ; Set a variable to indicate that the loop is running
+	Loop ; Start a loop without a label name
+	{
+		If (!running) ; Check if the variable is false
+			Break ; Break out of the loop if it is
+		SoundSet, 70, MASTER, VOLUME, 8 ; Set the volume to 70%, 8 corresponds to AT2020 Mic
+		Sleep, 600000   ;10 minute delay
 	}
 	
-	^!a::MsgBox Stremio Detected
--------------------------------------------------------------
+} 
+else 
+{
+	Menu, Tray, UnCheck, Set Microphone Volume
+	running := false ; Set the variable to false to stop the loop
+}
+return
