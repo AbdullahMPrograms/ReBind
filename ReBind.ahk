@@ -7,9 +7,11 @@ SetTitleMatchMode 2
 DetectHiddenWindows, On
 SendMode Input
 
-toggle := false ; Set the toggle variable to true
+Menu, tray, nostandard ; removes original menu
 Menu, Tray, Add, Set Microphone Volume, MicVolume ; Add a menu item named "Set Microphone Volume" that calls the subroutine "MicVolume"
 Menu, Tray, Default, Set Microphone Volume ; Make the menu item the default action when the icon is clicked
+Menu, Tray, Add ; Seperator
+Menu, Tray, Standard ; puts original back "under" your custom menu
 GoSub MicVolume ; Call the subroutine once to start the loop and check the menu item
 
 ;disable numlock and capslock
@@ -196,11 +198,13 @@ TriggerVolumeOSD() {
 
 ^!a::MsgBox Stremio Detected
 -------------------------------------------------------------
+toggle := false ; Set the toggle variable to true
 MicVolume:
 If (toggle := !toggle) ; Toggle a variable between true and false
 {
 	Menu, Tray, Check, Set Microphone Volume
 	running := true ; Set a variable to indicate that the loop is running
+	;Msgbox "Toggled On"
 	Loop ; Start a loop without a label name
 	{
 		If (!running) ; Check if the variable is false
@@ -212,6 +216,7 @@ If (toggle := !toggle) ; Toggle a variable between true and false
 } 
 else 
 {
+	;Msgbox "Toggled Off"
 	Menu, Tray, UnCheck, Set Microphone Volume
 	running := false ; Set the variable to false to stop the loop
 }
