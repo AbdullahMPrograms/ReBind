@@ -1,26 +1,37 @@
 #NoEnv
 #MaxHotkeysPerInterval,50000
 #SingleInstance Force
+#Persistent
 #MenuMaskKey vkE8 ; Replace default mask key Ctrl with vkE8 (Unused) 
-;^ MenuMaskKey does not fix misinput in games
 SetTitleMatchMode 2
 DetectHiddenWindows, On
 SendMode Input
 
+;< ---------------- TRAY MENU ---------------- >
 Menu, tray, nostandard ; removes original menu
-Menu, Tray, Add, Set Microphone Volume, MicVolume ; Add a menu item named "Set Microphone Volume" that calls the subroutine "MicVolume"
+Menu, Tray, Add, Set Microphone Volume, LoopMicVolume ; Add a menu item named "Set Microphone Volume" that calls the subroutine "MicVolume"
 Menu, Tray, Default, Set Microphone Volume ; Make the menu item the default action when the icon is clicked
 Menu, Tray, Add ; Seperator
-Menu, Tray, Standard ; puts original back "under" your custom menu
-GoSub MicVolume ; Call the subroutine once to start the loop and check the menu item
+Menu, Tray, Standard ; puts original back "under" custom menu
 
 ;disable numlock and capslock
 SetNumLockState, AlwaysOff
 SetCapsLockState, AlwaysOff
 
+; Add this code before the return statement to check the config file
+IniRead, toggleLoopMicVolumeValue, %A_ScriptDir%\config.ini, Settings, ToggleLoopMicVolume ; Read the value of ToggleLoopMicVolume and store it in toggleValue variable
+if (toggleLoopMicVolumeValue = 1) ; If the value is 1
+{
+	Gosub LoopMicVolume ; Start the loop by calling the label
+}
+
+; <---- possibly add preflight gosub to read config options before script execution ---->
+
 ;reload program in case of edge case failure
 ^!r::Reload
 
+;< ---------------- FKey Rebind ---------------- >
+/*
 ;core rebind
 CapsLock & 1:: F1
 CapsLock & 2:: F2
@@ -31,20 +42,15 @@ CapsLock & 6:: F6
 CapsLock & 7:: F7
 CapsLock & 8:: F8
 CapsLock & 9:: F9
-CapsLock & -:: F11
 CapsLock & 0:: F10
+CapsLock & -:: F11
 CapsLock & =:: F12
 CapsLock & Esc:: `
-CapsLock & Delete:: Numpad1
+*/
 -------------------------------------------------------------
 ; Deactivate volume wheel
 *Volume_Up::Return
 *Volume_Down::Return
-
-;Deactivate RShift
-;*RShift::Return
-;Deactivate RAlt
-*RAlt::Return
 -------------------------------------------------------------
 ; If FN (CapsLock) is pressed Next Media
 While (GetKeyState(CapsLock,"p")) {
@@ -80,7 +86,7 @@ TriggerVolumeOSD() {
 }
 
 -------------------------------------------------------------
-; Universal Keybinds
+; Macros
 -------------------------------------------------------------
 ;Rapid Fire 
 ~XButton1 & LButton::
@@ -197,19 +203,19 @@ TriggerVolumeOSD() {
 }
 
 ^!a::MsgBox Stremio Detected
--------------------------------------------------------------
-toggle := false ; Set the toggle variable to true
-MicVolume:
-If (toggle := !toggle) ; Toggle a variable between true and false
+;< ---------------- Scripts ---------------- >
+LoopMicVolume:
+If (toggleLoopMicVolume := !toggleLoopMicVolume) ; Toggle a variable between true and false
 {
 	Menu, Tray, Check, Set Microphone Volume
 	running := true ; Set a variable to indicate that the loop is running
 	;Msgbox "Toggled On"
+	IniWrite, %toggleLoopMicVolume%, %A_ScriptDir%\config.ini, Settings, ToggleLoopMicVolume
 	Loop ; Start a loop without a label name
 	{
 		If (!running) ; Check if the variable is false
 			Break ; Break out of the loop if it is
-		SoundSet, 70, MASTER, VOLUME, 8 ; Set the volume to 70%, 8 corresponds to AT2020 Mic
+		SoundSet, 70, MASTER, VOLUME, 7 ; Set the volume to 70%, 8 corresponds to AT2020 Mic
 		Sleep, 600000   ;10 minute delay
 	}
 	
@@ -219,5 +225,6 @@ else
 	;Msgbox "Toggled Off"
 	Menu, Tray, UnCheck, Set Microphone Volume
 	running := false ; Set the variable to false to stop the loop
+	IniWrite, %toggleLoopMicVolume%, %A_ScriptDir%\config.ini, Settings, ToggleLoopMicVolume
 }
 return
