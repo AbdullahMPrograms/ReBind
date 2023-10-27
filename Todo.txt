@@ -1,0 +1,2 @@
+CURRENT ISSUES:
+YouTube keybinds dont work because stremio is hardcoded as the first active program --investigating

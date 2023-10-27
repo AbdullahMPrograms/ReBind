@@ -1,3 +1,7 @@
+; Initial setup
+global programs := ["Stremio", "YouTube"]
+global currentProgramIndex := 1  ; start with the first program in the list
+
 #NoEnv
 #MaxHotkeysPerInterval,50000
 #SingleInstance Force
@@ -10,6 +14,9 @@ SendMode Input
 ;disable numlock and capslock
 SetNumLockState, AlwaysOff
 SetCapsLockState, AlwaysOff
+
+; Add the hotkey for Alt + Delete to toggle the active program
+!Delete::ToggleActiveProgram()  ; ! is the symbol for Alt in AHK
 
 ;< ---------------- TRAY MENU ---------------- >
 Menu, tray, nostandard ; removes original menu
@@ -47,11 +54,50 @@ RapidFire() {
 	}
 }
 
-SendKey(Key, Program) {
-; SendKey Method
-	ControlFocus
-	ControlSend ahk_parent, % Key, % Program
-	Return 									; clear buffer
+; Define ToggleActiveProgram function
+ToggleActiveProgram() {
+    global currentProgramIndex, programs
+    openPrograms := GetOpenPrograms()  ; Get the list of open programs
+    if (openPrograms.Length() > 1) {  ; Only cycle through if more than one program is open
+        currentProgramIndex := Mod(currentProgramIndex, openPrograms.Length()) + 1  ; Cycle through the open program list
+        UpdateGUI(openPrograms[currentProgramIndex])  ; Update the GUI with the new active program
+    }
+}
+
+; Update SendKey function to use currentProgram from the list of open programs
+SendKey(Key) {
+    global currentProgramIndex, programs
+    openPrograms := GetOpenPrograms()  ; Get the list of open programs
+    ControlFocus,, % openPrograms[currentProgramIndex]  ; Set focus to the current open program (optional)
+    ControlSend,, %Key%, % openPrograms[currentProgramIndex]  ; Send key to the current open program
+    Return  ; clear buffer
+}
+
+; Define UpdateGUI function
+UpdateGUI(program) {
+    Gui, Destroy  ; Destroy any existing GUI
+    Gui, +AlwaysOnTop +ToolWindow -Caption ; Make the GUI always on top and style it as an overlay
+    ;Gui, Color, EEAA99 ; Set a background color (optional, you can remove this line for a completely transparent GUI)
+    Gui, Font, s20 cBlack, Verdana ; Set the font size to 20 and color to black (adjust as needed)
+    Gui, Add, Text,, Now Focused: %program%  ; Add text indicating the currently focused program
+    Gui, Show, x0 y0 NoActivate, Focus Indicator ; Show the GUI at the top left corner without activating it
+    SetTimer, DestroyGUI, -1500  ; Set a timer to destroy the GUI after 2 seconds
+}
+
+; New function to destroy the GUI when the timer triggers
+DestroyGUI:
+    Gui, Destroy
+return
+
+; Define GetOpenPrograms function
+GetOpenPrograms() {
+    global programs
+    openPrograms := []  ; Initialize an empty array
+    for index, program in programs {
+        if WinExist(program)
+            openPrograms.Push(program)  ; Add the program to the list if it's open
+    }
+    return openPrograms
 }
 
 ; Trigger VolumeOSD Method
@@ -74,54 +120,55 @@ TriggerVolumeOSD() {
 ;-------------------------------------------------------------
 ; YouTube
 #If WinExist("YouTube") 
-	
+
 	*Volume_Up::
 	{
-		SendKey("{Up}", "YouTube") ; Volume Up
+		;SendKey("{Up}", "YouTube") ; Volume Up
+		SendKey("{Up}") ; Volume Up
 		Return
 	}
 	
 	*Volume_Down::
 	{
-		SendKey("{Down}", "YouTube") ; Volume Down
+		SendKey("{Down}") ; Volume Down
 		Return
 	}
-	
+
 	{
 	>+Volume_Up::
-		SendKey("{l}", "YouTube") ; Seek forwards
+		SendKey("{l}") ; Seek forwards
 		Return
 	}
 	
 	>+Volume_Down::
 	{
-		SendKey("{j}", "YouTube") ; Seek backward
+		SendKey("{j}") ; Seek backward
 		Return
 	}
 	
 	>!Right::
 	{
-		SendKey("+{N}", "YouTube") ; Next video			;here it sends lshift to focused program as well as rshift to browser (why?)
+		SendKey("+{N}") ; Next video			;here it sends lshift to focused program as well as rshift to browser (why?)
 		TriggerVolumeOSD()
 		Return
 	}
 	
 	>!Left::
 	{
-		SendKey("!{Left}", "YouTube") ; Previous Tab/Last Video
+		SendKey("!{Left}") ; Previous Tab/Last Video
 		TriggerVolumeOSD()
 		Return
 	}
 	
 	>+PgUp::
 	{
-		SendKey("{f}", "YouTube") ; Activate Mini-Player
+		SendKey("{f}") ; Activate Mini-Player
 		Return
 	}
 	
 	>+PgDn::
 	{
-		SendKey("{i}", "YouTube") ; Fullscreen to focus player
+		SendKey("{i}") ; Fullscreen to focus player
 		Return
 	}
 	
@@ -129,40 +176,42 @@ TriggerVolumeOSD() {
 ;-------------------------------------------------------------
 ; Stremio
 #If WinExist("Stremio")
-	
+
+	;numActivePrograms++
+
 	*Volume_Up::
 	{
-		SendKey("{Up}", "Stremio") ; Volume Up
+		SendKey("{Up}") ; Volume Up
 		Return
 	}
 	
 	*Volume_Down::
 	{
-		SendKey("{Down}", "Stremio") ; Volume Down
+		SendKey("{Down}") ; Volume Down
 		Return
 	}
 	
-	CapsLock & Media_Play_Pause::
+	Media_Play_Pause::
 	{
-		SendKey("{Space}", "Stremio") ; Play/Pause
+		SendKey("{Space}") ; Play/Pause
 		Return
 	}
 	
 	>+Volume_Up::
 	{
-		SendKey("{Right}", "Stremio") ; Seek forwards
+		SendKey("{Right}") ; Seek forwards
 		Return
 	}
 	
 	>+Volume_Down::
 	{
-		SendKey("{Left}", "Stremio") ; Seek backward
+		SendKey("{Left}") ; Seek backward
 		Return
 	}
 	
 	>!Right::
 	{
-		SendKey("+{N}", "Stremio") ; Next video
+		SendKey("+{N}") ; Next video
 		Return
 }
 
@@ -236,6 +285,7 @@ FKeyRebind:
 }
 
 #IF RemapToggle
+{
 		CapsLock & 1:: F1
 		CapsLock & 2:: F2
 		CapsLock & 3:: F3
@@ -249,3 +299,9 @@ FKeyRebind:
 		CapsLock & -:: F11
 		CapsLock & =:: F12
 		CapsLock & Esc:: `
+}
+; Initialize the GUI
+openPrograms := GetOpenPrograms()  ; Get the list of open programs
+if (openPrograms.Length() > 0) {  ; Only show the GUI if at least one program is open
+    UpdateGUI(openPrograms[1])  ; Show the initial GUI with the first open program
+}
