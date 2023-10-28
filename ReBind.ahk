@@ -116,7 +116,6 @@ TriggerVolumeOSD() {
 ; App specific keybinds
 ;-------------------------------------------------------------
 ; YouTube
-;#If WinExist("YouTube") 
 #If (activeProgram = "YouTube")
 	*Volume_Up::
 	{
@@ -173,7 +172,6 @@ TriggerVolumeOSD() {
 #If
 ;-------------------------------------------------------------
 ; Stremio
-;#If WinExist("Stremio")
 #If (activeProgram = "Stremio")
 	*Volume_Up::
 	{
