@@ -5,6 +5,6 @@ Fix not being able to use stremio keybinds when youtube is open - possibly relat
 -- Possibly fixed needs testing
 
 TO DO LATER:
-Make it so that you can send youtube hotkeys even when youtube is not the focused tab
-Make it so that you can skip forward and back when edge is focused
-Universal Audio Keybinds
+- Make it so that you can send youtube hotkeys even when youtube is not the focused tab
+- Make it so that you can skip forward and back when edge is focused
+- Universal Audio Keybinds
