@@ -1,11 +1,3 @@
-;just let it fly method (toggleactiveprogram at any time)
-;this works lmao
-
-;TODO
-; Make it so that the toggle only works when more then 1 program is open and make it so that the gui only appears when more then 1 programs is open 
-; make it so that gui will appear in the top left of the window that is the activeprogram
-; fix rshift volume wheel on stremio
-
 ; Initial setup
 global programs := ["Stremio", "YouTube"]
 global currentProgramIndex := 1  ; start with the first program in the list
@@ -38,10 +30,6 @@ SetTimer PreFlightCheck, -1 ; Run PreFlightCheck once on script start
 ;reload program in case of edge case failure
 ^!r::Reload
 ;-------------------------------------------------------------
-; Deactivate volume wheel
-*Volume_Up::Return
-*Volume_Down::Return
-;-------------------------------------------------------------
 ; If FN (CapsLock) is pressed Next Media
 While (GetKeyState(CapsLock,"p")) {
 	; fn + wheel to skip and go back on media
@@ -64,7 +52,7 @@ RapidFire() {
 
 ; Define ToggleActiveProgram function
 ToggleActiveProgram() {
-    global currentProgramIndex, programs
+    global currentProgramIndex, programs, activeProgram
     openPrograms := GetOpenPrograms()  ; Get the list of open programs
     if (openPrograms.Length() > 1) {  ; Only proceed if more than one program is open
         currentProgramIndex := Mod(currentProgramIndex, openPrograms.Length()) + 1  ; Cycle through the open program list
@@ -73,12 +61,11 @@ ToggleActiveProgram() {
     }
 }
 
-
 ; Update SendKey function to use currentProgram from the list of open programs
 SendKey(Key) {
     global currentProgramIndex, programs
     openPrograms := GetOpenPrograms()  ; Get the list of open programs
-    ControlFocus,, % openPrograms[currentProgramIndex]  ; Set focus to the current open program (optional)
+    ControlFocus,, % openPrograms[currentProgramIndex]  ; Set focus to the current open program
     ControlSend,, %Key%, % openPrograms[currentProgramIndex]  ; Send key to the current open program
     Return  ; clear buffer
 }
@@ -116,7 +103,6 @@ TriggerVolumeOSD() {
 	send {Volume_Up 1}
 	Return
 }
-
 ;-------------------------------------------------------------
 ; Macros
 ;-------------------------------------------------------------
@@ -130,8 +116,8 @@ TriggerVolumeOSD() {
 ; App specific keybinds
 ;-------------------------------------------------------------
 ; YouTube
-#If WinExist("YouTube") 
-
+;#If WinExist("YouTube") 
+#If (activeProgram = "YouTube")
 	*Volume_Up::
 	{
 
@@ -184,10 +170,11 @@ TriggerVolumeOSD() {
 	}
 	
 	^!a::MsgBox YouTube Detected
+#If
 ;-------------------------------------------------------------
 ; Stremio
-#If WinExist("Stremio")
-
+;#If WinExist("Stremio")
+#If (activeProgram = "Stremio")
 	*Volume_Up::
 	{
 		SendKey("{Up}") ; Volume Up
@@ -222,9 +209,10 @@ TriggerVolumeOSD() {
 	{
 		SendKey("+{N}") ; Next video
 		Return
-}
+	}
 
-^!a::MsgBox Stremio Detected
+	^!a::MsgBox Stremio Detected
+#If
 ;-------------------------------------------------------------
 ;< ---------------- Preflight Check ---------------- >
 PreFlightCheck:
@@ -232,13 +220,11 @@ PreFlightCheck:
     IniRead, toggleLoopMicVolumeValue, %A_ScriptDir%\config.ini, Settings, ToggleLoopMicVolume
     IniRead, toggleFKeyRebindValue, %A_ScriptDir%\config.ini, Settings, ToggleFKeyRebind
 
-    if (toggleLoopMicVolumeValue = 1) 
-    {
+    if (toggleLoopMicVolumeValue = 1) {
         SetTimer LoopMicVolume, -1
     }
 
-    if (toggleFKeyRebindValue = 1) 
-    {
+    if (toggleFKeyRebindValue = 1) {
         SetTimer FKeyRebind, -1
     }
     return
