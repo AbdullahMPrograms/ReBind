@@ -2,8 +2,8 @@
 ;this works perfectly lmao
 
 ;TODO
-; Make it so that the toggle only works when two programs are open and make it so that the gui only appears when two programs are open 
-; make it so that gui will appear in the top left of the window
+; Make it so that the toggle only works when more then 1 program is open and make it so that the gui only appears when more then 1 programs is open 
+; make it so that gui will appear in the top left of the window that is the activeprogram
 
 
 ; Initial setup
