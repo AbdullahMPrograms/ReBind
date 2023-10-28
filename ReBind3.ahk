@@ -1,13 +1,14 @@
-;the updateactiveprogram method
+;just let it fly method (toggleactiveprogram at any time)
+;this works perfectly lmao
+
+;TODO
+; Make it so that the toggle only works when two programs are open and make it so that the gui only appears when two programs are open 
+; make it so that gui will appear in the top left of the window
+
 
 ; Initial setup
-global programs := ["YouTube", "Stremio"]
+global programs := ["Stremio", "YouTube"]
 global currentProgramIndex := 1  ; start with the first program in the list
-global activeProgram := programs[currentProgramIndex]  ; start with the first program in the list
-
-; Call UpdateActiveProgram at the start of the script
-UpdateActiveProgram()
-
 
 #NoEnv
 #MaxHotkeysPerInterval,50000
@@ -62,17 +63,12 @@ RapidFire() {
 }
 
 ; Define ToggleActiveProgram function
+; Define ToggleActiveProgram function
 ToggleActiveProgram() {
     global currentProgramIndex, programs, activeProgram
-    openPrograms := GetOpenPrograms()  ; Get the list of open programs
-    if (openPrograms.Length() > 1) {  ; Only cycle through if more than one program is open
-        currentProgramIndex := Mod(currentProgramIndex, openPrograms.Length()) + 1  ; Cycle through the open program list
-        activeProgram := openPrograms[currentProgramIndex]  ; Update activeProgram
-        UpdateGUI(activeProgram)  ; Update the GUI with the new active program
-    } else {
-        ; Update activeProgram if the list of open programs has changed
-        UpdateActiveProgram()
-    }
+    currentProgramIndex := Mod(currentProgramIndex, programs.Length()) + 1  ; Cycle through the program list
+    activeProgram := programs[currentProgramIndex]  ; Update activeProgram
+    UpdateGUI(activeProgram)  ; Update the GUI with the new active program
 }
 
 
@@ -100,24 +96,6 @@ UpdateGUI(program) {
 DestroyGUI:
     Gui, Destroy
 return
-
-; Function to update the active program to the first open program in the list
-UpdateActiveProgram() {
-    global programs, activeProgram, currentProgramIndex
-    openPrograms := GetOpenPrograms()
-    if (openPrograms.Length() > 0) {
-        ; Find the index of the first open program in the programs list
-        currentProgramIndex := 1  ; Default to 1 if no open programs are found in the programs list
-        Loop, % programs.Length() { 
-            if (programs[A_Index] = openPrograms[1]) {
-                currentProgramIndex := A_Index
-                break
-            }
-        }
-        activeProgram := openPrograms[1]  ; Set activeProgram to the first open program
-    }
-	msgbox %activeProgram%
-}
 
 ; Define GetOpenPrograms function
 GetOpenPrograms() {
@@ -149,7 +127,7 @@ TriggerVolumeOSD() {
 ; App specific keybinds
 ;-------------------------------------------------------------
 ; YouTube
-#If WinExist("YouTube") && activeProgram = "YouTube"
+#If WinExist("YouTube") 
 
 	*Volume_Up::
 	{
@@ -205,7 +183,7 @@ TriggerVolumeOSD() {
 	^!a::MsgBox YouTube Detected
 ;-------------------------------------------------------------
 ; Stremio
-#If WinExist("Stremio") && activeProgram = "Stremio"
+#If WinExist("Stremio")
 
 	;numActivePrograms++
 
@@ -330,10 +308,6 @@ FKeyRebind:
 		CapsLock & =:: F12
 		CapsLock & Esc:: `
 }
-
-; Set up the timer to call the label
-SetTimer, UpdateActiveProgram, 10000  ; Set a timer to run UpdateActiveProgram every 10 seconds
-
 ; Initialize the GUI
 openPrograms := GetOpenPrograms()  ; Get the list of open programs
 if (openPrograms.Length() > 0) {  ; Only show the GUI if at least one program is open

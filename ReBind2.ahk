@@ -1,4 +1,5 @@
 ;just let it fly method (toggleactiveprogram at any time)
+;gui ontop of program method
 
 ; Initial setup
 global programs := ["Stremio", "YouTube"]
@@ -57,12 +58,14 @@ RapidFire() {
 }
 
 ; Define ToggleActiveProgram function
-; Define ToggleActiveProgram function
 ToggleActiveProgram() {
     global currentProgramIndex, programs, activeProgram
-    currentProgramIndex := Mod(currentProgramIndex, programs.Length()) + 1  ; Cycle through the program list
-    activeProgram := programs[currentProgramIndex]  ; Update activeProgram
-    UpdateGUI(activeProgram)  ; Update the GUI with the new active program
+    ; Check if there are multiple programs to toggle between
+    if (programs.Length() > 1) {
+        currentProgramIndex := Mod(currentProgramIndex, programs.Length()) + 1  ; Cycle through the program list
+        activeProgram := programs[currentProgramIndex]  ; Update activeProgram
+        UpdateGUI(activeProgram)  ; Update the GUI with the new active program
+    }
 }
 
 
@@ -79,11 +82,16 @@ SendKey(Key) {
 UpdateGUI(program) {
     Gui, Destroy  ; Destroy any existing GUI
     Gui, +AlwaysOnTop +ToolWindow -Caption ; Make the GUI always on top and style it as an overlay
-    ;Gui, Color, EEAA99 ; Set a background color (optional, you can remove this line for a completely transparent GUI)
     Gui, Font, s20 cBlack, Verdana ; Set the font size to 20 and color to black (adjust as needed)
     Gui, Add, Text,, Now Focused: %program%  ; Add text indicating the currently focused program
-    Gui, Show, x0 y0 NoActivate, Focus Indicator ; Show the GUI at the top left corner without activating it
-    SetTimer, DestroyGUI, -1500  ; Set a timer to destroy the GUI after 2 seconds
+    
+    ; Get the position of the active program's window
+    WinGetPos, X, Y, Width, Height, % program
+    
+    ; Position the GUI at the top left corner of the active program's window
+    Gui, Show, x%X% y%Y% NoActivate, Focus Indicator ; Show the GUI without activating it
+    
+    SetTimer, DestroyGUI, -2000  ; Set a timer to destroy the GUI after 2 seconds
 }
 
 ; New function to destroy the GUI when the timer triggers

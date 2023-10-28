@@ -5,3 +5,5 @@ YouTube keybinds dont work because stremio is hardcoded as the first active prog
 Maybe make it so that you can use alt delete to cycle through the windows at any time and then later make it so that it only cycles through the windows that open later?
 - it still sends all inputs to the first window that was opened
 
+Error when switching to second program if its not open in the freefly method 
+-fix later
