@@ -1,13 +1,14 @@
-;the updateactiveprogram method
+;just let it fly method (toggleactiveprogram at any time)
+;this works lmao
+
+;TODO
+; Make it so that the toggle only works when more then 1 program is open and make it so that the gui only appears when more then 1 programs is open 
+; make it so that gui will appear in the top left of the window that is the activeprogram
+; fix rshift volume wheel on stremio
 
 ; Initial setup
-global programs := ["YouTube", "Stremio"]
+global programs := ["Stremio", "YouTube"]
 global currentProgramIndex := 1  ; start with the first program in the list
-global activeProgram := programs[currentProgramIndex]  ; start with the first program in the list
-
-; Call UpdateActiveProgram at the start of the script
-UpdateActiveProgram()
-
 
 #NoEnv
 #MaxHotkeysPerInterval,50000
@@ -63,15 +64,12 @@ RapidFire() {
 
 ; Define ToggleActiveProgram function
 ToggleActiveProgram() {
-    global currentProgramIndex, programs, activeProgram
+    global currentProgramIndex, programs
     openPrograms := GetOpenPrograms()  ; Get the list of open programs
-    if (openPrograms.Length() > 1) {  ; Only cycle through if more than one program is open
+    if (openPrograms.Length() > 1) {  ; Only proceed if more than one program is open
         currentProgramIndex := Mod(currentProgramIndex, openPrograms.Length()) + 1  ; Cycle through the open program list
         activeProgram := openPrograms[currentProgramIndex]  ; Update activeProgram
         UpdateGUI(activeProgram)  ; Update the GUI with the new active program
-    } else {
-        ; Update activeProgram if the list of open programs has changed
-        UpdateActiveProgram()
     }
 }
 
@@ -92,7 +90,8 @@ UpdateGUI(program) {
     ;Gui, Color, EEAA99 ; Set a background color (optional, you can remove this line for a completely transparent GUI)
     Gui, Font, s20 cBlack, Verdana ; Set the font size to 20 and color to black (adjust as needed)
     Gui, Add, Text,, Now Focused: %program%  ; Add text indicating the currently focused program
-    Gui, Show, x0 y0 NoActivate, Focus Indicator ; Show the GUI at the top left corner without activating it
+	WinGetPos, X, Y,,, %program%
+    Gui, Show, x%X% y%Y% NoActivate, Focus Indicator ; Show the GUI at the top left corner without activating it
     SetTimer, DestroyGUI, -1500  ; Set a timer to destroy the GUI after 2 seconds
 }
 
@@ -100,24 +99,6 @@ UpdateGUI(program) {
 DestroyGUI:
     Gui, Destroy
 return
-
-; Function to update the active program to the first open program in the list
-UpdateActiveProgram() {
-    global programs, activeProgram, currentProgramIndex
-    openPrograms := GetOpenPrograms()
-    if (openPrograms.Length() > 0) {
-        ; Find the index of the first open program in the programs list
-        currentProgramIndex := 1  ; Default to 1 if no open programs are found in the programs list
-        Loop, % programs.Length() { 
-            if (programs[A_Index] = openPrograms[1]) {
-                currentProgramIndex := A_Index
-                break
-            }
-        }
-        activeProgram := openPrograms[1]  ; Set activeProgram to the first open program
-    }
-	msgbox %activeProgram%
-}
 
 ; Define GetOpenPrograms function
 GetOpenPrograms() {
@@ -149,11 +130,11 @@ TriggerVolumeOSD() {
 ; App specific keybinds
 ;-------------------------------------------------------------
 ; YouTube
-#If WinExist("YouTube") && activeProgram = "YouTube"
+#If WinExist("YouTube") 
 
 	*Volume_Up::
 	{
-		;SendKey("{Up}", "YouTube") ; Volume Up
+
 		SendKey("{Up}") ; Volume Up
 		Return
 	}
@@ -205,9 +186,7 @@ TriggerVolumeOSD() {
 	^!a::MsgBox YouTube Detected
 ;-------------------------------------------------------------
 ; Stremio
-#If WinExist("Stremio") && activeProgram = "Stremio"
-
-	;numActivePrograms++
+#If WinExist("Stremio")
 
 	*Volume_Up::
 	{
@@ -256,15 +235,12 @@ PreFlightCheck:
     if (toggleLoopMicVolumeValue = 1) 
     {
         SetTimer LoopMicVolume, -1
-		;return
     }
 
     if (toggleFKeyRebindValue = 1) 
     {
         SetTimer FKeyRebind, -1
-		;return
     }
-
     return
 }
 ;< ---------------- Scripts ---------------- >
@@ -330,10 +306,6 @@ FKeyRebind:
 		CapsLock & =:: F12
 		CapsLock & Esc:: `
 }
-
-; Set up the timer to call the label
-SetTimer, UpdateActiveProgram, 10000  ; Set a timer to run UpdateActiveProgram every 10 seconds
-
 ; Initialize the GUI
 openPrograms := GetOpenPrograms()  ; Get the list of open programs
 if (openPrograms.Length() > 0) {  ; Only show the GUI if at least one program is open
