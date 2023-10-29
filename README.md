@@ -1,9 +1,8 @@
 # ReBind Beta
 
 CURRENT ISSUES:
-- Fix not being able to use stremio keybinds when youtube is open - possibly related to static #IF WinExist design principle
-- not fixed
-- need to cycle active program still static
+- CurrentProgramIndex sets the first program in array as active, therefore youtube doesnt receive keybinds untill it is toggled when stremio is opened
+- debugging possible update CurrentProgramIndex before control focus and control send in SendKey
 
 TO DO LATER:
 - Make it so that you can send youtube hotkeys even when youtube is not the focused tab

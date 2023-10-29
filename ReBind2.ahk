@@ -1,9 +1,7 @@
-;Fix needing to toggle active program on program start to use youtube keybinds
-;Right now this does that but needs to wait 5 seconds to UpdateActiveProgram
-;Investigating way to only search when either YouTube or Stremio is opened
+;Still uses winExist therefore when both are open the keybinds get iffy
 
 ; Initial setup
-global programs := ["YouTube", "Stremio"]
+global programs := ["Stremio", "YouTube"]
 global currentProgramIndex := 1  ; start with the first program in the list
 
 #NoEnv
@@ -19,8 +17,6 @@ SendMode Input
 SetNumLockState, AlwaysOff
 SetCapsLockState, AlwaysOff
 
-SetTimer, UpdateActiveProgram, 5000  ; Set a timer to call ToggleActiveProgram every 5 seconds
-
 ; Add the hotkey for Alt + Delete to toggle the active program
 !Delete::ToggleActiveProgram()  ; ! is the symbol for Alt in AHK
 
@@ -30,7 +26,6 @@ Menu, Tray, Add, Set Microphone Volume, LoopMicVolume ; Add a menu item named "S
 Menu, Tray, Add, F-Key Rebind, FKeyRebind 
 Menu, Tray, Add ; Seperator
 Menu, Tray, Standard ; puts original back "under" custom menu
-
 
 SetTimer PreFlightCheck, -1 ; Run PreFlightCheck once on script start
 
@@ -61,33 +56,26 @@ RapidFire() {
 	}
 }
 
-UpdateActiveProgram() {
-	;MsgBox, UpdateActiveProgram called
-    global currentProgramIndex, programs, activeProgram
-    openPrograms := GetOpenPrograms()  ; Get the list of open programs
-	currentProgramIndex := Mod((currentProgramIndex), openPrograms.Length()) + 1  ; Cycle through the open program list
-    activeProgram := openPrograms[currentProgramIndex]  ; Update activeProgram
-}
-
 ; Define ToggleActiveProgram function
 ToggleActiveProgram() {
-    global activeProgram
-	UpdateActiveProgram()
+    global currentProgramIndex, programs
+    openPrograms := GetOpenPrograms()  ; Get the list of open programs
     if (openPrograms.Length() > 1) {  ; Only proceed if more than one program is open
+        currentProgramIndex := Mod(currentProgramIndex, openPrograms.Length()) + 1  ; Cycle through the open program list
+        activeProgram := openPrograms[currentProgramIndex]  ; Update activeProgram
         UpdateGUI(activeProgram)  ; Update the GUI with the new active program
-	}
+    }
 }
 
 
+; Update SendKey function to use currentProgram from the list of open programs
 SendKey(Key) {
     global currentProgramIndex, programs
     openPrograms := GetOpenPrograms()  ; Get the list of open programs
-    ControlFocus,, % openPrograms[currentProgramIndex]  ; Set focus to the current open program
+    ControlFocus,, % openPrograms[currentProgramIndex]  ; Set focus to the current open program (optional)
     ControlSend,, %Key%, % openPrograms[currentProgramIndex]  ; Send key to the current open program
-    ;MsgBox, % "Key sent to: " openPrograms[currentProgramIndex]  ; Debug message
     Return  ; clear buffer
 }
-
 
 ; Define UpdateGUI function
 UpdateGUI(program) {
@@ -117,12 +105,12 @@ GetOpenPrograms() {
     return openPrograms
 }
 
-
 ; Trigger VolumeOSD Method
 TriggerVolumeOSD() {
-	send {Volume_Up 100}
+	send {Volume_Up 1}
 	Return
 }
+
 ;-------------------------------------------------------------
 ; Macros
 ;-------------------------------------------------------------
@@ -136,9 +124,11 @@ TriggerVolumeOSD() {
 ; App specific keybinds
 ;-------------------------------------------------------------
 ; YouTube
-#If (activeProgram = "YouTube")
+#If WinExist("YouTube") 
+
 	*Volume_Up::
 	{
+
 		SendKey("{Up}") ; Volume Up
 		Return
 	}
@@ -187,11 +177,11 @@ TriggerVolumeOSD() {
 		Return
 	}
 	
-	>+a::MsgBox YouTube Detected
-#If
+	^!a::MsgBox YouTube Detected
 ;-------------------------------------------------------------
 ; Stremio
-#If (activeProgram = "Stremio")
+#If WinExist("Stremio")
+
 	*Volume_Up::
 	{
 		SendKey("{Up}") ; Volume Up
@@ -226,10 +216,9 @@ TriggerVolumeOSD() {
 	{
 		SendKey("+{N}") ; Next video
 		Return
-	}
+}
 
-	a::MsgBox Stremio Detected
-#If
+^!a::MsgBox Stremio Detected
 ;-------------------------------------------------------------
 ;< ---------------- Preflight Check ---------------- >
 PreFlightCheck:
@@ -237,11 +226,13 @@ PreFlightCheck:
     IniRead, toggleLoopMicVolumeValue, %A_ScriptDir%\config.ini, Settings, ToggleLoopMicVolume
     IniRead, toggleFKeyRebindValue, %A_ScriptDir%\config.ini, Settings, ToggleFKeyRebind
 
-    if (toggleLoopMicVolumeValue = 1) {
+    if (toggleLoopMicVolumeValue = 1) 
+    {
         SetTimer LoopMicVolume, -1
     }
-	return
-    if (toggleFKeyRebindValue = 1) {
+
+    if (toggleFKeyRebindValue = 1) 
+    {
         SetTimer FKeyRebind, -1
     }
     return
