@@ -1,4 +1,4 @@
-# ReBind Beta
+# ReBind
 
 CURRENT ISSUES:
 
