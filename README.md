@@ -2,7 +2,8 @@
 
 CURRENT ISSUES:
 
-TO DO LATER:
+TO DO:
+- Make toggle gui opaque
 - Make either extension or code modifications to make sure all keybinds sent to youtube tab go only to the video player
 - Make it so that you can send youtube hotkeys even when youtube is not the focused tab
 - Make it so that you can skip forward and back when edge is focused
