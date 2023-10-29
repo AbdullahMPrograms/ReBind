@@ -2,6 +2,9 @@
 ;only works when both are running to ToggleActiveProgram()
 ;need to dynamically change activeProgram
 
+;THIS WORKS
+;this dynamically changes activeProgram every 5 seconds super simple logic but it works
+
 ; Initial setup
 global programs := ["Stremio", "YouTube"]
 global currentProgramIndex := 1  ; start with the first program in the list
@@ -19,6 +22,8 @@ SendMode Input
 SetNumLockState, AlwaysOff
 SetCapsLockState, AlwaysOff
 
+SetTimer, CheckPrograms, 5000  ; Checks every second
+
 ; Add the hotkey for Alt + Delete to toggle the active program
 !Delete::ToggleActiveProgram()  ; ! is the symbol for Alt in AHK
 
@@ -33,6 +38,10 @@ SetTimer PreFlightCheck, -1 ; Run PreFlightCheck once on script start
 
 ;reload program in case of edge case failure
 ^!r::Reload
+;-------------------------------------------------------------
+; Deactivate volume wheel
+*Volume_Up::Return
+*Volume_Down::Return
 ;-------------------------------------------------------------
 ; If FN (CapsLock) is pressed Next Media
 While (GetKeyState(CapsLock,"p")) {
@@ -53,6 +62,17 @@ RapidFire() {
 		Sleep 7
 	}
 }
+
+CheckPrograms:
+	if (WinExist("YouTube") and !WinExist("Stremio"))
+	{
+		activeProgram := "YouTube"
+	}
+	else if (!WinExist("YouTube") and WinExist("Stremio"))
+	{
+		activeProgram := "Stremio"
+	}
+return
 
 ; Define ToggleActiveProgram function
 ToggleActiveProgram() {
