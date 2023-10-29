@@ -1,7 +1,3 @@
-;Possible fix to MultiProgram keybind issue
-;only works when both are running to ToggleActiveProgram()
-;need to dynamically change activeProgram
-
 ;THIS WORKS
 ;this dynamically changes activeProgram every 5 seconds super simple logic but it works
 
@@ -232,6 +228,12 @@ TriggerVolumeOSD() {
 	>!Right::
 	{
 		SendKey("+{N}") ; Next video
+		Return
+	}
+
+	>+PgUp::
+	{
+		SendKey("{f}") ; Activate Mini-Player
 		Return
 	}
 

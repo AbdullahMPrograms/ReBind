@@ -3,6 +3,7 @@
 CURRENT ISSUES:
 
 TO DO LATER:
+- Make either extension or code modifications to make sure all keybinds sent to youtube tab go only to the video player
 - OPTIMIZATION
 - Maybe update LoopMicVolume to find micid via name then set volume
 - Maybe modular sections of the code via cfg files? dont know if this is possible
