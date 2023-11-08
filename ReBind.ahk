@@ -137,6 +137,12 @@ TriggerVolumeOSD() {
 ;-------------------------------------------------------------
 ; YouTube
 #If (activeProgram = "YouTube")
+	;Media_Play_Pause:: ; Play/Pause
+	;{
+	;	SendKey("{Media_Play_Pause}")
+	;	Return
+	;}
+
 	*Volume_Up::
 	{
 
