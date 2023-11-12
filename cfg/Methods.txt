@@ -1,0 +1,82 @@
+;-------------------------------------------------------------
+; Methods
+;-------------------------------------------------------------
+; RapidFire Method
+RapidFire() {
+	While(GetKeyState("LButton","P") And GetKeyState("XButton1","P")) 
+	{
+		send {LButton down}
+		Sleep 7
+		send {LButton up}
+		Sleep 7
+	}
+}
+
+CheckPrograms:
+	if (WinExist("YouTube") and !WinExist("Stremio"))
+	{
+		activeProgram := "YouTube"
+	}
+	else if (!WinExist("YouTube") and WinExist("Stremio"))
+	{
+		activeProgram := "Stremio"
+	}
+return
+
+; Define ToggleActiveProgram function
+ToggleActiveProgram() {
+    global currentProgramIndex, programs, activeProgram
+    openPrograms := GetOpenPrograms()  ; Get the list of open programs
+    if (openPrograms.Length() > 1) {  ; Only proceed if more than one program is open
+        currentProgramIndex := Mod(currentProgramIndex, openPrograms.Length()) + 1  ; Cycle through the open program list
+        activeProgram := openPrograms[currentProgramIndex]  ; Update activeProgram
+        UpdateGUI(activeProgram)  ; Update the GUI with the new active program
+    }
+}
+
+; Update SendKey function to use currentProgram from the list of open programs
+SendKey(Key) {
+    global currentProgramIndex, programs
+    openPrograms := GetOpenPrograms()  ; Get the list of open programs
+    ControlFocus,, % openPrograms[currentProgramIndex]  ; Set focus to the current open program
+    ControlSend,, %Key%, % openPrograms[currentProgramIndex]  ; Send key to the current open program
+    Return  ; clear buffer
+}
+
+; Define UpdateGUI function
+UpdateGUI(program) {
+    Gui, Destroy  ; Destroy any existing GUI
+    Gui, +AlwaysOnTop +ToolWindow -Caption ; Make the GUI always on top and style it as an overlay
+    ;Gui, Color, EEAA99 ; Set a background color (optional, you can remove this line for a completely transparent GUI)
+    Gui, Font, s20 cBlack, Verdana ; Set the font size to 20 and color to black (adjust as needed)
+    Gui, Add, Text,, Now Focused: %program%  ; Add text indicating the currently focused program
+	WinGetPos, X, Y,,, %program%
+    Gui, Show, x%X% y%Y% NoActivate, Focus Indicator ; Show the GUI at the top left corner without activating it
+    SetTimer, DestroyGUI, -1500  ; Set a timer to destroy the GUI after 2 seconds
+}
+
+; New function to destroy the GUI when the timer triggers
+DestroyGUI:
+    Gui, Destroy
+return
+
+; Define GetOpenPrograms function
+GetOpenPrograms() {
+    global programs
+    openPrograms := []  ; Initialize an empty array
+    for index, program in programs {
+        if WinExist(program)
+            openPrograms.Push(program)  ; Add the program to the list if it's open
+    }
+    return openPrograms
+}
+
+; Trigger VolumeOSD Method
+TriggerVolumeOSD() {
+	send {Volume_Up 1}
+	Return
+}
+
+MyMsg(text) {
+  MsgBox, % text
+}
