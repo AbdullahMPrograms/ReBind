@@ -11,4 +11,4 @@ TO DO:
 - Maybe update LoopMicVolume to find micid via name then set volume
 - Maybe modular sections of the code via cfg files? dont know if this is possible
 - Universal Audio Keybinds
-- GUI
+- Python GUI
