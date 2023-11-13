@@ -2,6 +2,12 @@
 ;dumb way for my python program but eh
 ;this works
 
+; Method:
+; Can use a persistent AHK program (ReBind) that reads a cfg file like below to run code
+; inside python program whenever you change something in the gui it will write to the file and restart the ahk process (or the AHK program will read the file every 5-10 seconds idk yet)
+; thus you get a python gui but AHK functionality (kinda stupid ik)
+; Later on will have to be a full code conversion, either AHK wrapper (AHKUnwrapped most likely) or rewrite functions in python
+
 ; Include initial setup
 #Include %A_ScriptDir%\cfg\InitialSetup.txt
 
