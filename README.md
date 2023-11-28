@@ -4,7 +4,7 @@ CURRENT ISSUES:
 
 TO DO:
 - Add switching for if more then one youtube tab exists (same keybind as regular switching)
-- make a 50% (or lower) opacity gui of the app icon when sending a keystroke 
+- make a 50% (or lower) opacity gui of the app icon when sending a keystroke (if more then one window is open) 
   - for instance if volume is sent to yt the youtube icon will appear at the top left the of the window and will be lightly visible (makes it easier to know where keys are being sent for multiple program sends)
 - Universal Audio Keybinds (combine python + ahk via wrapper/via cfg)
 
