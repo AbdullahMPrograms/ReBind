@@ -11,4 +11,8 @@ TO DO:
 - Maybe update LoopMicVolume to find micid via name then set volume
 - Maybe modular sections of the code via cfg files? dont know if this is possible
 - Universal Audio Keybinds
-- Python GUI
+- Python GUI (In progress)
+
+- Add switching for if more then one youtube tab exists
+- make a 50% (or lower) opacity gui of the app icon when sending a keystroke 
+  - for instance if volume is sent to yt the youtube icon will appear at the top left the of the window and will be lightly visible (makes it easier to know where keys are being sent for multiple program sends)
