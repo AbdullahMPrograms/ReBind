@@ -20,4 +20,5 @@ TO DO LATER:
   - Make this part of the "Plugins" section
 
 DONE:
-- Maybe modular sections of the code via cfg files? dont know if this is possible (done) 
+- Maybe modular sections of the code via cfg files? dont know if this is possible (done)
+- AHK Wrapper integration
