@@ -1,6 +1,0 @@
-;< ---------------- TRAY MENU ---------------- >
-Menu, tray, nostandard ; removes original menu
-Menu, Tray, Add, Set Microphone Volume, LoopMicVolume ; Add a menu item named "Set Microphone Volume" that calls the subroutine "MicVolume"
-Menu, Tray, Add, F-Key Rebind, FKeyRebind 
-Menu, Tray, Add ; Seperator
-Menu, Tray, Standard ; puts original back "under" custom menu

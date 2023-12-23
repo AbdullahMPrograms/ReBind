@@ -1,7 +1,13 @@
-from pathlib import Path
-from ahkunwrapped import Script
+from pathlib import *
+from ahkunwrapped import *
+import keyboard
 
-ahk = Script.from_file(Path('ReBindexp.ahk'))
-ahk.call('MyMsg', "Wooo!")
+ahk = Script.from_file(Path('ReBindFunc.ahk'))
+def send_space(key):
+    ahk.call('SendKey', 'key')
+    print("Sent Key")
 
-ahk.call('SendKey', '{Space}')
+keyboard.add_hotkey('ctrl+space', lambda: send_space("{Space}"))
+
+# Block forever, to keep the script running.
+keyboard.wait() 

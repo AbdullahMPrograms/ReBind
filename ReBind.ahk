@@ -87,7 +87,6 @@ SendKey(Key) {
     Return  ; clear buffer
 }
 
-; Define UpdateGUI function
 UpdateGUI(program) {
     Gui, Destroy  ; Destroy any existing GUI
     Gui, +AlwaysOnTop +ToolWindow -Caption ; Make the GUI always on top and style it as an overlay
@@ -130,11 +129,6 @@ TriggerVolumeOSD() {
 ;-------------------------------------------------------------
 ; YouTube
 #If (activeProgram = "YouTube")
-	;Media_Play_Pause:: ; Play/Pause
-	;{
-	;	SendKey("{Media_Play_Pause}")
-	;	Return
-	;}
 
 	*Volume_Up::
 	{
