@@ -175,7 +175,7 @@ max_y = 0
 for key in keys:
     text, x, y, width, height, layouts = key
     if current_layout in layouts:
-        button = ctk.CTkButton(keys_frame, text=text, width=width, height=height)
+        button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=button_event)
         button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
         button.place(x=x, y=y)
         max_x = max(max_x, x + width)
