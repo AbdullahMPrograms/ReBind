@@ -3,10 +3,9 @@ import customtkinter as ctk
 # Create a new CustomTkinter window
 root = ctk.CTk()
 root.title("ReBind")
-root.minsize(1260, 670)  # Set the minimum size of the window
 
-def button_event():
-    print("button clicked")
+def button_event(button_name):
+    print(f"{button_name} clicked")
 
 # Create a function to print the current window size
 def print_window_size():
@@ -17,17 +16,17 @@ sidebar = ctk.CTkFrame(root, width=70, height=500, fg_color = "transparent")
 sidebar.pack(side='left', fill='y')
 
 # Create a hamburger menu inside the sidebar
-hamburger_menu = ctk.CTkButton(sidebar, text="☰", width=50, height=50, fg_color = "transparent")
+hamburger_menu = ctk.CTkButton(sidebar, text="☰", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Hamburger Menu'))
 hamburger_menu.place(x=10, y=10)
 
 # Create the Home, Macros, Save, and Settings buttons
-home_button = ctk.CTkButton(sidebar, text="☖", width=50, height=50, fg_color = "transparent")
+home_button = ctk.CTkButton(sidebar, text="☖", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Home'))
 home_button.place(x=10, y=70)
 
-macros_button = ctk.CTkButton(sidebar, text="Macros", width=50, height=50, fg_color = "transparent")
+macros_button = ctk.CTkButton(sidebar, text="Macros", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Macros'))
 macros_button.place(x=10, y=130)
 
-save_button = ctk.CTkButton(sidebar, text="🖬", width=50, height=50, fg_color = "transparent")
+save_button = ctk.CTkButton(sidebar, text="🖬", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Save'))
 save_button.place(x=10, y=190)
 
 # Create a Print Size button and place it above the Settings button
@@ -35,7 +34,7 @@ print_size_button = ctk.CTkButton(sidebar, text="Print Size", width=50, height=5
 print_size_button.place(relx=0.5, rely=0.85, anchor='center')  # Adjust the y coordinate
 
 # Create a Settings button and place it at the bottom of the window
-settings_button = ctk.CTkButton(sidebar, text="Settings", width=50, height=50, fg_color = "transparent")
+settings_button = ctk.CTkButton(sidebar, text="Settings", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Settings'))
 settings_button.place(relx=0.5, rely=0.93, anchor='center')  # Adjust the y coordinate
 
 # Create a frame for the keys
@@ -175,27 +174,24 @@ max_y = 0
 for key in keys:
     text, x, y, width, height, layouts = key
     if current_layout in layouts:
-        button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=button_event)
+        button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: button_event(text))
         button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
-        button.place(x=x, y=y)
+        button.place(x=x+50, y=y+50)  # Add 50 pixels of space on the left and on top
         max_x = max(max_x, x + width)
         max_y = max(max_y, y + height)
 
 # Force tkinter to draw the window and update the widget sizes
 root.update()
 
-# Calculate the center of the keys_frame
-center_y = (keys_frame.winfo_height() - max_y) // 2
+print(f"max_y: {max_y}")
+print(f"sidebar['height']: {sidebar['height']}")
+print(f"keys_frame height: {keys_frame.winfo_height()}")
 
-# Adjust the position of each key to center them vertically in the keys_frame
-for child in keys_frame.winfo_children():
-    child.place_configure(y=child.winfo_y() + center_y)
+# Adjust the size of the keys_frame to exactly fit the keys, plus 50 pixels to the right and below
+keys_frame.configure(width=max_x + 100, height=max_y + 100)
 
-# Adjust the size of the keys_frame to exactly fit the keys, plus 10 pixels to the right
-keys_frame.configure(width=max_x + 10, height=max_y)
-
-# Adjust the size of the window to fit the keys_frame and the sidebar
-root.geometry(f"{max_x + sidebar['width'] + 10}x{max(max_y, sidebar['height'])}")
+# Adjust the size of the window to fit the keys_frame
+root.geometry(f"{max_x + sidebar['width'] + 100}x{max_y + 100}")
 
 # Start the CustomTkinter event loop
 root.mainloop()
