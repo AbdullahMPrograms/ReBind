@@ -1,16 +1,46 @@
-import tkinter as tk
+import customtkinter as ctk
 
-# Function to decrease the size of the button when the mouse hovers over it
-def on_enter(e):
-    e.widget.config(height=2, width=14)
-
-# Function to return the button to its original size when the mouse leaves it
-def on_leave(e):
-    e.widget.config(height=5, width=20)
-
-# Create a new tkinter window
-root = tk.Tk()
+# Create a new CustomTkinter window
+root = ctk.CTk()
 root.title("ReBind")
+root.minsize(1260, 670)  # Set the minimum size of the window
+
+def button_event():
+    print("button clicked")
+
+# Create a function to print the current window size
+def print_window_size():
+    print(f"Current window size: {root.winfo_width()}x{root.winfo_height()}")
+
+# Create a sidebar
+sidebar = ctk.CTkFrame(root, width=70, height=500, fg_color = "transparent")
+sidebar.pack(side='left', fill='y')
+
+# Create a hamburger menu inside the sidebar
+hamburger_menu = ctk.CTkButton(sidebar, text="☰", width=50, height=50, fg_color = "transparent")
+hamburger_menu.place(x=10, y=10)
+
+# Create the Home, Macros, Save, and Settings buttons
+home_button = ctk.CTkButton(sidebar, text="☖", width=50, height=50, fg_color = "transparent")
+home_button.place(x=10, y=70)
+
+macros_button = ctk.CTkButton(sidebar, text="Macros", width=50, height=50, fg_color = "transparent")
+macros_button.place(x=10, y=130)
+
+save_button = ctk.CTkButton(sidebar, text="🖬", width=50, height=50, fg_color = "transparent")
+save_button.place(x=10, y=190)
+
+# Create a Print Size button and place it above the Settings button
+print_size_button = ctk.CTkButton(sidebar, text="Print Size", width=50, height=50, fg_color = "transparent", command=print_window_size)
+print_size_button.place(relx=0.5, rely=0.85, anchor='center')  # Adjust the y coordinate
+
+# Create a Settings button and place it at the bottom of the window
+settings_button = ctk.CTkButton(sidebar, text="Settings", width=50, height=50, fg_color = "transparent")
+settings_button.place(relx=0.5, rely=0.93, anchor='center')  # Adjust the y coordinate
+
+# Create a frame for the keys
+keys_frame = ctk.CTkFrame(root, width=1270, height=450)
+keys_frame.pack(side='left', fill='both', expand=True)
 
 # Define the keys with their positions and sizes
 keys = [
@@ -138,17 +168,34 @@ elif isFullSized:
 else:
     current_layout = None
 
+max_x = 0
+max_y = 0
+
 # Create and place the buttons
 for key in keys:
     text, x, y, width, height, layouts = key
     if current_layout in layouts:
-        button = tk.Button(root, text=text, width=width, height=height, relief='raised', bd=4, wraplength=width*0.8)
-        button.place(x=x, y=y, width=width, height=height)
-        button.bind("<Enter>", on_enter)
-        button.bind("<Leave>", on_leave)
+        button = ctk.CTkButton(keys_frame, text=text, width=width, height=height)
+        button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
+        button.place(x=x, y=y)
+        max_x = max(max_x, x + width)
+        max_y = max(max_y, y + height)
 
-# Set the size of the window
-root.geometry("1330x370")
+# Force tkinter to draw the window and update the widget sizes
+root.update()
 
-# Start the tkinter event loop
+# Calculate the center of the keys_frame
+center_y = (keys_frame.winfo_height() - max_y) // 2
+
+# Adjust the position of each key to center them vertically in the keys_frame
+for child in keys_frame.winfo_children():
+    child.place_configure(y=child.winfo_y() + center_y)
+
+# Adjust the size of the keys_frame to exactly fit the keys, plus 10 pixels to the right
+keys_frame.configure(width=max_x + 10, height=max_y)
+
+# Adjust the size of the window to fit the keys_frame and the sidebar
+root.geometry(f"{max_x + sidebar['width'] + 10}x{max(max_y, sidebar['height'])}")
+
+# Start the CustomTkinter event loop
 root.mainloop()
