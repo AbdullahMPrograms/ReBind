@@ -180,9 +180,6 @@ for key in keys:
         max_x = max(max_x, x + width)
         max_y = max(max_y, y + height)
 
-# Force tkinter to draw the window and update the widget sizes
-root.update()
-
 print(f"max_y: {max_y}")
 print(f"sidebar['height']: {sidebar['height']}")
 print(f"keys_frame height: {keys_frame.winfo_height()}")
