@@ -1,8 +1,36 @@
 import customtkinter as ctk
+from PIL import Image, ImageTk
+
+# might need to make the keysframe the total outside size of the keys then place that frame in another frame and center it, rn the spacing is so dumb
 
 # Create a new CustomTkinter window
 root = ctk.CTk()
 root.title("ReBind")
+
+menu_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
+home_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_home.png").resize((16,16), Image.Resampling.LANCZOS))
+macros_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_macros.png").resize((16,16), Image.Resampling.LANCZOS))
+save_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_save.png").resize((16,16), Image.Resampling.LANCZOS))
+plugins_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_plugins.png").resize((16,16), Image.Resampling.LANCZOS))
+settings_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_settings.png").resize((18,18), Image.Resampling.LANCZOS))
+
+# Set the layout variables
+isSixty = False
+isTenKeyless = True
+isFullSized = False
+
+# Determine the current layout
+if isSixty:
+    current_layout = "sixty"
+elif isTenKeyless:
+    current_layout = "tenkeyless"
+elif isFullSized:
+    current_layout = "full"
+else:
+    current_layout = None
+
+max_x = 0
+max_y = 0
 
 def button_event(button_name):
     print(f"{button_name} clicked")
@@ -10,35 +38,64 @@ def button_event(button_name):
 # Create a function to print the current window size
 def print_window_size():
     print(f"Current window size: {root.winfo_width()}x{root.winfo_height()}")
+    print(f"keys_frame height: {keys_frame.winfo_height()}")
+    print(f"sidebarframe height: {sidebar.winfo_height()}")
+    print(f"settings button placement: {(sidebar.winfo_height() - 50)}")
+
+# Create a variable to keep track of whether the sidebar is expanded or not
+sidebar_expanded = False
+
+# Create a function to toggle the sidebar
+# maybe make keys_frame x = -50 so that keys frame wont move (dumb solution ik)
+def toggle_sidebar():
+    global sidebar_expanded
+    if sidebar_expanded:
+        sidebar.configure(width=70)
+        home_button.configure(compound="none")  # Hide the text
+        sidebar_expanded = False
+    else:
+        sidebar.configure(width=200)  # Change this to the expanded width you want
+        home_button.configure(compound="left")  # Show the text to the left of the image
+        sidebar_expanded = True
+    sidebar.lift()  # Bring the sidebar to the front
 
 # Create a sidebar
 sidebar = ctk.CTkFrame(root, width=70, height=500, fg_color = "transparent")
 sidebar.pack(side='left', fill='y')
 
 # Create a hamburger menu inside the sidebar
-hamburger_menu = ctk.CTkButton(sidebar, text="☰", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Hamburger Menu'))
-hamburger_menu.place(x=10, y=10)
+hamburger_menu = ctk.CTkButton(sidebar, image=menu_image, text = "", width=70, height=50, fg_color = "transparent", command=toggle_sidebar)
+hamburger_menu.place(x=0, y=0)
 
 # Create the Home, Macros, Save, and Settings buttons
-home_button = ctk.CTkButton(sidebar, text="☖", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Home'))
-home_button.place(x=10, y=70)
+home_button = ctk.CTkButton(sidebar, image=home_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Home'))
+home_button.place(x=0, y=50)
 
-macros_button = ctk.CTkButton(sidebar, text="Macros", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Macros'))
-macros_button.place(x=10, y=130)
+macros_button = ctk.CTkButton(sidebar, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Macros'))
+macros_button.place(x=0, y=100)
 
-save_button = ctk.CTkButton(sidebar, text="🖬", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Save'))
-save_button.place(x=10, y=190)
+plugin_button = ctk.CTkButton(sidebar, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Plugins'))
+plugin_button.place(x=0, y=150)
+
+save_button = ctk.CTkButton(sidebar, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Save'))
+save_button.place(x=0, y=200)
 
 # Create a Print Size button and place it above the Settings button
-print_size_button = ctk.CTkButton(sidebar, text="Print Size", width=50, height=50, fg_color = "transparent", command=print_window_size)
-print_size_button.place(relx=0.5, rely=0.85, anchor='center')  # Adjust the y coordinate
+#print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
+#print_size_button.place(x=0, y=410)  # Adjust the y coordinate
 
 # Create a Settings button and place it at the bottom of the window
-settings_button = ctk.CTkButton(sidebar, text="Settings", width=50, height=50, fg_color = "transparent", command=lambda: button_event('Settings'))
-settings_button.place(relx=0.5, rely=0.93, anchor='center')  # Adjust the y coordinate
+settings_button = ctk.CTkButton(sidebar, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Settings'))
+# Place the settings button at the bottom of the window
+if current_layout == 'sixty':
+    settings_button.place(x=0, y=(sidebar.winfo_height() - 100))  # Adjust the y coordinate
+else:
+    settings_button.place(x=0, y=460)  # Adjust the y coordinate
+
+
 
 # Create a frame for the keys
-keys_frame = ctk.CTkFrame(root, width=1270, height=450)
+keys_frame = ctk.CTkFrame(root, width=1270, height=650)  # Increase the height to 650
 keys_frame.pack(side='left', fill='both', expand=True)
 
 # Define the keys with their positions and sizes
@@ -152,43 +209,27 @@ keys = [
     (".", 1210, 310, 50, 50, {"full"})
 ]
 
-# Set the layout variables
-isSixty = False
-isTenKeyless = True
-isFullSized = False
-
-# Determine the current layout
-if isSixty:
-    current_layout = "sixty"
-elif isTenKeyless:
-    current_layout = "tenkeyless"
-elif isFullSized:
-    current_layout = "full"
-else:
-    current_layout = None
-
-max_x = 0
-max_y = 0
-
 # Create and place the buttons
 for key in keys:
     text, x, y, width, height, layouts = key
     if current_layout in layouts:
+        # If the current layout is 'sixty', adjust the y-coordinate
+        if current_layout == 'sixty':
+            y -= 60  # Why is this needed? idk man
         button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: button_event(text))
         button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
-        button.place(x=x+50, y=y+50)  # Add 50 pixels of space on the left and on top
+        button.place(x=x+50, y=y+70)  # Add 50 pixels of space on the left and on top
         max_x = max(max_x, x + width)
         max_y = max(max_y, y + height)
 
-print(f"max_y: {max_y}")
-print(f"sidebar['height']: {sidebar['height']}")
-print(f"keys_frame height: {keys_frame.winfo_height()}")
-
 # Adjust the size of the keys_frame to exactly fit the keys, plus 50 pixels to the right and below
-keys_frame.configure(width=max_x + 100, height=max_y + 100)
+keys_frame.configure(width=max_x + 100, height=max_y + 150)  # Increase the height by 200
 
 # Adjust the size of the window to fit the keys_frame
-root.geometry(f"{max_x + sidebar['width'] + 100}x{max_y + 100}")
+root.geometry(f"{max_x + sidebar['width'] + 100}x{max_y + 150}")  # Increase the height by 200
+
+# Lock the window size
+root.resizable(False, False)
 
 # Start the CustomTkinter event loop
 root.mainloop()
