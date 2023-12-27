@@ -92,8 +92,12 @@ if current_layout == 'sixty':
 else:
     settings_button.place(x=0, y=460)  # Adjust the y coordinate
 
-# Create a frame for the keys
-keys_frame = ctk.CTkFrame(root, width=1270, height=650)  # Increase the height to 650
+# Create a home frame
+home_frame = ctk.CTkFrame(root, width=1270, height=650)  # Increase the height to 650
+home_frame.pack(side='left', fill='both', expand=True)
+
+# Create a frame for the keys inside the home frame
+keys_frame = ctk.CTkFrame(home_frame, width=1270, height=650)  # Increase the height to 650
 keys_frame.pack(side='left', fill='both', expand=True)
 
 # Define the keys with their positions and sizes
