@@ -57,7 +57,6 @@ def toggle_sidebar():
         sidebar.configure(width=200)  # Change this to the expanded width you want
         home_button.configure(compound="left")  # Show the text to the left of the image
         sidebar_expanded = True
-    sidebar.lift()  # Bring the sidebar to the front
 
 # Create a sidebar
 sidebar = ctk.CTkFrame(root, width=70, height=500, fg_color = "transparent")
@@ -77,12 +76,13 @@ macros_button.place(x=0, y=100)
 plugin_button = ctk.CTkButton(sidebar, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Plugins'))
 plugin_button.place(x=0, y=150)
 
-save_button = ctk.CTkButton(sidebar, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Save'))
+#Profiles
+save_button = ctk.CTkButton(sidebar, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Profiles'))
 save_button.place(x=0, y=200)
 
 # Create a Print Size button and place it above the Settings button
-#print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
-#print_size_button.place(x=0, y=410)  # Adjust the y coordinate
+print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
+print_size_button.place(x=0, y=410)  # Adjust the y coordinate
 
 # Create a Settings button and place it at the bottom of the window
 settings_button = ctk.CTkButton(sidebar, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Settings'))
@@ -91,8 +91,6 @@ if current_layout == 'sixty':
     settings_button.place(x=0, y=(sidebar.winfo_height() - 100))  # Adjust the y coordinate
 else:
     settings_button.place(x=0, y=460)  # Adjust the y coordinate
-
-
 
 # Create a frame for the keys
 keys_frame = ctk.CTkFrame(root, width=1270, height=650)  # Increase the height to 650
@@ -221,9 +219,6 @@ for key in keys:
         button.place(x=x+50, y=y+70)  # Add 50 pixels of space on the left and on top
         max_x = max(max_x, x + width)
         max_y = max(max_y, y + height)
-
-# Adjust the size of the keys_frame to exactly fit the keys, plus 50 pixels to the right and below
-keys_frame.configure(width=max_x + 100, height=max_y + 150)  # Increase the height by 200
 
 # Adjust the size of the window to fit the keys_frame
 root.geometry(f"{max_x + sidebar['width'] + 100}x{max_y + 150}")  # Increase the height by 200
