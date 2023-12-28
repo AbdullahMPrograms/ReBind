@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
+import ast
 
 # might need to make the keysframe the total outside size of the keys then place that frame in another frame and center it, rn the spacing is so dumb
 
@@ -40,6 +41,7 @@ def print_window_size():
     print(f"Current window size: {root.winfo_width()}x{root.winfo_height()}")
     print(f"keys_frame height: {keys_frame.winfo_height()}")
     print(f"sidebarframe height: {sidebar.winfo_height()}")
+    print(f"Main frame size: {main_frame.winfo_width()}x{main_frame.winfo_height()}")
     print(f"settings button placement: {(sidebar.winfo_height() - 50)}")
 
 # Create a variable to keep track of whether the sidebar is expanded or not
@@ -58,8 +60,12 @@ def toggle_sidebar():
         home_button.configure(compound="left")  # Show the text to the left of the image
         sidebar_expanded = True
 
-# Create a sidebar
-sidebar = ctk.CTkFrame(root, width=70, height=500, fg_color = "transparent")
+# Create a main frame
+main_frame = ctk.CTkFrame(root, width=130, height=650)  # Increase the height to 650
+main_frame.pack(side='left', fill='both', expand=True)
+
+# Create a sidebar inside the main frame
+sidebar = ctk.CTkFrame(main_frame, width=70, height=500, fg_color="transparent")
 sidebar.pack(side='left', fill='y')
 
 # Create a hamburger menu inside the sidebar
@@ -92,124 +98,17 @@ if current_layout == 'sixty':
 else:
     settings_button.place(x=0, y=460)  # Adjust the y coordinate
 
-# Create a home frame
-home_frame = ctk.CTkFrame(root, width=1270, height=650)  # Increase the height to 650
+# Create a home frame inside the main frame
+home_frame = ctk.CTkFrame(main_frame, width=1270, height=650)  # Increase the height to 650
 home_frame.pack(side='left', fill='both', expand=True)
 
 # Create a frame for the keys inside the home frame
-keys_frame = ctk.CTkFrame(home_frame, width=1270, height=650)  # Increase the height to 650
+keys_frame = ctk.CTkFrame(home_frame, width=1270, height=650, bg_color="transparent")  # Increase the height to 650
 keys_frame.pack(side='left', fill='both', expand=True)
 
-# Define the keys with their positions and sizes
-keys = [
-    # Format: (text, x, y, width, height, layouts)
-    # The 'layouts' field is a set of strings that indicate which layouts the key belongs to.
-    ("Esc", 10, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F1", 130, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F2", 190, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F3", 250, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F4", 310, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F5", 400, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F6", 460, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F7", 520, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F8", 580, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F9", 670, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F10", 730, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F11", 790, 10, 50, 50, {"full", "tenkeyless"}),
-    ("F12", 850, 10, 50, 50, {"full", "tenkeyless"}),
-    ("Print", 910, 10, 50, 50, {"full", "tenkeyless"}),
-    ("Scroll Lock", 970, 10, 50, 50, {"full", "tenkeyless"}),
-    ("Pause", 1030, 10, 50, 50, {"full", "tenkeyless"}),
-    ("`", 10, 70, 50, 50, {"full", "tenkeyless"}),
-    ("Esc", 10, 70, 50, 50, {"sixty"}),
-    ("1", 70, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("2", 130, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("3", 190, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("4", 250, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("5", 310, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("6", 370, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("7", 430, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("8", 490, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("9", 550, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("0", 610, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("-", 670, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("=", 730, 70, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("Backspace", 790, 70, 110, 50, {"full", "tenkeyless", "sixty"}),
-    ("Insert", 910, 70, 50, 50, {"full", "tenkeyless"}),
-    ("Home", 970, 70, 50, 50, {"full", "tenkeyless"}),
-    ("Page Up", 1030, 70, 50, 50, {"full", "tenkeyless"}),
-    ("Tab", 10, 130, 75, 50, {"full", "tenkeyless", "sixty"}),
-    ("Q", 95, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("W", 155, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("E", 215, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("R", 275, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("T", 335, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("Y", 395, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("U", 455, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("I", 515, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("O", 575, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("P", 635, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("[", 695, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("]", 755, 130, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("\\", 815, 130, 85, 50, {"full", "tenkeyless", "sixty"}),
-    ("Delete", 910, 130, 50, 50, {"full", "tenkeyless"}),
-    ("End", 970, 130, 50, 50, {"full", "tenkeyless"}),
-    ("Page Down", 1030, 130, 50, 50, {"full", "tenkeyless"}),
-    ("Caps Lock", 10, 190, 85, 50, {"full", "tenkeyless", "sixty"}),
-    ("A", 105, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("S", 165, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("D", 225, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("F", 285, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("G", 345, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("H", 405, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("J", 465, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("K", 525, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("L", 585, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    (";", 645, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("'", 705, 190, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("Enter", 765, 190, 135, 50, {"full", "tenkeyless", "sixty"}),
-    ("Shift", 10, 250, 125, 50, {"full", "tenkeyless", "sixty"}),
-    ("Z", 145, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("X", 205, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("C", 265, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("V", 325, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("B", 385, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("N", 445, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("M", 505, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    (",", 565, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    (".", 625, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("/", 685, 250, 50, 50, {"full", "tenkeyless", "sixty"}),
-    ("Shift", 745, 250, 155, 50, {"full", "tenkeyless", "sixty"}),
-    ("Up", 970, 250, 50, 50, {"full", "tenkeyless"}),
-    ("Ctrl", 10, 310, 75, 50, {"full", "tenkeyless", "sixty"}),
-    ("Win", 95, 310, 75, 50, {"full", "tenkeyless", "sixty"}),
-    ("Alt", 180, 310, 75, 50, {"full", "tenkeyless", "sixty"}),
-    ("Space", 265, 310, 380, 50, {"full", "tenkeyless", "sixty"}),
-    ("Alt", 655, 310, 75, 50, {"full", "tenkeyless", "sixty"}),
-    ("Win", 740, 310, 75, 50, {"full", "tenkeyless", "sixty"}),
-    ("Ctrl", 825, 310, 75, 50, {"full", "tenkeyless", "sixty"}),
-    ("Left", 910, 310, 50, 50, {"full", "tenkeyless"}),
-    ("Down", 970, 310, 50, 50, {"full", "tenkeyless"}),
-    ("Right", 1030, 310, 50, 50, {"full", "tenkeyless"}),
-    # Numeric keypad for full layout
-    ("Num Lock", 1090, 70, 50, 50, {"full"}),
-    ("/", 1150, 70, 50, 50, {"full"}),
-    ("*", 1210, 70, 50, 50, {"full"}),
-    ("-", 1270, 70, 50, 50, {"full"}),
-    ("7", 1090, 130, 50, 50, {"full"}),
-    ("8", 1150, 130, 50, 50, {"full"}),
-    ("9", 1210, 130, 50, 50, {"full"}),
-    ("+", 1270, 130, 50, 110, {"full"}),
-    ("4", 1090, 190, 50, 50, {"full"}),
-    ("5", 1150, 190, 50, 50, {"full"}),
-    ("6", 1210, 190, 50, 50, {"full"}),
-    ("1", 1090, 250, 50, 50, {"full"}),
-    ("2", 1150, 250, 50, 50, {"full"}),
-    ("3", 1210, 250, 50, 50, {"full"}),
-    ("Enter", 1270, 250, 50, 110, {"full"}),
-    ("0", 1090, 310, 110, 50, {"full"}),
-    (".", 1210, 310, 50, 50, {"full"})
-]
+# Read the keys from the 'Keys.ini' file
+with open('Python/Layouts/Keys.ini', 'r') as file:
+    keys = ast.literal_eval(file.read())
 
 # Create and place the buttons
 for key in keys:
@@ -217,15 +116,28 @@ for key in keys:
     if current_layout in layouts:
         # If the current layout is 'sixty', adjust the y-coordinate
         if current_layout == 'sixty':
-            y -= 60  # Why is this needed? idk man
+            y -= 60
         button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: button_event(text))
         button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
-        button.place(x=x+50, y=y+70)  # Add 50 pixels of space on the left and on top
+        #button.place(x=x+50, y=y+70)  # Add 50 pixels of space on the left and on top
+        button.place(x=x, y=y)
         max_x = max(max_x, x + width)
         max_y = max(max_y, y + height)
 
-# Adjust the size of the window to fit the keys_frame
-root.geometry(f"{max_x + sidebar['width'] + 100}x{max_y + 150}")  # Increase the height by 200
+# Adjust the size of the keys_frame to fit the keys
+keys_frame.configure(width=max_x + 10, height=max_y + 10)
+
+# Adjust the size of the home_frame to fit the keys_frame
+home_frame.configure(width=max_x + sidebar['width'] + 100, height=max_y + 150)
+
+# Adjust the size of the main_frame to fit the home_frame
+main_frame.configure(width=max_x + sidebar['width'] + 100, height=max_y + 150)
+
+# Adjust the size of the window to fit the main_frame
+root.geometry(f"{max_x + sidebar['width'] + 100}x{max_y + 150}")
+
+# Center the keys_frame within the home_frame
+keys_frame.place(relx=0.5, rely=0.5, anchor='center')
 
 # Lock the window size
 root.resizable(False, False)
