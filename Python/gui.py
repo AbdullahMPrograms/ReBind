@@ -44,7 +44,19 @@ def print_window_size():
     print(f"Keys frame size: {keys_frame.winfo_width()}x{keys_frame.winfo_height()}")
     print(f"Sidebar size: {sidebar.winfo_width()}x{sidebar.winfo_height()}")
     print(f"Version frame placement: x={version_frame.winfo_x()}, y={version_frame.winfo_y()}")
+    
+# Define a StringVar to track the state of the switch
+switch_state = ctk.StringVar(value="off")
 
+# Define the mode_switch function before creating the CTkSwitch
+def mode_switch():
+    modification_frame.update_idletasks()
+    if switch_state.get() == "on":
+        modification_frame.configure(bg_color="transparent")  # Replace "color1" with the color you want
+    if switch_state.get() == "off":
+        modification_frame.configure(fg_color="transparent")  # Replace "color2" with the color you want
+    print("switch toggled, current value:", switch_state.get())
+    
 # Create a variable to keep track of whether the sidebar is expanded or not
 sidebar_expanded = False
 
@@ -98,9 +110,25 @@ print_size_button.place(x=0, y=410)  # Adjust the y coordinate
 home_frame = ctk.CTkFrame(main_frame)
 home_frame.pack(side='top', fill='both', expand=True)
 
-# Create a frame for the keys inside the home frame
+# Create a frame at the top of the home_frame to hold the switch and label
+modification_frame = ctk.CTkFrame(home_frame, fg_color="transparent")
+modification_frame.pack(side='top', fill='x')
+
+# Create a spacer Label with a height of 40 pixels
+spacer = ctk.CTkLabel(modification_frame, height=20, text = "")
+spacer.pack()
+
+# Create a label underneath the switch and pack it to the right of the modification_frame
+switch_label = ctk.CTkLabel(modification_frame, text="Advanced")
+switch_label.pack(side='right', padx=20)
+
+# Now create the CTkSwitch
+switch = ctk.CTkSwitch(modification_frame, text="", variable=switch_state, onvalue="on", offvalue="off", command=mode_switch)
+switch.pack(side='right', padx=20)
+
+# Create a frame for the keys inside the home_frame
 keys_frame = ctk.CTkFrame(home_frame, bg_color="transparent")
-keys_frame.pack(side='left', fill='both', expand=True)
+keys_frame.pack(side='top', fill='both', expand=True)
 
 # VERSION FRAME
 # Create a version frame inside the main frame with a specific height
