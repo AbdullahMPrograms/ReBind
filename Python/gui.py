@@ -39,10 +39,11 @@ def button_event(button_name):
 # Create a function to print the current window size
 def print_window_size():
     print(f"Current window size: {root.winfo_width()}x{root.winfo_height()}")
-    print(f"keys_frame height: {keys_frame.winfo_height()}")
-    print(f"sidebarframe height: {sidebar.winfo_height()}")
     print(f"Main frame size: {main_frame.winfo_width()}x{main_frame.winfo_height()}")
-    print(f"settings button placement: {(sidebar.winfo_height() - 50)}")
+    print(f"Home frame size: {home_frame.winfo_width()}x{home_frame.winfo_height()}")
+    print(f"Keys frame size: {keys_frame.winfo_width()}x{keys_frame.winfo_height()}")
+    print(f"Sidebar size: {sidebar.winfo_width()}x{sidebar.winfo_height()}")
+    print(f"Version frame placement: x={version_frame.winfo_x()}, y={version_frame.winfo_y()}")
 
 # Create a variable to keep track of whether the sidebar is expanded or not
 sidebar_expanded = False
@@ -60,14 +61,16 @@ def toggle_sidebar():
         home_button.configure(compound="left")  # Show the text to the left of the image
         sidebar_expanded = True
 
+# ROOT Frame
 # Create a main frame
-main_frame = ctk.CTkFrame(root, width=130, height=650)  # Increase the height to 650
+main_frame = ctk.CTkFrame(root)
 main_frame.pack(side='left', fill='both', expand=True)
 
 # Create a sidebar inside the main frame
-sidebar = ctk.CTkFrame(main_frame, width=70, height=500, fg_color="transparent")
+sidebar = ctk.CTkFrame(main_frame, fg_color="transparent")
 sidebar.pack(side='left', fill='y')
 
+# SIDEBAR BUTTONS
 # Create a hamburger menu inside the sidebar
 hamburger_menu = ctk.CTkButton(sidebar, image=menu_image, text = "", width=70, height=50, fg_color = "transparent", command=toggle_sidebar)
 hamburger_menu.place(x=0, y=0)
@@ -90,21 +93,23 @@ save_button.place(x=0, y=200)
 print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
 print_size_button.place(x=0, y=410)  # Adjust the y coordinate
 
-# Create a Settings button and place it at the bottom of the window
-settings_button = ctk.CTkButton(sidebar, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Settings'))
-# Place the settings button at the bottom of the window
-if current_layout == 'sixty':
-    settings_button.place(x=0, y=(sidebar.winfo_height() - 100))  # Adjust the y coordinate
-else:
-    settings_button.place(x=0, y=460)  # Adjust the y coordinate
-
-# Create a home frame inside the main frame
-home_frame = ctk.CTkFrame(main_frame, width=1270, height=650)  # Increase the height to 650
-home_frame.pack(side='left', fill='both', expand=True)
+# HOME FRAME
+# Create a home frame inside the main frame with a specific height
+home_frame = ctk.CTkFrame(main_frame)
+home_frame.pack(side='top', fill='both', expand=True)
 
 # Create a frame for the keys inside the home frame
-keys_frame = ctk.CTkFrame(home_frame, width=1270, height=650, bg_color="transparent")  # Increase the height to 650
+keys_frame = ctk.CTkFrame(home_frame, bg_color="transparent")
 keys_frame.pack(side='left', fill='both', expand=True)
+
+# VERSION FRAME
+# Create a version frame inside the main frame with a specific height
+version_frame = ctk.CTkFrame(main_frame, height=20, fg_color="transparent")
+version_frame.pack(side='bottom', fill='x')
+
+# Create a label with a text message on the far right of the version frame
+version_label = ctk.CTkLabel(version_frame, text="v0.0.1     ", anchor='e')
+version_label.pack(side='right')
 
 # Read the keys from the 'Keys.ini' file
 with open('Python/Layouts/Keys.ini', 'r') as file:
@@ -128,13 +133,25 @@ for key in keys:
 keys_frame.configure(width=max_x + 10, height=max_y + 10)
 
 # Adjust the size of the home_frame to fit the keys_frame
-home_frame.configure(width=max_x + sidebar['width'] + 100, height=max_y + 150)
+home_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y + 130)
 
 # Adjust the size of the main_frame to fit the home_frame
-main_frame.configure(width=max_x + sidebar['width'] + 100, height=max_y + 150)
+main_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y + 170)
+
+# HAS TO BE HERE CAUSE OF THE MAIN FRAME HEIGHT THING
+# Create a Settings button and place it at the bottom of the window
+settings_button = ctk.CTkButton(sidebar, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Settings'))
+sidebar.configure(width=70, height=main_frame['height'])
+# Place the settings button at the bottom of the window
+if current_layout == 'sixty':
+    settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
+else:
+    settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
+
+print_size_button.place(x=0, y=250)  # Adjust the y coordinate
 
 # Adjust the size of the window to fit the main_frame
-root.geometry(f"{max_x + sidebar['width'] + 100}x{max_y + 150}")
+root.geometry(f"{max_x + sidebar['width'] + 100}x{sidebar['height']}")
 
 # Center the keys_frame within the home_frame
 keys_frame.place(relx=0.5, rely=0.5, anchor='center')
