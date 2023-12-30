@@ -110,7 +110,7 @@ modification_frame.pack(side='top', expand=False)  # Pack to the left of the par
 
 # Create labels and dropdown menus in the modification frame
 program_label = ctk.CTkLabel(modification_frame, text="Program Name:")
-program_label.pack(side='left', padx=(10, 10))  # Reduce padding to 10 pixels
+program_label.pack(side='left', padx=(0, 10))  # Reduce padding to 10 pixels
 program_dropdown = ctk.CTkComboBox(modification_frame, values=["Option 1", "Option 2", "Option 3"])
 program_dropdown.pack(side='left', pady=5)  # Add 50 pixels of padding to the left
 
@@ -124,19 +124,6 @@ layer_label.pack(side='left', padx=(50, 10))  # Reduce padding to 10 pixels
 layer_segbutton = ctk.CTkSegmentedButton(modification_frame, values=["0","1", "2", "3"])
 layer_segbutton.set("0")
 layer_segbutton.pack(side='left', pady=5) 
-
-# SWITCH FRAME
-# Create a new frame for the switch button
-#switch_frame = ctk.CTkFrame(home_frame, width=200, height=100, bg_color = "transparent")
-#switch_frame.place(relx=1.0, y=70, anchor='se')
-
-# Create a CTkSwitch in the modification_frame without text
-#switch = ctk.CTkSwitch(modification_frame, variable=switch_state, text="")
-#switch.pack(side='right')  # Pack to the right of the switch_label
-
-# Create a label in the home_frame
-#switch_label = ctk.CTkLabel(home_frame, text="Advanced", bg_color="transparent")
-#switch_label.place(relx=0.93, rely=0.07, anchor='n')  # Place just below the top right corner of the home_frame
 
 # Create a frame for the keys inside the home_frame
 keys_frame = ctk.CTkFrame(home_frame, bg_color="transparent")
