@@ -41,21 +41,14 @@ def print_window_size():
     print(f"Current window size: {root.winfo_width()}x{root.winfo_height()}")
     print(f"Main frame size: {main_frame.winfo_width()}x{main_frame.winfo_height()}")
     print(f"Home frame size: {home_frame.winfo_width()}x{home_frame.winfo_height()}")
+    print(f"Home frame width: {home_frame['width']}")
     print(f"Keys frame size: {keys_frame.winfo_width()}x{keys_frame.winfo_height()}")
     print(f"Sidebar size: {sidebar.winfo_width()}x{sidebar.winfo_height()}")
     print(f"Version frame placement: x={version_frame.winfo_x()}, y={version_frame.winfo_y()}")
-    
+    print(f"modification frame placement: x={modification_frame.winfo_width()}")
+
 # Define a StringVar to track the state of the switch
 switch_state = ctk.StringVar(value="off")
-
-# Define the mode_switch function before creating the CTkSwitch
-def mode_switch():
-    modification_frame.update_idletasks()
-    if switch_state.get() == "on":
-        modification_frame.configure(bg_color="transparent")  # Replace "color1" with the color you want
-    if switch_state.get() == "off":
-        modification_frame.configure(fg_color="transparent")  # Replace "color2" with the color you want
-    print("switch toggled, current value:", switch_state.get())
     
 # Create a variable to keep track of whether the sidebar is expanded or not
 sidebar_expanded = False
@@ -102,29 +95,48 @@ save_button = ctk.CTkButton(sidebar, image=save_image, text = "", width=70, heig
 save_button.place(x=0, y=200)
 
 # Create a Print Size button and place it above the Settings button
-print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
-print_size_button.place(x=0, y=410)  # Adjust the y coordinate
+#print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
+#print_size_button.place(x=0, y=410)  # Adjust the y coordinate
 
 # HOME FRAME
 # Create a home frame inside the main frame with a specific height
 home_frame = ctk.CTkFrame(main_frame)
 home_frame.pack(side='top', fill='both', expand=True)
 
-# Create a frame at the top of the home_frame to hold the switch and label
+# MODIFICATION FRAME
+# Create a frame at the top of the parent_frame to hold the labels and dropdown menus
 modification_frame = ctk.CTkFrame(home_frame, fg_color="transparent")
-modification_frame.pack(side='top', fill='x')
+modification_frame.pack(side='top', expand=False)  # Pack to the left of the parent_frame
 
-# Create a spacer Label with a height of 40 pixels
-spacer = ctk.CTkLabel(modification_frame, height=20, text = "")
-spacer.pack()
+# Create labels and dropdown menus in the modification frame
+program_label = ctk.CTkLabel(modification_frame, text="Program Name:")
+program_label.pack(side='left', padx=(10, 10))  # Reduce padding to 10 pixels
+program_dropdown = ctk.CTkComboBox(modification_frame, values=["Option 1", "Option 2", "Option 3"])
+program_dropdown.pack(side='left', pady=5)  # Add 50 pixels of padding to the left
 
-# Create a label underneath the switch and pack it to the right of the modification_frame
-switch_label = ctk.CTkLabel(modification_frame, text="Advanced")
-switch_label.pack(side='right', padx=20)
+modifier_label = ctk.CTkLabel(modification_frame, text="Modifier Key:")
+modifier_label.pack(side='left', padx=(50, 10))  # Reduce padding to 10 pixels
+modifier_dropdown = ctk.CTkComboBox(modification_frame, values=["Option 1", "Option 2", "Option 3"])
+modifier_dropdown.pack(side='left', pady=5)  # Add 50 pixels of padding to the right
 
-# Now create the CTkSwitch
-switch = ctk.CTkSwitch(modification_frame, text="", variable=switch_state, onvalue="on", offvalue="off", command=mode_switch)
-switch.pack(side='right', padx=20)
+layer_label = ctk.CTkLabel(modification_frame, text="Layer:")
+layer_label.pack(side='left', padx=(50, 10))  # Reduce padding to 10 pixels
+layer_segbutton = ctk.CTkSegmentedButton(modification_frame, values=["0","1", "2", "3"])
+layer_segbutton.set("0")
+layer_segbutton.pack(side='left', pady=5) 
+
+# SWITCH FRAME
+# Create a new frame for the switch button
+#switch_frame = ctk.CTkFrame(home_frame, width=200, height=100, bg_color = "transparent")
+#switch_frame.place(relx=1.0, y=70, anchor='se')
+
+# Create a CTkSwitch in the modification_frame without text
+#switch = ctk.CTkSwitch(modification_frame, variable=switch_state, text="")
+#switch.pack(side='right')  # Pack to the right of the switch_label
+
+# Create a label in the home_frame
+#switch_label = ctk.CTkLabel(home_frame, text="Advanced", bg_color="transparent")
+#switch_label.place(relx=0.93, rely=0.07, anchor='n')  # Place just below the top right corner of the home_frame
 
 # Create a frame for the keys inside the home_frame
 keys_frame = ctk.CTkFrame(home_frame, bg_color="transparent")
@@ -161,10 +173,10 @@ for key in keys:
 keys_frame.configure(width=max_x + 10, height=max_y + 10)
 
 # Adjust the size of the home_frame to fit the keys_frame
-home_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y + 130)
+home_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y + 170)
 
 # Adjust the size of the main_frame to fit the home_frame
-main_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y + 170)
+main_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y + 210)
 
 # HAS TO BE HERE CAUSE OF THE MAIN FRAME HEIGHT THING
 # Create a Settings button and place it at the bottom of the window
@@ -176,7 +188,7 @@ if current_layout == 'sixty':
 else:
     settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
 
-print_size_button.place(x=0, y=250)  # Adjust the y coordinate
+#print_size_button.place(x=0, y=250)  # Adjust the y coordinate
 
 # Adjust the size of the window to fit the main_frame
 root.geometry(f"{max_x + sidebar['width'] + 100}x{sidebar['height']}")
