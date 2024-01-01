@@ -66,12 +66,12 @@ def toggle_sidebar():
         sidebar_expanded = False
     else:
         sidebar.configure(width=200)  # Change this to the expanded width you want
-        menu_label.configure(text="Hide", width=130)
-        home_label.configure(text="Home", width=130)
-        macros_label.configure(text="Macros", width=130)
-        plugin_label.configure(text="Plugins", width=130)
-        save_label.configure(text="Profiles", width=130)
-        settings_label.configure(text="Settings", width=130)  
+        menu_label.configure(text="Hide")
+        home_label.configure(text="Home")
+        macros_label.configure(text="Macros")
+        plugin_label.configure(text="Plugins")
+        save_label.configure(text="Profiles")
+        settings_label.configure(text="Settings")  
         sidebar_expanded = True
 
 # ROOT Frame
@@ -81,6 +81,7 @@ main_frame.pack(side='left', fill='both', expand=True)
 
 # Create a sidebar inside the main frame
 sidebar = ctk.CTkFrame(main_frame, fg_color="transparent")
+sidebar.pack_propagate(0)  # Don't allow the widgets inside to dictate the frame's width
 sidebar.pack(side='left', fill='y')
 
 # SIDEBAR BUTTONS
@@ -97,7 +98,7 @@ menu_button.pack(side='left')
 
 # Create a label for the home button
 menu_label = ctk.CTkLabel(menu_frame, text="", fg_color="transparent")
-menu_label.pack(side='right', padx=50)
+menu_label.pack(side='left')
 
 # Create a frame for the home button
 home_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
@@ -109,7 +110,7 @@ home_button.pack(side='left')
 
 # Create a label for the home button
 home_label = ctk.CTkLabel(home_frame, text="", fg_color="transparent")
-home_label.pack(side='right', padx=50)
+home_label.pack(side='left')
 
 # Create a frame for the macros button
 macros_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
@@ -121,7 +122,7 @@ macros_button.pack(side='left')
 
 # Create a label for the macros button
 macros_label = ctk.CTkLabel(macros_frame, text="", fg_color="transparent")
-macros_label.pack(side='right', padx=50)
+macros_label.pack(side='left')
 
 # Create a frame for the plugin button
 plugin_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
@@ -133,7 +134,7 @@ plugin_button.pack(side='left')
 
 # Create a label for the plugin button
 plugin_label = ctk.CTkLabel(plugin_frame, text="", fg_color="transparent")
-plugin_label.pack(side='right', padx=50)
+plugin_label.pack(side='left')
 
 # Create a frame for the save button
 save_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
@@ -145,7 +146,7 @@ save_button.pack(side='left')
 
 # Create a label for the save button
 save_label = ctk.CTkLabel(save_frame, text="", fg_color="transparent")
-save_label.pack(side='right', padx=50)
+save_label.pack(side='left')
 
 # Create a frame for the settings button
 settings_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
@@ -156,24 +157,12 @@ settings_button = ctk.CTkButton(settings_frame, image=settings_image, text = "",
 settings_button.pack(side='left')
 
 # Create a label for the settings button
-settings_label = ctk.CTkLabel(settings_frame, text="", fg_color="transparent")
-settings_label.pack(side='right', padx=50)
+settings_label = ctk.CTkLabel(settings_frame, text="1", bg_color="transparent")
+settings_label.pack(side='left')
 
 # Create a Print Size button and place it above the Settings button
 #print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
 #print_size_button.pack(side='top')  # Adjust the y coordinate
-
-# Create a frame for the settings button
-print_size_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
-print_size_frame.pack(side='bottom', fill='x')
-
-# Create the Settings button inside the settings frame
-print_size_button = ctk.CTkButton(print_size_frame, text = "Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
-print_size_button.pack(side='left')
-
-# Create a label for the settings button
-print_size_label = ctk.CTkLabel(print_size_frame, text="", fg_color="transparent")
-print_size_label.pack(side='right', padx=50)
 
 # HOME FRAME
 # Create a home frame inside the main frame with a specific height
