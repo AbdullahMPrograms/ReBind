@@ -2,8 +2,6 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 import ast
 
-# might need to make the keysframe the total outside size of the keys then place that frame in another frame and center it, rn the spacing is so dumb
-
 # Create a new CustomTkinter window
 root = ctk.CTk()
 root.title("ReBind")
@@ -54,16 +52,26 @@ switch_state = ctk.StringVar(value="off")
 sidebar_expanded = False
 
 # Create a function to toggle the sidebar
-# maybe make keys_frame x = -50 so that keys frame wont move (dumb solution ik)
+# Update the toggle_sidebar function to hide/show the labels
 def toggle_sidebar():
     global sidebar_expanded
     if sidebar_expanded:
         sidebar.configure(width=70)
-        home_button.configure(compound="none")  # Hide the text
+        menu_label.configure(text="", width=0)
+        home_label.configure(text="", width=0)
+        macros_label.configure(text="", width=0)
+        plugin_label.configure(text="", width=0)
+        save_label.configure(text="", width=0)
+        settings_label.configure(text="", width=0)
         sidebar_expanded = False
     else:
         sidebar.configure(width=200)  # Change this to the expanded width you want
-        home_button.configure(compound="left")  # Show the text to the left of the image
+        menu_label.configure(text="Hide", width=130)
+        home_label.configure(text="Home", width=130)
+        macros_label.configure(text="Macros", width=130)
+        plugin_label.configure(text="Plugins", width=130)
+        save_label.configure(text="Profiles", width=130)
+        settings_label.configure(text="Settings", width=130)  
         sidebar_expanded = True
 
 # ROOT Frame
@@ -77,26 +85,95 @@ sidebar.pack(side='left', fill='y')
 
 # SIDEBAR BUTTONS
 # Create a hamburger menu inside the sidebar
-hamburger_menu = ctk.CTkButton(sidebar, image=menu_image, text = "", width=70, height=50, fg_color = "transparent", command=toggle_sidebar)
-hamburger_menu.place(x=0, y=0)
+#hamburger_menu = ctk.CTkButton(sidebar, image=menu_image, text = "", width=70, height=50, fg_color = "transparent", command=toggle_sidebar)
+#hamburger_menu.pack(side='top', fill='x')
 
-# Create the Home, Macros, Save, and Settings buttons
-home_button = ctk.CTkButton(sidebar, image=home_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Home'))
-home_button.place(x=0, y=50)
+menu_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
+menu_frame.pack(side='top', fill='x')
 
-macros_button = ctk.CTkButton(sidebar, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Macros'))
-macros_button.place(x=0, y=100)
+# Create the Home button inside the home frame
+menu_button = ctk.CTkButton(menu_frame, image=menu_image, text = "", width=70, height=50, fg_color = "transparent", command=toggle_sidebar)
+menu_button.pack(side='left')
 
-plugin_button = ctk.CTkButton(sidebar, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Plugins'))
-plugin_button.place(x=0, y=150)
+# Create a label for the home button
+menu_label = ctk.CTkLabel(menu_frame, text="", fg_color="transparent")
+menu_label.pack(side='right', padx=50)
 
-#Profiles
-save_button = ctk.CTkButton(sidebar, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Profiles'))
-save_button.place(x=0, y=200)
+# Create a frame for the home button
+home_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
+home_frame.pack(side='top', fill='x')
+
+# Create the Home button inside the home frame
+home_button = ctk.CTkButton(home_frame, image=home_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Home'))
+home_button.pack(side='left')
+
+# Create a label for the home button
+home_label = ctk.CTkLabel(home_frame, text="", fg_color="transparent")
+home_label.pack(side='right', padx=50)
+
+# Create a frame for the macros button
+macros_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
+macros_frame.pack(side='top', fill='x')
+
+# Create the Macros button inside the macros frame
+macros_button = ctk.CTkButton(macros_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Macros'))
+macros_button.pack(side='left')
+
+# Create a label for the macros button
+macros_label = ctk.CTkLabel(macros_frame, text="", fg_color="transparent")
+macros_label.pack(side='right', padx=50)
+
+# Create a frame for the plugin button
+plugin_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
+plugin_frame.pack(side='top', fill='x')
+
+# Create the Plugin button inside the plugin frame
+plugin_button = ctk.CTkButton(plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Plugins'))
+plugin_button.pack(side='left')
+
+# Create a label for the plugin button
+plugin_label = ctk.CTkLabel(plugin_frame, text="", fg_color="transparent")
+plugin_label.pack(side='right', padx=50)
+
+# Create a frame for the save button
+save_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
+save_frame.pack(side='top', fill='x')
+
+# Create the Save button inside the save frame
+save_button = ctk.CTkButton(save_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Profiles'))
+save_button.pack(side='left')
+
+# Create a label for the save button
+save_label = ctk.CTkLabel(save_frame, text="", fg_color="transparent")
+save_label.pack(side='right', padx=50)
+
+# Create a frame for the settings button
+settings_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
+settings_frame.pack(side='bottom', fill='x')
+
+# Create the Settings button inside the settings frame
+settings_button = ctk.CTkButton(settings_frame, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Settings'))
+settings_button.pack(side='left')
+
+# Create a label for the settings button
+settings_label = ctk.CTkLabel(settings_frame, text="", fg_color="transparent")
+settings_label.pack(side='right', padx=50)
 
 # Create a Print Size button and place it above the Settings button
 #print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
-#print_size_button.place(x=0, y=410)  # Adjust the y coordinate
+#print_size_button.pack(side='top')  # Adjust the y coordinate
+
+# Create a frame for the settings button
+print_size_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
+print_size_frame.pack(side='bottom', fill='x')
+
+# Create the Settings button inside the settings frame
+print_size_button = ctk.CTkButton(print_size_frame, text = "Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
+print_size_button.pack(side='left')
+
+# Create a label for the settings button
+print_size_label = ctk.CTkLabel(print_size_frame, text="", fg_color="transparent")
+print_size_label.pack(side='right', padx=50)
 
 # HOME FRAME
 # Create a home frame inside the main frame with a specific height
@@ -167,13 +244,13 @@ main_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y 
 
 # HAS TO BE HERE CAUSE OF THE MAIN FRAME HEIGHT THING
 # Create a Settings button and place it at the bottom of the window
-settings_button = ctk.CTkButton(sidebar, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: button_event('Settings'))
+
 sidebar.configure(width=70, height=main_frame['height'])
 # Place the settings button at the bottom of the window
-if current_layout == 'sixty':
-    settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
-else:
-    settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
+#if current_layout == 'sixty':
+#    settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
+#else:
+#    settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
 
 #print_size_button.place(x=0, y=250)  # Adjust the y coordinate
 
