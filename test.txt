@@ -1,1 +1,4 @@
 when toggling the sidebar maybe make like a for x=0 to 200 pixels sidebarwidth = sidebarwidth + 1 and then when it reaches 200 it stops and then when you toggle it again it does the opposite, and same for the homeframe
+
+Remember the per key popout which will control what keys are replaced with what
+
