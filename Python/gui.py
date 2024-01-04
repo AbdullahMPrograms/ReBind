@@ -2,35 +2,13 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 import ast
 
+#--------------ROOT FRAME---------------
 # Create a new CustomTkinter window
 root = ctk.CTk()
 root.title("ReBind")
+#------------ROOT FRAME END-------------
 
-menu_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
-home_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_home.png").resize((16,16), Image.Resampling.LANCZOS))
-macros_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_macros.png").resize((16,16), Image.Resampling.LANCZOS))
-save_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_save.png").resize((16,16), Image.Resampling.LANCZOS))
-plugins_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_plugins.png").resize((16,16), Image.Resampling.LANCZOS))
-settings_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_settings.png").resize((18,18), Image.Resampling.LANCZOS))
-
-# Set the layout variables
-isSixty = False
-isTenKeyless = True
-isFullSized = False
-
-# Determine the current layout
-if isSixty:
-    current_layout = "sixty"
-elif isTenKeyless:
-    current_layout = "tenkeyless"
-elif isFullSized:
-    current_layout = "full"
-else:
-    current_layout = None
-
-max_x = 0
-max_y = 0
-
+#--------------DEBUG FUNCTIONS---------------
 def button_event(button_name):
     print(f"{button_name} clicked")
 
@@ -44,10 +22,20 @@ def print_window_size():
     print(f"Sidebar size: {sidebar.winfo_width()}x{sidebar.winfo_height()}")
     print(f"Version frame placement: x={version_frame.winfo_x()}, y={version_frame.winfo_y()}")
     print(f"modification frame placement: x={modification_frame.winfo_width()}")
+#------------DEBUG FUNCTIONS END-------------
+  
+#--------------MAIN FRAME---------------
+# Create a main frame
+main_frame = ctk.CTkFrame(root)
+main_frame.pack(side='left', fill='both', expand=True)
+#------------MAIN FRAME END-------------
 
-# Define a StringVar to track the state of the switch
-switch_state = ctk.StringVar(value="off")
-    
+#--------------SIDEBAR FRAME---------------
+# Create a sidebar inside the main frame
+sidebar = ctk.CTkFrame(main_frame, fg_color="transparent")
+sidebar.pack_propagate(0)  # Don't allow the widgets inside to dictate the frame's width
+sidebar.pack(side='left', fill='y')
+
 # Create a variable to keep track of whether the sidebar is expanded or not
 sidebar_expanded = False
 
@@ -73,21 +61,15 @@ def toggle_sidebar():
         save_label.configure(text="Profiles")
         settings_label.configure(text="Settings")  
         sidebar_expanded = True
+#-----SIDEBAR FRAME END------
 
-# ROOT Frame
-# Create a main frame
-main_frame = ctk.CTkFrame(root)
-main_frame.pack(side='left', fill='both', expand=True)
-
-# Create a sidebar inside the main frame
-sidebar = ctk.CTkFrame(main_frame, fg_color="transparent")
-sidebar.pack_propagate(0)  # Don't allow the widgets inside to dictate the frame's width
-sidebar.pack(side='left', fill='y')
-
-# SIDEBAR BUTTONS
-# Create a hamburger menu inside the sidebar
-#hamburger_menu = ctk.CTkButton(sidebar, image=menu_image, text = "", width=70, height=50, fg_color = "transparent", command=toggle_sidebar)
-#hamburger_menu.pack(side='top', fill='x')
+#--------------SIDEBAR BUTTONS---------------
+menu_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
+home_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_home.png").resize((16,16), Image.Resampling.LANCZOS))
+macros_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_macros.png").resize((16,16), Image.Resampling.LANCZOS))
+save_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_save.png").resize((16,16), Image.Resampling.LANCZOS))
+plugins_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_plugins.png").resize((16,16), Image.Resampling.LANCZOS))
+settings_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_settings.png").resize((18,18), Image.Resampling.LANCZOS))
 
 menu_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
 menu_frame.pack(side='top', fill='x')
@@ -159,17 +141,15 @@ settings_button.pack(side='left')
 # Create a label for the settings button
 settings_label = ctk.CTkLabel(settings_frame, text="1", bg_color="transparent")
 settings_label.pack(side='left')
+#-----SIDEBAR BUTTONS END------
 
-# Create a Print Size button and place it above the Settings button
-#print_size_button = ctk.CTkButton(sidebar, text="Size", width=70, height=50, fg_color = "transparent", command=print_window_size)
-#print_size_button.pack(side='top')  # Adjust the y coordinate
-
-# HOME FRAME
+#--------------HOME FRAME---------------
 # Create a home frame inside the main frame with a specific height
 home_frame = ctk.CTkFrame(main_frame)
 home_frame.pack(side='top', fill='both', expand=True)
+#-----HOME FRAME END------
 
-# MODIFICATION FRAME
+#--------------MODIFICATION FRAME---------------
 # Create a frame at the top of the parent_frame to hold the labels and dropdown menus
 modification_frame = ctk.CTkFrame(home_frame, fg_color="transparent")
 modification_frame.pack(side='top', expand=False)  # Pack to the left of the parent_frame
@@ -190,19 +170,30 @@ layer_label.pack(side='left', padx=(50, 10))  # Reduce padding to 10 pixels
 layer_segbutton = ctk.CTkSegmentedButton(modification_frame, values=["0","1", "2", "3"])
 layer_segbutton.set("0")
 layer_segbutton.pack(side='left', pady=5) 
+#------------MODIFICATION FRAME END-------------
+
+#--------------KEYS FRAME---------------
+max_x = 0
+max_y = 0
+
+# Set the layout variables
+isSixty = False
+isTenKeyless = True
+isFullSized = False
+
+# Determine the current layout
+if isSixty:
+    current_layout = "sixty"
+elif isTenKeyless:
+    current_layout = "tenkeyless"
+elif isFullSized:
+    current_layout = "full"
+else:
+    current_layout = None
 
 # Create a frame for the keys inside the home_frame
 keys_frame = ctk.CTkFrame(home_frame, bg_color="transparent")
 keys_frame.pack(side='top', fill='both', expand=True)
-
-# VERSION FRAME
-# Create a version frame inside the main frame with a specific height
-version_frame = ctk.CTkFrame(main_frame, height=20, fg_color="transparent")
-version_frame.pack(side='bottom', fill='x')
-
-# Create a label with a text message on the far right of the version frame
-version_label = ctk.CTkLabel(version_frame, text="v0.0.1     ", anchor='e')
-version_label.pack(side='right')
 
 # Read the keys from the 'Keys.ini' file
 with open('Python/Layouts/Keys.ini', 'r') as file:
@@ -217,11 +208,22 @@ for key in keys:
             y -= 60
         button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: button_event(text))
         button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
-        #button.place(x=x+50, y=y+70)  # Add 50 pixels of space on the left and on top
         button.place(x=x, y=y)
         max_x = max(max_x, x + width)
         max_y = max(max_y, y + height)
+#------------KEYS FRAME END-------------
 
+#--------------VERSION FRAME---------------
+# Create a version frame inside the main frame with a specific height
+version_frame = ctk.CTkFrame(main_frame, height=20, fg_color="transparent")
+version_frame.pack(side='bottom', fill='x')
+
+# Create a label with a text message on the far right of the version frame
+version_label = ctk.CTkLabel(version_frame, text="v0.0.1", padx = (15), anchor='e')
+version_label.pack(side='right')
+#------------VERSION FRAME END-------------
+
+#------------FINAL FRAME PLACEMENTS-------------
 # Adjust the size of the keys_frame to fit the keys
 keys_frame.configure(width=max_x + 10, height=max_y + 10)
 
@@ -231,23 +233,13 @@ home_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y 
 # Adjust the size of the main_frame to fit the home_frame
 main_frame.configure(width=sidebar['width'] + home_frame['width'], height=max_y + 210)
 
-# HAS TO BE HERE CAUSE OF THE MAIN FRAME HEIGHT THING
-# Create a Settings button and place it at the bottom of the window
-
 sidebar.configure(width=70, height=main_frame['height'])
-# Place the settings button at the bottom of the window
-#if current_layout == 'sixty':
-#    settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
-#else:
-#    settings_button.place(x=0, y=sidebar['height'] - 50)  # Adjust the y coordinate
 
-#print_size_button.place(x=0, y=250)  # Adjust the y coordinate
-
-# Adjust the size of the window to fit the main_frame
 root.geometry(f"{max_x + sidebar['width'] + 100}x{sidebar['height']}")
 
 # Center the keys_frame within the home_frame
 keys_frame.place(relx=0.5, rely=0.5, anchor='center')
+#------------FINAL FRAME PLACEMENTS END-------------
 
 # Lock the window size
 root.resizable(False, False)
