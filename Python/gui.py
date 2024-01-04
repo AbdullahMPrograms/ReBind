@@ -10,9 +10,12 @@ class MyApp:
         self.main_frame = self.create_main_frame()
         self.sidebar_frame = self.create_sidebar_frame()
         self.home_frame = self.create_home_frame()
+        self.macro_frame = self.create_macro_frame()
+        self.plugin_frame = self.create_plugin_frame()
+        self.profile_frame = self.create_profile_frame()
+        self.settings_frame = self.create_settings_frame()
         self.modification_frame = self.create_modification_frame()
         self.keys_frame = self.create_keys_frame()
-        self.settings_frame = self.create_settings_frame()
         self.version_frame = self.create_version_frame()
         self.create_sidebar_buttons()
         self.switch_frame('home')
@@ -32,13 +35,22 @@ class MyApp:
 
     def switch_frame(self, frame_name):
         self.home_frame.pack_forget()
+        self.macro_frame.pack_forget()
+        self.plugin_frame.pack_forget()
+        self.profile_frame.pack_forget()
         self.settings_frame.pack_forget()
 
         if frame_name == 'home':
             self.home_frame.pack(side='top', fill='both', expand=True)
+        elif frame_name == 'macro':
+            self.macro_frame.pack(side='top', fill='both', expand=True)
+        elif frame_name == 'plugin':
+            self.plugin_frame.pack(side='top', fill='both', expand=True)
+        elif frame_name == 'profile':
+            self.profile_frame.pack(side='top', fill='both', expand=True)   
         elif frame_name == 'settings':
             self.settings_frame.pack(side='top', fill='both', expand=True)
-
+        
     def create_main_frame(self):
         main_frame = ctk.CTkFrame(self.root)
         main_frame.pack(side='left', fill='both', expand=True)
@@ -58,9 +70,30 @@ class MyApp:
     def create_settings_frame(self):
         settings_frame = ctk.CTkFrame(self.main_frame)
         settings_frame.pack(side='top', fill='both', expand=True)
-        program_label = ctk.CTkLabel(settings_frame, text="SETTINGS PAGE")
-        program_label.pack(side='top')  # Reduce padding to 10 pixels
+        settings_label = ctk.CTkLabel(settings_frame, text="SETTINGS PAGE")
+        settings_label.pack(side='top')
         return settings_frame
+    
+    def create_macro_frame(self):
+        macro_frame = ctk.CTkFrame(self.main_frame)
+        macro_frame.pack(side='top', fill='both', expand=True)
+        macro_label = ctk.CTkLabel(macro_frame, text="MACROS PAGE")
+        macro_label.pack(side='top')
+        return macro_frame
+    
+    def create_plugin_frame(self):
+        plugin_frame = ctk.CTkFrame(self.main_frame)
+        plugin_frame.pack(side='top', fill='both', expand=True)
+        plugin_label = ctk.CTkLabel(plugin_frame, text="PLUGIN PAGE")
+        plugin_label.pack(side='top')
+        return plugin_frame
+    
+    def create_profile_frame(self):
+        profile_frame = ctk.CTkFrame(self.main_frame)
+        profile_frame.pack(side='top', fill='both', expand=True)
+        profile_label = ctk.CTkLabel(profile_frame, text="PROFILE/SAVE PAGE")
+        profile_label.pack(side='top')
+        return profile_frame
     
     def toggle_sidebar(self):
         self.SIDEBAR_WIDTH_COLLAPSED = 70
@@ -72,7 +105,7 @@ class MyApp:
             self.home_label.configure(text="", width=0)
             self.macros_label.configure(text="", width=0)
             self.plugin_label.configure(text="", width=0)
-            self.save_label.configure(text="", width=0)
+            self.profile_label.configure(text="", width=0)
             self.settings_label.configure(text="", width=0)
             self.sidebar_expanded = False
         else:
@@ -81,7 +114,7 @@ class MyApp:
             self.home_label.configure(text="Home")
             self.macros_label.configure(text="Macros")
             self.plugin_label.configure(text="Plugins")
-            self.save_label.configure(text="Profiles")
+            self.profile_label.configure(text="Profiles")
             self.settings_label.configure(text="Settings")  
             self.sidebar_expanded = True
 
@@ -179,24 +212,24 @@ class MyApp:
 
         macros_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         macros_frame.pack(side='top', fill='x')
-        self.macros_button = ctk.CTkButton(macros_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.button_event('Macros'))
+        self.macros_button = ctk.CTkButton(macros_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.switch_frame('macro'))
         self.macros_button.pack(side='left')
         self.macros_label = ctk.CTkLabel(macros_frame, text="", fg_color="transparent")
         self.macros_label.pack(side='left')
 
         plugin_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         plugin_frame.pack(side='top', fill='x')
-        self.plugin_button = ctk.CTkButton(plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.button_event('Plugins'))
+        self.plugin_button = ctk.CTkButton(plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.switch_frame('plugin'))
         self.plugin_button.pack(side='left')
         self.plugin_label = ctk.CTkLabel(plugin_frame, text="", fg_color="transparent")
         self.plugin_label.pack(side='left')
 
-        save_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
-        save_frame.pack(side='top', fill='x')
-        self.save_button = ctk.CTkButton(save_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.button_event('Profiles'))
-        self.save_button.pack(side='left')
-        self.save_label = ctk.CTkLabel(save_frame, text="", fg_color="transparent")
-        self.save_label.pack(side='left')
+        profile_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
+        profile_frame.pack(side='top', fill='x')
+        self.profile_button = ctk.CTkButton(profile_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.switch_frame('profile'))
+        self.profile_button.pack(side='left')
+        self.profile_label = ctk.CTkLabel(profile_frame, text="", fg_color="transparent")
+        self.profile_label.pack(side='left')
 
         settings_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         settings_frame.pack(side='bottom', fill='x')
