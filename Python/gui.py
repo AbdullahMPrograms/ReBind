@@ -18,7 +18,7 @@ class MyApp:
         self.keys_frame = self.create_keys_frame()
         self.version_frame = self.create_version_frame()
         self.create_sidebar_buttons()
-        self.switch_frame('home')
+        self.draw_frame('home')
 
     def button_event(self, button_name):
         print(f"{button_name} clicked")
@@ -33,7 +33,7 @@ class MyApp:
         print(f"Version frame placement: x={self.version_frame.winfo_x()}, y={self.version_frame.winfo_y()}")
         print(f"modification frame placement: x={self.modification_frame.winfo_width()}")
 
-    def switch_frame(self, frame_name):
+    def draw_frame(self, frame_name):
         self.home_frame.pack_forget()
         self.macro_frame.pack_forget()
         self.plugin_frame.pack_forget()
@@ -194,6 +194,7 @@ class MyApp:
         macros_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_macros.png").resize((16,16), Image.Resampling.LANCZOS))
         save_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_save.png").resize((16,16), Image.Resampling.LANCZOS))
         plugins_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_plugins.png").resize((16,16), Image.Resampling.LANCZOS))
+        windowsize_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_windowsize.png").resize((18,18), Image.Resampling.LANCZOS))
         settings_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_settings.png").resize((18,18), Image.Resampling.LANCZOS))
 
         menu_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
@@ -205,37 +206,44 @@ class MyApp:
 
         home_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         home_frame.pack(side='top', fill='x')
-        self.home_button = ctk.CTkButton(home_frame, image=home_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.switch_frame('home'))
+        self.home_button = ctk.CTkButton(home_frame, image=home_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.draw_frame('home'))
         self.home_button.pack(side='left')
         self.home_label = ctk.CTkLabel(home_frame, text="", fg_color="transparent")
         self.home_label.pack(side='left')
 
         macros_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         macros_frame.pack(side='top', fill='x')
-        self.macros_button = ctk.CTkButton(macros_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.switch_frame('macro'))
+        self.macros_button = ctk.CTkButton(macros_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.draw_frame('macro'))
         self.macros_button.pack(side='left')
         self.macros_label = ctk.CTkLabel(macros_frame, text="", fg_color="transparent")
         self.macros_label.pack(side='left')
 
         plugin_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         plugin_frame.pack(side='top', fill='x')
-        self.plugin_button = ctk.CTkButton(plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.switch_frame('plugin'))
+        self.plugin_button = ctk.CTkButton(plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.draw_frame('plugin'))
         self.plugin_button.pack(side='left')
         self.plugin_label = ctk.CTkLabel(plugin_frame, text="", fg_color="transparent")
         self.plugin_label.pack(side='left')
 
         profile_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         profile_frame.pack(side='top', fill='x')
-        self.profile_button = ctk.CTkButton(profile_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.switch_frame('profile'))
+        self.profile_button = ctk.CTkButton(profile_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.draw_frame('profile'))
         self.profile_button.pack(side='left')
         self.profile_label = ctk.CTkLabel(profile_frame, text="", fg_color="transparent")
         self.profile_label.pack(side='left')
+        
+        window_size_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
+        window_size_frame.pack(side='top', fill='x')
+        self.window_size_button = ctk.CTkButton(window_size_frame, image=windowsize_image ,text = "", width=70, height=50, fg_color = "transparent", command=self.print_window_size)
+        self.window_size_button.pack(side='left')   
+        self.window_size_label = ctk.CTkLabel(window_size_frame, text="", fg_color="transparent")
+        self.window_size_label.pack(side='left')
 
         settings_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         settings_frame.pack(side='bottom', fill='x')
-        self.settings_button = ctk.CTkButton(settings_frame, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.switch_frame('settings'))
+        self.settings_button = ctk.CTkButton(settings_frame, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", command=lambda: self.draw_frame('settings'))
         self.settings_button.pack(side='left')
-        self.settings_label = ctk.CTkLabel(settings_frame, text="1", bg_color="transparent")
+        self.settings_label = ctk.CTkLabel(settings_frame, text="", bg_color="transparent")
         self.settings_label.pack(side='left')
 
     def run(self):
