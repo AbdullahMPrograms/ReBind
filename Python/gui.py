@@ -26,42 +26,55 @@ class MyApp:
     def draw_replace_key(self, button_name):
         print(f"{button_name} clicked")
         self.replace_key_window = ctk.CTkToplevel(self.root)
-        #self.replace_key_window.resizable(False, False)
         self.replace_key_window.geometry('400x460')
         self.replace_key_window.title(f"Replace Key: {button_name}")
         self.replace_key_window.grab_set()
         self.replace_key_window.attributes('-topmost', True)
 
-        # Get the root window's width, height, and offsets
         root_width = self.root.winfo_width()
         root_height = self.root.winfo_height()
         root_x = self.root.winfo_rootx()
         root_y = self.root.winfo_rooty()
-        # Calculate the position of the replace_key_window
+
         window_width = 400
         window_height = 460
         pos_x = root_x + (root_width - window_width) // 2
         pos_y = root_y + (root_height - window_height) // 2
-        # Set the position of the replace_key_window
+
         self.replace_key_window.geometry(f"+{pos_x}+{pos_y}")
 
         search_frame = ctk.CTkFrame(self.replace_key_window)
         search_frame.pack(side='top', fill='x', padx=40, pady=(40,0))
-        search_bar = ctk.CTkEntry(search_frame, placeholder_text="Search...", height=35)
+
+        keys = self.get_keys()
+        key_names = [key[0] for key in keys]
+
+        search_var = ctk.StringVar()
+        search_bar = ctk.CTkEntry(search_frame, textvariable=search_var, placeholder_text="Search...", height=35)
         search_bar.pack(fill='x')
 
         keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
         keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=20)
-        keys = self.get_keys()
 
-        # Keep track of the currently highlighted button
         self.current_button = None
+        self.key_buttons = []
 
         for key in keys:
             text, x, y, width, height, layouts = key
             key_button = ctk.CTkButton(keys_frame, text=text, height=45, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
             key_button.configure(command=lambda key_button=key_button, text=text: self.highlight_button(key_button, text))
             key_button.pack(side='top', fill='x', padx=0, pady=5)
+            self.key_buttons.append(key_button)
+
+        def update_buttons(*args):
+            search_term = search_var.get().lower()
+            for key_button in self.key_buttons:
+                if search_term in key_button.cget("text").lower():
+                    key_button.pack(side='top', fill='x', padx=0, pady=5)
+                else:
+                    key_button.pack_forget()
+
+        search_var.trace("w", update_buttons)
 
         buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
         buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
@@ -143,16 +156,16 @@ class MyApp:
     def create_version_frame(self):
         version_frame = ctk.CTkFrame(self.main_frame, height=20, fg_color="transparent")
         version_frame.pack(side='bottom', fill='x')
-        version_label = ctk.CTkLabel(version_frame, text="v0.0.1", padx = (15), anchor='e')
+        version_label = ctk.CTkLabel(version_frame, text="v0.0.1", padx=15, anchor='e')
         version_label.pack(side='right')
         return version_frame
     
     def create_sidebar_frame(self):
-        sidebar_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
+        sidebar_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")   
         sidebar_frame.pack_propagate(False)  # Don't allow the widgets inside to dictate the frame's width
         sidebar_frame.pack(side='left', fill='y')
         return sidebar_frame
-    
+
     def create_sidebar_buttons(self):
         menu_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
         home_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_home.png").resize((16,16), Image.Resampling.LANCZOS))
