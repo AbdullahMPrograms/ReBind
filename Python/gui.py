@@ -23,47 +23,46 @@ class MyApp:
         #self.debug_settings_frame = self.create_debug_settings_frame()
         self.draw_frame('home')
 
-    def button_event(self, button_name):
+    def draw_replace_key(self, button_name):
         print(f"{button_name} clicked")
+        self.replace_key_window = ctk.CTkToplevel(self.root)
+        self.replace_key_window.geometry('400x460')
+        self.replace_key_window.title(f"Replace Key: {button_name}")
+        self.replace_key_window.grab_set()
+        self.replace_key_window.attributes('-topmost', True)
 
-        # Create a new window
-        replace_key_window = ctk.CTkToplevel(self.root)
-        #replace_key_window.resizable(False, False) #makes the toplevel window flicker before opening?
-        replace_key_window.geometry('400x450')
-        replace_key_window.title(f"Replace Key: {button_name}")
-        replace_key_window.attributes('-topmost', True)
-
-        # Create a frame for the search bar
-        search_frame = ctk.CTkFrame(replace_key_window)
-        search_frame.pack(side='top', fill='x', padx=40, pady=(40,20))
-
-        # Create the search bar
-        search_bar = ctk.CTkEntry(search_frame)
-        search_bar.configure(placeholder_text="Search...", height=40)
+        search_frame = ctk.CTkFrame(self.replace_key_window)
+        search_frame.pack(side='top', fill='x', padx=40, pady=(40,0))
+        search_bar = ctk.CTkEntry(search_frame, placeholder_text="Search...", height=35)
         search_bar.pack(fill='x')
 
-        # Create a scrollable frame for the keys
-        keys_frame = ctk.CTkScrollableFrame(replace_key_window, fg_color="transparent")
-        keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=(0,20))
+        keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
+        keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=20)
         keys = self.get_keys()
-        
-        # Populate the keys frame with buttons
+
+        # Keep track of the currently highlighted button
+        self.current_button = None
+
         for key in keys:
             text, x, y, width, height, layouts = key
-            key_button = ctk.CTkButton(keys_frame, text=text, height=45, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=lambda text=text: print(f"{text} clicked"))
+            key_button = ctk.CTkButton(keys_frame, text=text, height=45, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
+            key_button.configure(command=lambda key_button=key_button: self.highlight_button(key_button))
             key_button.pack(side='top', fill='x', padx=0, pady=5)
 
-        # Create a frame for the buttons
-        buttons_frame = ctk.CTkFrame(replace_key_window, fg_color="transparent")
-        buttons_frame.pack(side='top', fill='x', pady=(0,5))
-
-        # Create the 'Save' button
-        save_button = ctk.CTkButton(buttons_frame, text='Save')
-        save_button.pack(side='left', padx=5, pady=5)
-
-        # Create the 'Cancel' button
-        cancel_button = ctk.CTkButton(buttons_frame, text='Cancel', command=replace_key_window.destroy)
-        cancel_button.pack(side='right', padx=5, pady=5)
+        buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
+        buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
+        self.save_button = ctk.CTkButton(buttons_frame, width=100, height=35, border_width=2, fg_color="transparent", text_color=("gray10", "#DCE4EE"), text='Save')
+        self.save_button.configure(state='disabled')
+        self.save_button.pack(side='left')
+        cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", text_color=("gray10", "#DCE4EE"), text='Cancel', command=self.replace_key_window.destroy)
+        cancel_button.pack(side='right')
+        
+    def highlight_button(self, key_button):
+        if self.current_button:         # Unhighlight the currently highlighted button
+            self.current_button.configure(fg_color="transparent")
+        key_button.configure(fg_color='#1f6aa5')          # Highlight the new button
+        self.current_button = key_button
+        self.save_button.configure(state='normal', command=self.replace_key_window.destroy)
 
     def print_window_size(self):
         print(f"Current window size: {self.root.winfo_width()}x{self.root.winfo_height()}")
@@ -248,7 +247,7 @@ class MyApp:
             if current_layout in layouts:
                 if current_layout == 'sixty':
                     y -= 60
-                button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: self.button_event(text))
+                button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: self.draw_replace_key(text))
                 button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
                 button.place(x=x, y=y)
                 max_x = max(max_x, x + width)
