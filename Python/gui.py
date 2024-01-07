@@ -46,23 +46,28 @@ class MyApp:
         for key in keys:
             text, x, y, width, height, layouts = key
             key_button = ctk.CTkButton(keys_frame, text=text, height=45, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
-            key_button.configure(command=lambda key_button=key_button: self.highlight_button(key_button))
+            key_button.configure(command=lambda key_button=key_button, text=text: self.highlight_button(key_button, text))
             key_button.pack(side='top', fill='x', padx=0, pady=5)
 
         buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
         buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
-        self.save_button = ctk.CTkButton(buttons_frame, width=100, height=35, border_width=2, fg_color="transparent", text_color=("gray10", "#DCE4EE"), text='Save')
+        self.save_button = ctk.CTkButton(buttons_frame, width=100, height=35, border_width=2, fg_color="transparent", text_color=("gray10", "#DCE4EE"), text="Save")
         self.save_button.configure(state='disabled')
         self.save_button.pack(side='left')
-        cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", text_color=("gray10", "#DCE4EE"), text='Cancel', command=self.replace_key_window.destroy)
+        cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
         
-    def highlight_button(self, key_button):
+    def highlight_button(self, key_button, text):
+        print(f"{text} clicked")
         if self.current_button:         # Unhighlight the currently highlighted button
             self.current_button.configure(fg_color="transparent")
         key_button.configure(fg_color='#1f6aa5')          # Highlight the new button
         self.current_button = key_button
-        self.save_button.configure(state='normal', command=self.replace_key_window.destroy)
+        self.save_button.configure(state='normal', command=self.save_replaced_key)
+    
+    def save_replaced_key(self):
+        print("Save button clicked")
+        self.replace_key_window.destroy()
 
     def print_window_size(self):
         print(f"Current window size: {self.root.winfo_width()}x{self.root.winfo_height()}")
