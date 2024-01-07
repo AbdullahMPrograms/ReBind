@@ -20,6 +20,8 @@ TO DO LATER:
 TO DO:
 - Finish theme files and integrate alongside theme select
 - place create sidebar buttons function inside create sidebar frame function etc
-- expanding sidebar no longer pushes home frame, will appear over and dim home frame
-- Add autocorrect to comboboxes and replace key window
+- Add autocorrect to comboboxes (maybe use ctkscrollabledropdown on github)
+- pull combobox modifier options and program combobox options from file or function
+- fix sidebar buttons taking whole x (Hard)
+- expanding sidebar no longer pushes home frame, will appear over and dim home frame (Hard)
 - seperate gui functions into new file?

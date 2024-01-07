@@ -47,12 +47,11 @@ class MyApp:
         search_frame.pack(side='top', fill='x', padx=40, pady=(40,0))
 
         keys = self.get_keys()
-        key_names = [key[0] for key in keys]
 
         search_var = ctk.StringVar()
-        search_bar = ctk.CTkEntry(search_frame, textvariable=search_var, placeholder_text="Search...", height=35)
+        search_bar = ctk.CTkEntry(search_frame, textvariable=search_var, height=35)
         search_bar.pack(fill='x')
-
+        
         keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
         keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=20)
 
@@ -79,7 +78,7 @@ class MyApp:
                         key_button.pack(side='bottom', fill='x', padx=0, pady=5)
                 else:
                     key_button.pack_forget()
-
+        
         search_var.trace("w", update_buttons)
 
         buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
