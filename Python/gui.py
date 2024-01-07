@@ -26,10 +26,24 @@ class MyApp:
     def draw_replace_key(self, button_name):
         print(f"{button_name} clicked")
         self.replace_key_window = ctk.CTkToplevel(self.root)
+        #self.replace_key_window.resizable(False, False)
         self.replace_key_window.geometry('400x460')
         self.replace_key_window.title(f"Replace Key: {button_name}")
         self.replace_key_window.grab_set()
         self.replace_key_window.attributes('-topmost', True)
+
+        # Get the root window's width, height, and offsets
+        root_width = self.root.winfo_width()
+        root_height = self.root.winfo_height()
+        root_x = self.root.winfo_rootx()
+        root_y = self.root.winfo_rooty()
+        # Calculate the position of the replace_key_window
+        window_width = 400
+        window_height = 460
+        pos_x = root_x + (root_width - window_width) // 2
+        pos_y = root_y + (root_height - window_height) // 2
+        # Set the position of the replace_key_window
+        self.replace_key_window.geometry(f"+{pos_x}+{pos_y}")
 
         search_frame = ctk.CTkFrame(self.replace_key_window)
         search_frame.pack(side='top', fill='x', padx=40, pady=(40,0))
@@ -204,22 +218,22 @@ class MyApp:
     
     def create_modification_frame(self):
         modification_frame = ctk.CTkFrame(self.home_frame, fg_color="transparent")
-        modification_frame.pack(side='top', expand=False)  # Pack to the left of the parent_frame
+        modification_frame.pack(side='top', expand=False)
 
         program_label = ctk.CTkLabel(modification_frame, text="Program Name:")
-        program_label.pack(side='left', padx=(0, 10))  # Reduce padding to 10 pixels
+        program_label.pack(side='left', padx=(0, 10))
         program_dropdown = ctk.CTkComboBox(modification_frame, values=["Option 1", "Option 2", "Option 3"])
         program_dropdown.set("")
-        program_dropdown.pack(side='left', pady=5)  # Add 50 pixels of padding to the left
+        program_dropdown.pack(side='left', pady=5)
 
         modifier_label = ctk.CTkLabel(modification_frame, text="Modifier Key:")
-        modifier_label.pack(side='left', padx=(50, 10))  # Reduce padding to 10 pixels
+        modifier_label.pack(side='left', padx=(50, 10))
         modifier_dropdown = ctk.CTkComboBox(modification_frame, values=["Option 1", "Option 2", "Option 3"])
         modifier_dropdown.set("")
-        modifier_dropdown.pack(side='left', pady=5)  # Add 50 pixels of padding to the right
+        modifier_dropdown.pack(side='left', pady=5)
 
         layer_label = ctk.CTkLabel(modification_frame, text="Layer:")
-        layer_label.pack(side='left', padx=(50, 10))  # Reduce padding to 10 pixels
+        layer_label.pack(side='left', padx=(50, 10))
         layer_segbutton = ctk.CTkSegmentedButton(modification_frame, values=["0","1", "2", "3"])
         layer_segbutton.set("0")
         layer_segbutton.pack(side='left', pady=5) 

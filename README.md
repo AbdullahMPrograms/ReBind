@@ -18,6 +18,8 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
-- Place replace key window in the middle of program window
 - Finish theme files and integrate alongside theme select
+- place create sidebar buttons function inside create sidebar frame function etc
+- expanding sidebar no longer pushes home frame, will appear over and dim home frame
 - Add autocorrect to comboboxes and replace key window
+- seperate gui functions into new file?
