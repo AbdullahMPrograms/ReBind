@@ -16,9 +16,7 @@ TO DO LATER:
 - Make toggle gui opaque (python most likely)
 - OPTIMIZATION/Clean-Up
 
-- Maybe update LoopMicVolume to find micid via name then set volume (prob not needed anymore)
-  - Make this part of the "Plugins" section
-
-DONE:
-- Maybe modular sections of the code via cfg files? dont know if this is possible (done)
-- AHK Wrapper integration
+# ReBind GUI (Python)
+TO DO:
+- Finish theme files and integrate alongside theme select
+- Add autocorrect to comboboxes and replace key window
