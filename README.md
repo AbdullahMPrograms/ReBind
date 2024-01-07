@@ -18,5 +18,6 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
+- Place replace key window in the middle of program window
 - Finish theme files and integrate alongside theme select
 - Add autocorrect to comboboxes and replace key window
