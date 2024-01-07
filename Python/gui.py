@@ -69,8 +69,14 @@ class MyApp:
         def update_buttons(*args):
             search_term = search_var.get().lower()
             for key_button in self.key_buttons:
-                if search_term in key_button.cget("text").lower():
-                    key_button.pack(side='top', fill='x', padx=0, pady=5)
+                key_text = key_button.cget("text").lower()
+                if search_term in key_text:
+                    if search_term == key_text:
+                        # If it's an exact match, pack it at the top
+                        key_button.pack(side='top', fill='x', padx=0, pady=5)
+                    else:
+                        # If it's not an exact match, pack it at the bottom
+                        key_button.pack(side='bottom', fill='x', padx=0, pady=5)
                 else:
                     key_button.pack_forget()
 
