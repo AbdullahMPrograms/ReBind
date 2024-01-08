@@ -257,13 +257,18 @@ class MyApp:
         layer_segbutton.pack(side='left', pady=5) 
         return modification_frame
 
-    def shrink_button(self, button, original_x, original_y, original_width, original_height):
-        button.configure(width=original_width*0.9, height=original_height*0.9)
-        button.place_configure(x=original_x+original_width*0.05, y=original_y+original_height*0.05)
+    def shrink_button(self, event, button, original_x, original_y, original_width, original_height, original_font_size, original_font_name):
+        shrink_factor_button = 0.90  # Adjust this value as needed
+        shrink_factor_font = 0.95  # Adjust this value as needed
+        button.configure(width=original_width*shrink_factor_button, height=original_height*shrink_factor_button)
+        button.place_configure(x=original_x+(original_width*(1-shrink_factor_button)/2), y=original_y+(original_height*(1-shrink_factor_button)/2))
+        new_font_size = int(original_font_size*shrink_factor_font) # Adjust this value as needed
+        button._text_label.configure(font=(original_font_name, new_font_size))
 
-    def restore_button(self, button, original_x, original_y, original_width, original_height):
+    def restore_button(self, event, button, original_x, original_y, original_width, original_height, original_font_size, original_font_name):
         button.configure(width=original_width, height=original_height)
         button.place_configure(x=original_x, y=original_y)
+        button._text_label.configure(font=(original_font_name, original_font_size))
 
     def create_keys_frame(self):
         max_x = 0
@@ -295,8 +300,11 @@ class MyApp:
                 button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: self.draw_replace_key(text))
                 button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
                 button.place(x=x, y=y)
-                button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height: self.shrink_button(button, x, y, width, height))
-                button.bind("<Leave>", lambda event, button=button, x=x, y=y, width=width, height=height: self.restore_button(button, x, y, width, height))
+                original_font_name = button._text_label.cget("font").split(" ")[0]
+                #print(f"Font name of the button '{text}': {original_font_name}")
+                original_font_size = int(button._text_label.cget("font").split(" ")[1])
+                button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size, original_font_name=original_font_name: self.shrink_button(event, button, x, y, width, height, original_font_size, original_font_name))
+                button.bind("<Leave>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size, original_font_name=original_font_name: self.restore_button(event, button, x, y, width, height, original_font_size, original_font_name))
                 max_x = max(max_x, x + width)
                 max_y = max(max_y, y + height)
 
