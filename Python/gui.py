@@ -260,13 +260,13 @@ class MyApp:
     def shrink_button(self, event, button, original_x, original_y, original_width, original_height, original_font_size, original_font_name):
         shrink_factor_button = 0.90  # Adjust this value as needed
         shrink_factor_font = 0.95  # Adjust this value as needed
-        button.configure(width=original_width*shrink_factor_button, height=original_height*shrink_factor_button)
+        button.configure(width=original_width*shrink_factor_button, height=original_height*shrink_factor_button, fg_color="#144870")
         button.place_configure(x=original_x+(original_width*(1-shrink_factor_button)/2), y=original_y+(original_height*(1-shrink_factor_button)/2))
         new_font_size = int(original_font_size*shrink_factor_font) # Adjust this value as needed
         button._text_label.configure(font=(original_font_name, new_font_size))
 
     def restore_button(self, event, button, original_x, original_y, original_width, original_height, original_font_size, original_font_name):
-        button.configure(width=original_width, height=original_height)
+        button.configure(width=original_width, height=original_height, fg_color="#1f6aa5")
         button.place_configure(x=original_x, y=original_y)
         button._text_label.configure(font=(original_font_name, original_font_size))
 
