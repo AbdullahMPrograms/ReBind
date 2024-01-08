@@ -257,11 +257,13 @@ class MyApp:
         layer_segbutton.pack(side='left', pady=5) 
         return modification_frame
 
-    def shrink_button(self, event, button, original_width, original_height):
-        button.configure(width=original_width*0.95, height=original_height*0.95, fg_color="#144870")
+    def shrink_button(self, button, original_x, original_y, original_width, original_height):
+        button.configure(width=original_width*0.9, height=original_height*0.9)
+        button.place_configure(x=original_x+original_width*0.05, y=original_y+original_height*0.05)
 
-    def restore_button(self, event, button, original_width, original_height):
-        button.configure(width=original_width, height=original_height, fg_color="#1f6aa5")
+    def restore_button(self, button, original_x, original_y, original_width, original_height):
+        button.configure(width=original_width, height=original_height)
+        button.place_configure(x=original_x, y=original_y)
 
     def create_keys_frame(self):
         max_x = 0
@@ -293,8 +295,8 @@ class MyApp:
                 button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: self.draw_replace_key(text))
                 button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
                 button.place(x=x, y=y)
-                button.bind("<Enter>", lambda event, button=button, width=width, height=height: self.shrink_button(event, button, width, height))
-                button.bind("<Leave>", lambda event, button=button, width=width, height=height: self.restore_button(event, button, width, height))
+                button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height: self.shrink_button(button, x, y, width, height))
+                button.bind("<Leave>", lambda event, button=button, x=x, y=y, width=width, height=height: self.restore_button(button, x, y, width, height))
                 max_x = max(max_x, x + width)
                 max_y = max(max_y, y + height)
 
