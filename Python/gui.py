@@ -20,7 +20,6 @@ class MyApp:
         self.version_frame = self.create_version_frame()
         self.create_sidebar_buttons()
         self.general_settings_frame = self.create_general_settings_frame()
-        #self.debug_settings_frame = self.create_debug_settings_frame()
         self.draw_frame('home')
 
     def draw_replace_key(self, button_name):
@@ -257,18 +256,18 @@ class MyApp:
         layer_segbutton.pack(side='left', pady=5) 
         return modification_frame
 
-    def shrink_button(self, event, button, original_x, original_y, original_width, original_height, original_font_size, original_font_name):
+    def shrink_button(self, button, original_x, original_y, original_width, original_height, original_font_size):
         shrink_factor_button = 0.93  # Adjust this value as needed
         shrink_factor_font = 0.95  # Adjust this value as needed
         button.configure(width=original_width*shrink_factor_button, height=original_height*shrink_factor_button, fg_color="#144870")
         button.place_configure(x=original_x+(original_width*(1-shrink_factor_button)/2), y=original_y+(original_height*(1-shrink_factor_button)/2))
         new_font_size = int(original_font_size*shrink_factor_font) # Adjust this value as needed
-        button._text_label.configure(font=(original_font_name, new_font_size))
+        button._text_label.configure(font=("Roboto", new_font_size))
 
-    def restore_button(self, event, button, original_x, original_y, original_width, original_height, original_font_size, original_font_name):
+    def restore_button(self, button, original_x, original_y, original_width, original_height, original_font_size):
         button.configure(width=original_width, height=original_height, fg_color="#1f6aa5")
         button.place_configure(x=original_x, y=original_y)
-        button._text_label.configure(font=(original_font_name, original_font_size))
+        button._text_label.configure(font=("Roboto", original_font_size))
 
     def create_keys_frame(self):
         max_x = 0
@@ -300,11 +299,9 @@ class MyApp:
                 button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, command=lambda text=text: self.draw_replace_key(text))
                 button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
                 button.place(x=x, y=y)
-                original_font_name = button._text_label.cget("font").split(" ")[0]
-                #print(f"Font name of the button '{text}': {original_font_name}")
                 original_font_size = int(button._text_label.cget("font").split(" ")[1])
-                button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size, original_font_name=original_font_name: self.shrink_button(event, button, x, y, width, height, original_font_size, original_font_name))
-                button.bind("<Leave>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size, original_font_name=original_font_name: self.restore_button(event, button, x, y, width, height, original_font_size, original_font_name))
+                button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.shrink_button(button, x, y, width, height, original_font_size))
+                button.bind("<Leave>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.restore_button(button, x, y, width, height, original_font_size))
                 max_x = max(max_x, x + width)
                 max_y = max(max_y, y + height)
 
@@ -366,13 +363,6 @@ class MyApp:
         key_tester_switch.pack(side='right')
         
         return general_settings_frame
-    
-    #def create_debug_settings_frame(self):
-        debug_settings_frame = ctk.CTkFrame(self.settings_frame, fg_color="transparent")
-        debug_settings_frame.pack(side='top', fill='both', expand=True)
-        debug_settings_label = ctk.CTkLabel(debug_settings_frame, text="DEBUG", font=('Bold', 22))
-        debug_settings_label.pack(side='top', pady=(10,30))
-        return debug_settings_frame
     
     def run(self):
         self.root.resizable(False, False)
