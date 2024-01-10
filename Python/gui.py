@@ -45,6 +45,7 @@ class MyApp:
         self.button_hover_colour = colours['button_hover']
         self.button_press_colour = colours['button_press']
         self.button_selected_colour = colours['button_selected']
+        self.segmented_button_hover_colour = colours['segmented_button_hover']
         self.keys_frame_colour = colours['keys_frame']
         self.key_button_colour = colours['key_button']
 
@@ -277,7 +278,7 @@ class MyApp:
 
         layer_label = ctk.CTkLabel(modification_frame, text="Layer:")
         layer_label.pack(side='left', padx=(50, 10))
-        layer_segbutton = ctk.CTkSegmentedButton(modification_frame, selected_color=self.button_selected_colour, selected_hover_color=self.button_hover_colour, unselected_hover_color=self.button_hover_colour, values=["0","1", "2", "3"])
+        layer_segbutton = ctk.CTkSegmentedButton(modification_frame, selected_color=self.button_selected_colour, selected_hover_color=self.button_hover_colour, unselected_hover_color=self.segmented_button_hover_colour, values=["0","1", "2", "3"])
         layer_segbutton.set("0")
         layer_segbutton.pack(side='left', pady=5) 
         return modification_frame
