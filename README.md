@@ -18,10 +18,11 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
-- Finish theme files and integrate alongside theme select
+- add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
 - Add autocorrect to comboboxes (maybe use ctkscrollabledropdown on github)
 - pull combobox modifier options and program combobox options from file or function
 - fix sidebar buttons not taking whole x (Hard)
 - expanding sidebar no longer pushes home frame, will appear over and dim home frame (Hard)
 - seperate gui functions into new file?
+- eventually fix the button hover on corners
