@@ -41,7 +41,7 @@ class MyApp:
         config.read(f'Python/Themes/{theme}.ini')
         colours = config['colours']
         self.bg_colour = colours['background']
-        self.sidebar_colour = colours['sidebar']
+        self.main_colour = colours['main']
         self.button_hover_colour = colours['button_hover']
         self.button_press_colour = colours['button_press']
         self.button_selected_colour = colours['button_selected']
@@ -180,19 +180,19 @@ class MyApp:
             self.settings_frame.pack(side='top', fill='both', expand=True)
         
     def create_main_frame(self):
-        main_frame = ctk.CTkFrame(self.root, fg_color=self.sidebar_colour)
+        main_frame = ctk.CTkFrame(self.root, fg_color=self.main_colour)
         main_frame.pack(side='left', fill='both', expand=True)
         return main_frame
         
     def create_version_frame(self):
-        version_frame = ctk.CTkFrame(self.main_frame, height=20, fg_color=self.sidebar_colour)
+        version_frame = ctk.CTkFrame(self.main_frame, height=20, fg_color=self.main_colour)
         version_frame.pack(side='bottom', fill='x')
         version_label = ctk.CTkLabel(version_frame, text="v0.0.1", padx=15, anchor='e')
         version_label.pack(side='right')
         return version_frame
     
     def create_sidebar_frame(self):
-        sidebar_frame = ctk.CTkFrame(self.main_frame, fg_color=self.sidebar_colour)   
+        sidebar_frame = ctk.CTkFrame(self.main_frame, fg_color=self.main_colour)   
         sidebar_frame.pack_propagate(False)
         sidebar_frame.pack(side='left', fill='y')
         return sidebar_frame
