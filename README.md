@@ -18,6 +18,9 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
+- maybe add checkbox in replace key window when a program is typed, checkbox will control if the program needs to be focused (ifwindowexist vs ifwindowactive)
+- in keys.txt, add variable that holds the original button key text, for resetting keys
+
 - add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
 - Add autocorrect to comboboxes (maybe use ctkscrollabledropdown on github)

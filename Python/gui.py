@@ -53,7 +53,17 @@ class MyApp:
         print(f"{button_name} clicked")
         self.replace_key_window = ctk.CTkToplevel(self.root)
         self.replace_key_window.geometry('400x460')
-        self.replace_key_window.title(f"Replace Key: {button_name}")
+
+        # Store the name of the key to be replaced
+        self.key_to_be_replaced = button_name
+
+        # Modify this line to include the selected options only if they are not empty
+        program = self.program_dropdown.get()
+        title = f"Replace Key: {button_name}"
+        if program:
+            title += f" for {program}"
+        self.replace_key_window.title(title)
+
         self.replace_key_window.grab_set()
         self.replace_key_window.attributes('-topmost', True)
 
@@ -77,7 +87,7 @@ class MyApp:
         search_var = ctk.StringVar()
         search_bar = ctk.CTkEntry(search_frame, textvariable=search_var, height=35)
         search_bar.pack(fill='x')
-        
+
         keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
         keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=20)
 
@@ -97,15 +107,32 @@ class MyApp:
                 key_text = key_button.cget("text").lower()
                 if search_term in key_text:
                     if search_term == key_text:
-                        # If it's an exact match, pack it at the top
                         key_button.pack(side='top', fill='x', padx=0, pady=5)
                     else:
-                        # If it's not an exact match, pack it at the bottom
                         key_button.pack(side='bottom', fill='x', padx=0, pady=5)
                 else:
                     key_button.pack_forget()
-        
+
         search_var.trace("w", update_buttons)
+
+        # Create a new frame for the checkbox only if a program is typed into the program dropdown
+        if program:
+            checkbox_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
+            checkbox_frame.pack(side='top', fill='x', padx=120, pady=(10,15))
+
+            # Create a StringVar to store the state of the checkbox
+            self.checkbox_var = ctk.StringVar()
+
+            # Set the checkbox to be auto-checked
+            self.checkbox_var.set("1")
+
+            # Create the label
+            checkbox_label = ctk.CTkLabel(checkbox_frame, text="Require Focus")
+            checkbox_label.pack(side='left', anchor='w', padx=(0,20))
+
+            # Create the checkbox
+            checkbox = ctk.CTkCheckBox(checkbox_frame, text="", variable=self.checkbox_var)
+            checkbox.pack(side='left', anchor='w')
 
         buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
         buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
@@ -115,6 +142,19 @@ class MyApp:
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
         
+    def save_replaced_key(self):
+        # Modify this line to include the selected options only if they are not empty
+        program = self.program_dropdown.get()
+        modifier = self.modifier_dropdown.get()
+        replaced_key = f"{self.key_to_be_replaced} has been replaced with "
+        if modifier:
+            replaced_key += f"{modifier} + "
+        replaced_key += f"{self.current_button.cget('text')}"
+        if program:
+            replaced_key += f" for {program}"
+        print(replaced_key)
+        self.replace_key_window.destroy()
+        
     def highlight_button(self, key_button, text):
         print(f"{text} clicked")
         if self.current_button:         # Unhighlight the currently highlighted button
@@ -122,10 +162,6 @@ class MyApp:
         key_button.configure(fg_color=self.button_selected_colour)          # Highlight the new button
         self.current_button = key_button
         self.save_button.configure(state='normal', command=self.save_replaced_key)
-    
-    def save_replaced_key(self):
-        print("Save button clicked")
-        self.replace_key_window.destroy()
 
     def print_window_size(self):
         print(f"Current window size: {self.root.winfo_width()}x{self.root.winfo_height()}")
@@ -203,7 +239,7 @@ class MyApp:
         macros_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_macros.png").resize((16,16), Image.Resampling.LANCZOS))
         save_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_save.png").resize((16,16), Image.Resampling.LANCZOS))
         plugins_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_plugins.png").resize((16,16), Image.Resampling.LANCZOS))
-        windowsize_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_windowsize.png").resize((18,18), Image.Resampling.LANCZOS))
+        windowsize_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_windowsize.png").resize((16,16), Image.Resampling.LANCZOS))
         settings_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_settings.png").resize((18,18), Image.Resampling.LANCZOS))
 
         menu_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
@@ -264,17 +300,20 @@ class MyApp:
         modification_frame = ctk.CTkFrame(self.home_frame, fg_color="transparent")
         modification_frame.pack(side='top', expand=False)
 
+        self.program_var = ctk.StringVar()
+        self.modifier_var = ctk.StringVar()
+
         program_label = ctk.CTkLabel(modification_frame, text="Program Name:")
         program_label.pack(side='left', padx=(0, 10))
-        program_dropdown = ctk.CTkComboBox(modification_frame, values=["Option 1", "Option 2", "Option 3"])
-        program_dropdown.set("")
-        program_dropdown.pack(side='left', pady=5)
+        self.program_dropdown = ctk.CTkComboBox(modification_frame, variable=self.program_var, values=["", "Option 1", "Option 2", "Option 3"])
+        self.program_dropdown.set("")
+        self.program_dropdown.pack(side='left', pady=5)
 
         modifier_label = ctk.CTkLabel(modification_frame, text="Modifier Key:")
         modifier_label.pack(side='left', padx=(50, 10))
-        modifier_dropdown = ctk.CTkComboBox(modification_frame, values=["Option 1", "Option 2", "Option 3"])
-        modifier_dropdown.set("")
-        modifier_dropdown.pack(side='left', pady=5)
+        self.modifier_dropdown = ctk.CTkComboBox(modification_frame, variable=self.modifier_var, values=["", "Option 1", "Option 2", "Option 3"])
+        self.modifier_dropdown.set("")
+        self.modifier_dropdown.pack(side='left', pady=5)
 
         layer_label = ctk.CTkLabel(modification_frame, text="Layer:")
         layer_label.pack(side='left', padx=(50, 10))
