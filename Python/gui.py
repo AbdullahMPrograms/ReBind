@@ -124,10 +124,13 @@ class MyApp:
         cancel_button.pack(side='right')
         
     def save_replaced_key(self):
-        # Modify this line to include the selected options only if they are not empty
+        # Get the selected options
         program = self.program_dropdown.get()
         focus = self.focus_dropdown.get()
         modifier = self.modifier_dropdown.get()
+        layer = self.layer_var.get()
+
+        # Start building the print statement
         replaced_key = f"{self.key_to_be_replaced} has been replaced with "
         if modifier:
             replaced_key += f"{modifier} + "
@@ -136,6 +139,8 @@ class MyApp:
             replaced_key += f" for {program}"
         if focus:
             replaced_key += f", Requires Focus: {focus}"
+        replaced_key += f" on Layer: {layer}"
+        
         print(replaced_key)
         self.replace_key_window.destroy()
         
@@ -285,8 +290,9 @@ class MyApp:
         modification_frame.pack(side='top', expand=False)
 
         self.program_var = ctk.StringVar()
-        self.modifier_var = ctk.StringVar()
         self.focus_var = ctk.StringVar()
+        self.modifier_var = ctk.StringVar()
+        self.layer_var = ctk.StringVar()
 
         # Create a new frame for the program and focus dropdowns
         program_focus_frame = ctk.CTkFrame(modification_frame, fg_color="transparent")
@@ -318,7 +324,7 @@ class MyApp:
 
         layer_label = ctk.CTkLabel(modification_frame, text="Layer:")
         layer_label.pack(side='left', padx=(50, 10))
-        layer_segbutton = ctk.CTkSegmentedButton(modification_frame, selected_color=self.button_selected_colour, selected_hover_color=self.button_hover_colour, unselected_hover_color=self.segmented_button_hover_colour, values=["0","1", "2", "3"])
+        layer_segbutton = ctk.CTkSegmentedButton(modification_frame, variable=self.layer_var, selected_color=self.button_selected_colour, selected_hover_color=self.button_hover_colour, unselected_hover_color=self.segmented_button_hover_colour, values=["0","1", "2", "3"])
         layer_segbutton.set("0")
         layer_segbutton.pack(side='left', pady=5) 
         return modification_frame
