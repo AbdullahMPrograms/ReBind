@@ -55,10 +55,8 @@ class MyApp:
         self.replace_key_window.geometry('400x460')
         self.key_to_be_replaced = button_name
 
-        # Get the modifier dropdown value
         modifier = self.modifier_dropdown.get()
 
-        # Build the title
         title = f"Replace Key: "
         if modifier:
             title += f"{modifier} + "
@@ -102,28 +100,24 @@ class MyApp:
         for key in keys:
             text, x, y, width, height, layouts = key
             key_button = ctk.CTkButton(keys_frame, text=text, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
-            key_button.configure(command=lambda key_button=key_button, text=text: self.highlight_button(key_button, text))
+            key_button.configure(command=lambda key_button=key_button, text=text: self.update_search_bar(key_button, text, search_bar))
             key_button.pack(side='top', fill='x', padx=0, pady=5)
             self.key_buttons.append(key_button)
 
         def update_buttons(*args):
             search_term = search_var.get().lower()
 
-            # Unpack all buttons
             for key_button in self.key_buttons:
                 key_button.pack_forget()
 
-            # If buttons are selected, pack them first
             for key_button in self.current_buttons:
                 key_button.pack(side='top', fill='x', padx=0, pady=5)
 
-            # Pack the button that exactly matches the search term
             for key_button in self.key_buttons:
                 key_text = key_button.cget("text").lower()
                 if search_term == key_text and key_button not in self.current_buttons:
                     key_button.pack(side='top', fill='x', padx=0, pady=5)
 
-            # Pack the rest of the buttons that match the search term
             for key_button in self.key_buttons:
                 key_text = key_button.cget("text").lower()
                 if search_term in key_text and key_button not in self.current_buttons and search_term != key_text:
@@ -138,6 +132,22 @@ class MyApp:
         self.save_button.pack(side='left')
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
+
+    def update_search_bar(self, key_button, text, search_bar):
+        if key_button in self.current_buttons:  # If this button is already selected
+            self.current_buttons.remove(key_button)  # Deselect it
+            key_button.configure(fg_color="transparent")
+            # Remove the text of the button from the search bar
+            current_text = search_bar.get()
+            new_text = current_text.replace(text, '')
+            search_bar.delete(0, 'end')
+            search_bar.insert(0, new_text)
+        else:  # If this button is not selected
+            self.current_buttons.append(key_button)  # Select it
+            key_button.configure(fg_color=self.button_selected_colour)
+            # Add the text of the button to the search bar
+            search_bar.insert('end', text)
+        self.save_button.configure(state='normal' if self.current_buttons else 'disabled')
         
     def save_replaced_key(self):
         # Get the selected options

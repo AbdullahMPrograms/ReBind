@@ -19,9 +19,7 @@ TO DO LATER:
 # ReBind GUI (Python)
 TO DO:
 - in keys.txt, add variable that holds the original button key text, for resetting keys
-- add the ability to bind + to another button in the replace key window
-  - if you select a button it should appear in the search, if you select more then one it should add a +
-  - anytime + is written it should go back to as if nothing is searched (for fast typing macros instead of manually selecting)
+- anytime + is written it should go back to as if nothing is searched (for fast typing macros instead of manually selecting)
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
 
 - add font theme options
