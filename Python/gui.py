@@ -115,25 +115,6 @@ class MyApp:
 
         search_var.trace("w", update_buttons)
 
-        # Create a new frame for the checkbox only if a program is typed into the program dropdown
-        if program:
-            checkbox_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
-            checkbox_frame.pack(side='top', fill='x', padx=120, pady=(10,15))
-
-            # Create a StringVar to store the state of the checkbox
-            self.checkbox_var = ctk.StringVar()
-
-            # Set the checkbox to be auto-checked
-            self.checkbox_var.set("1")
-
-            # Create the label
-            checkbox_label = ctk.CTkLabel(checkbox_frame, text="Require Focus")
-            checkbox_label.pack(side='left', anchor='w', padx=(0,20))
-
-            # Create the checkbox
-            checkbox = ctk.CTkCheckBox(checkbox_frame, text="", variable=self.checkbox_var)
-            checkbox.pack(side='left', anchor='w')
-
         buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
         buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
         self.save_button = ctk.CTkButton(buttons_frame, width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Save")
@@ -145,6 +126,7 @@ class MyApp:
     def save_replaced_key(self):
         # Modify this line to include the selected options only if they are not empty
         program = self.program_dropdown.get()
+        focus = self.focus_dropdown.get()
         modifier = self.modifier_dropdown.get()
         replaced_key = f"{self.key_to_be_replaced} has been replaced with "
         if modifier:
@@ -152,6 +134,8 @@ class MyApp:
         replaced_key += f"{self.current_button.cget('text')}"
         if program:
             replaced_key += f" for {program}"
+        if focus:
+            replaced_key += f", Requires Focus: {focus}"
         print(replaced_key)
         self.replace_key_window.destroy()
         
@@ -302,12 +286,29 @@ class MyApp:
 
         self.program_var = ctk.StringVar()
         self.modifier_var = ctk.StringVar()
+        self.focus_var = ctk.StringVar()
 
-        program_label = ctk.CTkLabel(modification_frame, text="Program Name:")
+        # Create a new frame for the program and focus dropdowns
+        program_focus_frame = ctk.CTkFrame(modification_frame, fg_color="transparent")
+        program_focus_frame.pack(side='left')
+
+        program_label = ctk.CTkLabel(program_focus_frame, text="Program Name:")
         program_label.pack(side='left', padx=(0, 10))
-        self.program_dropdown = ctk.CTkComboBox(modification_frame, variable=self.program_var, values=["", "Option 1", "Option 2", "Option 3"])
+        self.program_dropdown = ctk.CTkComboBox(program_focus_frame, variable=self.program_var, values=["", "Option 1", "Option 2", "Option 3"])
         self.program_dropdown.set("")
         self.program_dropdown.pack(side='left', pady=5)
+
+        # Add a trace to the program_var
+        self.program_var.trace('w', self.update_focus_dropdown)
+
+        # Create the focus dropdown and initially hide it
+        self.focus_label = ctk.CTkLabel(program_focus_frame, text="Requires Focus:")
+        self.focus_label.pack(side='left')
+        self.focus_label.pack_forget()
+        self.focus_dropdown = ctk.CTkComboBox(program_focus_frame, variable=self.focus_var, values=["Yes", "No"])
+        self.focus_dropdown.set("Yes")
+        self.focus_dropdown.pack(side='left')
+        self.focus_dropdown.pack_forget()
 
         modifier_label = ctk.CTkLabel(modification_frame, text="Modifier Key:")
         modifier_label.pack(side='left', padx=(50, 10))
@@ -322,6 +323,14 @@ class MyApp:
         layer_segbutton.pack(side='left', pady=5) 
         return modification_frame
 
+    def update_focus_dropdown(self, *args):
+        if self.program_var.get():
+            self.focus_label.pack(side='left', padx=(50, 10))
+            self.focus_dropdown.pack(side='left', pady=5)
+        else:
+            self.focus_label.pack_forget()
+            self.focus_dropdown.pack_forget()
+        
     def shrink_button(self, button, original_x, original_y, original_width, original_height, original_font_size):
         shrink_factor_button = 0.93  # Adjust this value as needed
         shrink_factor_font = 0.95  # Adjust this value as needed

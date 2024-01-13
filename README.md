@@ -20,6 +20,7 @@ TO DO LATER:
 TO DO:
 - maybe add checkbox in replace key window when a program is typed, checkbox will control if the program needs to be focused (ifwindowexist vs ifwindowactive)
 - in keys.txt, add variable that holds the original button key text, for resetting keys
+- in modification bar, if program dropdown has text, create a checkbox to the right of it with text "Require Program Focus: " 
 
 - add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
