@@ -18,9 +18,11 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
-- maybe add checkbox in replace key window when a program is typed, checkbox will control if the program needs to be focused (ifwindowexist vs ifwindowactive)
 - in keys.txt, add variable that holds the original button key text, for resetting keys
-- in modification bar, if program dropdown has text, create a checkbox to the right of it with text "Require Program Focus: " 
+- add the ability to bind + to another button in the replace key window
+  - if you select a button it should appear in the search, if you select more then one it should add a +
+  - anytime + is written it should go back to as if nothing is searched (for fast typing macros instead of manually selecting)
+- make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
 
 - add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
@@ -29,4 +31,4 @@ TO DO:
 - fix sidebar buttons not taking whole x (Hard)
 - expanding sidebar no longer pushes home frame, will appear over and dim home frame (Hard)
 - seperate gui functions into new file?
-- eventually fix the button hover on corners
+- eventually fix the button hover on corners (borderwidth, border colour matches keys frame)

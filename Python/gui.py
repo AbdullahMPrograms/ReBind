@@ -21,6 +21,7 @@ class MyApp:
         self.settings_frame = self.create_settings_frame()
         self.modification_frame = self.create_modification_frame()
         self.keys_frame = self.create_keys_frame()
+        self.current_buttons = []
         self.version_frame = self.create_version_frame()
         self.create_sidebar_buttons()
         self.general_settings_frame = self.create_general_settings_frame()
@@ -50,16 +51,20 @@ class MyApp:
         self.key_button_colour = colours['key_button']
 
     def draw_replace_key(self, button_name):
-        print(f"{button_name} clicked")
         self.replace_key_window = ctk.CTkToplevel(self.root)
         self.replace_key_window.geometry('400x460')
-
-        # Store the name of the key to be replaced
         self.key_to_be_replaced = button_name
 
-        # Modify this line to include the selected options only if they are not empty
+        # Get the modifier dropdown value
+        modifier = self.modifier_dropdown.get()
+
+        # Build the title
+        title = f"Replace Key: "
+        if modifier:
+            title += f"{modifier} + "
+        title += button_name
+
         program = self.program_dropdown.get()
-        title = f"Replace Key: {button_name}"
         if program:
             title += f" for {program}"
         self.replace_key_window.title(title)
@@ -91,7 +96,7 @@ class MyApp:
         keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
         keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=20)
 
-        self.current_button = None
+        self.current_buttons = []
         self.key_buttons = []
 
         for key in keys:
@@ -103,21 +108,32 @@ class MyApp:
 
         def update_buttons(*args):
             search_term = search_var.get().lower()
+
+            # Unpack all buttons
+            for key_button in self.key_buttons:
+                key_button.pack_forget()
+
+            # If buttons are selected, pack them first
+            for key_button in self.current_buttons:
+                key_button.pack(side='top', fill='x', padx=0, pady=5)
+
+            # Pack the button that exactly matches the search term
             for key_button in self.key_buttons:
                 key_text = key_button.cget("text").lower()
-                if search_term in key_text:
-                    if search_term == key_text:
-                        key_button.pack(side='top', fill='x', padx=0, pady=5)
-                    else:
-                        key_button.pack(side='bottom', fill='x', padx=0, pady=5)
-                else:
-                    key_button.pack_forget()
+                if search_term == key_text and key_button not in self.current_buttons:
+                    key_button.pack(side='top', fill='x', padx=0, pady=5)
+
+            # Pack the rest of the buttons that match the search term
+            for key_button in self.key_buttons:
+                key_text = key_button.cget("text").lower()
+                if search_term in key_text and key_button not in self.current_buttons and search_term != key_text:
+                    key_button.pack(side='top', fill='x', padx=0, pady=5)
 
         search_var.trace("w", update_buttons)
 
         buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
         buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
-        self.save_button = ctk.CTkButton(buttons_frame, width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Save")
+        self.save_button = ctk.CTkButton(buttons_frame, width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Save", command=self.save_replaced_key)
         self.save_button.configure(state='disabled')
         self.save_button.pack(side='left')
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
@@ -131,10 +147,17 @@ class MyApp:
         layer = self.layer_var.get()
 
         # Start building the print statement
-        replaced_key = f"{self.key_to_be_replaced} has been replaced with "
+        replaced_key = ""
         if modifier:
             replaced_key += f"{modifier} + "
-        replaced_key += f"{self.current_button.cget('text')}"
+        replaced_key += f"{self.key_to_be_replaced} has been replaced with "
+        
+        # Get the names of the selected keys
+        selected_keys = [button.cget('text') for button in self.current_buttons]
+        
+        # Add the selected keys to the print statement
+        replaced_key += " + ".join(selected_keys)
+        
         if program:
             replaced_key += f" for {program}"
         if focus:
@@ -143,14 +166,17 @@ class MyApp:
         
         print(replaced_key)
         self.replace_key_window.destroy()
+        self.current_buttons.clear()  # Clear the list of selected buttons
         
     def highlight_button(self, key_button, text):
         print(f"{text} clicked")
-        if self.current_button:         # Unhighlight the currently highlighted button
-            self.current_button.configure(fg_color="transparent")
-        key_button.configure(fg_color=self.button_selected_colour)          # Highlight the new button
-        self.current_button = key_button
-        self.save_button.configure(state='normal', command=self.save_replaced_key)
+        if key_button in self.current_buttons:  # If this button is already selected
+            self.current_buttons.remove(key_button)  # Deselect it
+            key_button.configure(fg_color="transparent")
+        else:  # If this button is not selected
+            self.current_buttons.append(key_button)  # Select it
+            key_button.configure(fg_color=self.button_selected_colour)
+        self.save_button.configure(state='normal' if self.current_buttons else 'disabled')
 
     def print_window_size(self):
         print(f"Current window size: {self.root.winfo_width()}x{self.root.winfo_height()}")
@@ -312,7 +338,7 @@ class MyApp:
         self.focus_label.pack(side='left')
         self.focus_label.pack_forget()
         self.focus_dropdown = ctk.CTkComboBox(program_focus_frame, variable=self.focus_var, values=["Yes", "No"])
-        self.focus_dropdown.set("Yes")
+        self.focus_dropdown.set("")
         self.focus_dropdown.pack(side='left')
         self.focus_dropdown.pack_forget()
 
@@ -333,7 +359,9 @@ class MyApp:
         if self.program_var.get():
             self.focus_label.pack(side='left', padx=(50, 10))
             self.focus_dropdown.pack(side='left', pady=5)
+            self.focus_dropdown.set("Yes")
         else:
+            self.focus_dropdown.set("")
             self.focus_label.pack_forget()
             self.focus_dropdown.pack_forget()
         
