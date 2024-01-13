@@ -20,6 +20,7 @@ TO DO LATER:
 TO DO:
 - in keys.txt, add variable that holds the original button key text, for resetting keys
 - anytime + is written it should go back to as if nothing is searched (for fast typing macros instead of manually selecting)
+  - if a key is written in text then + is added select that key as you would normally with click
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
 
 - add font theme options

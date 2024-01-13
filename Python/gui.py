@@ -145,8 +145,9 @@ class MyApp:
         else:  # If this button is not selected
             self.current_buttons.append(key_button)  # Select it
             key_button.configure(fg_color=self.button_selected_colour)
-            # Add the text of the button to the search bar
-            search_bar.insert('end', text)
+            # Replace the existing text in the search bar with the button text
+            search_bar.delete(0, 'end')
+            search_bar.insert(0, text)
         self.save_button.configure(state='normal' if self.current_buttons else 'disabled')
         
     def save_replaced_key(self):
