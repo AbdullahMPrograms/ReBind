@@ -107,8 +107,8 @@ class MyApp:
         def update_buttons(*args):
             search_term = search_var.get().lower()
 
-            # If the search term contains '+', show all buttons
-            if '+' in search_term:
+            # If the search term ends with '+', show all buttons
+            if search_term.strip().endswith('+'):
                 for key_button in self.key_buttons:
                     key_button.pack(side='top', fill='x', padx=0, pady=5)
             else:
@@ -118,15 +118,18 @@ class MyApp:
                 for key_button in self.current_buttons:
                     key_button.pack(side='top', fill='x', padx=0, pady=5)
 
-                for key_button in self.key_buttons:
-                    key_text = key_button.cget("text").lower()
-                    if search_term == key_text and key_button not in self.current_buttons:
-                        key_button.pack(side='top', fill='x', padx=0, pady=5)
+                search_terms = search_term.split('+')
+                for term in search_terms:
+                    term = term.strip()
+                    for key_button in self.key_buttons:
+                        key_text = key_button.cget("text").lower()
+                        if term == key_text and key_button not in self.current_buttons:
+                            key_button.pack(side='top', fill='x', padx=0, pady=5)
 
-                for key_button in self.key_buttons:
-                    key_text = key_button.cget("text").lower()
-                    if search_term in key_text and key_button not in self.current_buttons and search_term != key_text:
-                        key_button.pack(side='top', fill='x', padx=0, pady=5)
+                    for key_button in self.key_buttons:
+                        key_text = key_button.cget("text").lower()
+                        if term in key_text and key_button not in self.current_buttons and term != key_text:
+                            key_button.pack(side='top', fill='x', padx=0, pady=5)
 
         search_var.trace("w", update_buttons)
 
