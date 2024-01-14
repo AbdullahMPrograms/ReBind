@@ -139,22 +139,30 @@ class MyApp:
         cancel_button.pack(side='right')
 
     def update_search_bar(self, key_button, text, search_bar):
+        current_text = search_bar.get()
         if key_button in self.current_buttons:  # If this button is already selected
             self.current_buttons.remove(key_button)  # Deselect it
             key_button.configure(fg_color="transparent")
             # Remove the text of the button from the search bar
-            current_text = search_bar.get()
-            new_text = current_text.replace(text, '')
-            search_bar.delete(0, 'end')
-            search_bar.insert(0, new_text)
+            parts = current_text.split(' + ')
+            parts.remove(text)
+            new_text = ' + '.join(parts)
         else:  # If this button is not selected
             self.current_buttons.append(key_button)  # Select it
             key_button.configure(fg_color=self.button_selected_colour)
-            # Replace the existing text in the search bar with the button text
-            search_bar.delete(0, 'end')
-            search_bar.insert(0, text)
+            # Replace the current text in the search bar with the button text
+            if '+' in current_text:
+                base_text, _ = current_text.rsplit('+', 1)
+                new_text = base_text + '+ ' + text
+            else:
+                new_text = text
+
+        # Update the search bar
+        search_bar.delete(0, 'end')
+        search_bar.insert(0, new_text.strip())
+
         self.save_button.configure(state='normal' if self.current_buttons else 'disabled')
-        
+
     def save_replaced_key(self):
         # Get the selected options
         program = self.program_dropdown.get()
