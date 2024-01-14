@@ -18,11 +18,14 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
-- in keys.txt, add variable that holds the original button key text, for resetting keys
 - anytime + is written it should go back to as if nothing is searched (for fast typing macros instead of manually selecting)
-  - if a key is written in text then + is added select that key as you would normally with click
+  - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
+  - when the text is deleted the key should be deselected
+- remove multiple duplicate keys in the replace key window
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
+- maybe add segmented button in replace window with keys, macros, layer options
 
+- in keys.txt, add variable that holds the original button key text, for resetting keys
 - add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
 - Add autocorrect to comboboxes (maybe use ctkscrollabledropdown on github)

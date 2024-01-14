@@ -107,21 +107,26 @@ class MyApp:
         def update_buttons(*args):
             search_term = search_var.get().lower()
 
-            for key_button in self.key_buttons:
-                key_button.pack_forget()
+            # If the search term contains '+', show all buttons
+            if '+' in search_term:
+                for key_button in self.key_buttons:
+                    key_button.pack(side='top', fill='x', padx=0, pady=5)
+            else:
+                for key_button in self.key_buttons:
+                    key_button.pack_forget()
 
-            for key_button in self.current_buttons:
-                key_button.pack(side='top', fill='x', padx=0, pady=5)
-
-            for key_button in self.key_buttons:
-                key_text = key_button.cget("text").lower()
-                if search_term == key_text and key_button not in self.current_buttons:
+                for key_button in self.current_buttons:
                     key_button.pack(side='top', fill='x', padx=0, pady=5)
 
-            for key_button in self.key_buttons:
-                key_text = key_button.cget("text").lower()
-                if search_term in key_text and key_button not in self.current_buttons and search_term != key_text:
-                    key_button.pack(side='top', fill='x', padx=0, pady=5)
+                for key_button in self.key_buttons:
+                    key_text = key_button.cget("text").lower()
+                    if search_term == key_text and key_button not in self.current_buttons:
+                        key_button.pack(side='top', fill='x', padx=0, pady=5)
+
+                for key_button in self.key_buttons:
+                    key_text = key_button.cget("text").lower()
+                    if search_term in key_text and key_button not in self.current_buttons and search_term != key_text:
+                        key_button.pack(side='top', fill='x', padx=0, pady=5)
 
         search_var.trace("w", update_buttons)
 
