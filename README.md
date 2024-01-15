@@ -20,16 +20,16 @@ TO DO LATER:
 TO DO:
 - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
 - remove multiple duplicate keys in the replace key window
-- fix the way the selected button is sorted (through functio), current method is very stupid
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
 - maybe add segmented button in replace window with keys, macros, layer options
 
 - in keys.txt, add variable that holds the original button key text, for resetting keys
+- change the method of layouts, make similar to themes?
+  - add IK75 layout
 - add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
 - Add autocorrect to comboboxes (maybe use ctkscrollabledropdown on github)
 - pull combobox modifier options and program combobox options from file or function
 - fix sidebar buttons not taking whole x (Hard)
 - expanding sidebar no longer pushes home frame, will appear over and dim home frame (Hard)
-- seperate gui functions into new file?
-- eventually fix the button hover on corners (borderwidth, border colour matches keys frame)
+- eventually fix the button hover on corners (borderwidth, border colour matches keys frame?)
