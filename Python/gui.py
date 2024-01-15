@@ -143,16 +143,16 @@ class MyApp:
 
     def update_search_bar(self, key_button, text, search_bar):
         current_text = search_bar.get()
-        if key_button in self.current_buttons:  # If this button is already selected
-            self.current_buttons.remove(key_button)  # Deselect it
-            key_button.configure(fg_color="transparent")
+        # Call the select_button function instead of selecting the button here
+        self.select_button(key_button, text)
+
+        # If this button is not selected
+        if key_button not in self.current_buttons:
             # Remove the text of the button from the search bar
             parts = current_text.split(' + ')
             parts.remove(text)
             new_text = ' + '.join(parts)
-        else:  # If this button is not selected
-            self.current_buttons.append(key_button)  # Select it
-            key_button.configure(fg_color=self.button_selected_colour)
+        else:
             # Replace the current text in the search bar with the button text
             if '+' in current_text:
                 base_text, _ = current_text.rsplit('+', 1)
@@ -163,8 +163,6 @@ class MyApp:
         # Update the search bar
         search_bar.delete(0, 'end')
         search_bar.insert(0, new_text.strip())
-
-        self.save_button.configure(state='normal' if self.current_buttons else 'disabled')
 
     def save_replaced_key(self):
         # Get the selected options
@@ -195,8 +193,8 @@ class MyApp:
         self.replace_key_window.destroy()
         self.current_buttons.clear()  # Clear the list of selected buttons
         
-    def highlight_button(self, key_button, text):
-        print(f"{text} clicked")
+    def select_button(self, key_button, text):
+        print(f"{text} selected")
         if key_button in self.current_buttons:  # If this button is already selected
             self.current_buttons.remove(key_button)  # Deselect it
             key_button.configure(fg_color="transparent")
