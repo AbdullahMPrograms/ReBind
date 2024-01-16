@@ -11,6 +11,8 @@ class MyApp:
         self.root.minsize(1250, 570) #Tenkeyless size, works well with 60%
         self.themes = self.get_available_themes()
         self.set_theme(self.themes[0])  # Set the first available theme
+        self.layouts = self.get_available_layouts()
+        self.set_layout(self.layouts[3])  # Set the first available layout
         self.sidebar_expanded = False
         self.main_frame = self.create_main_frame()
         self.sidebar_frame = self.create_sidebar_frame()
@@ -50,6 +52,24 @@ class MyApp:
         self.keys_frame_colour = colours['keys_frame']
         self.key_button_colour = colours['key_button']
 
+    def get_available_layouts(self):
+        layouts = []
+        layout_files = os.listdir("Python/Layouts")
+        for file in layout_files:
+            if file.endswith('.ini'):
+                layouts.append(file[:-4])  # Remove the .ini extension
+        print('Detected layouts:', layouts)
+        return layouts
+
+    def set_layout(self, layout):
+        print("Setting layout:", layout)
+        self.keys = self.get_keys(layout)
+
+    def get_keys(self, layout):
+        with open(f'Python/Layouts/{layout}.ini', 'r') as file:
+            keys = ast.literal_eval(file.read())
+        return keys
+
     def draw_replace_key(self, button_name):
         self.replace_key_window = ctk.CTkToplevel(self.root)
         self.replace_key_window.geometry('400x460')
@@ -85,8 +105,6 @@ class MyApp:
         search_frame = ctk.CTkFrame(self.replace_key_window)
         search_frame.pack(side='top', fill='x', padx=40, pady=(40,0))
 
-        keys = self.get_keys()
-
         search_var = ctk.StringVar()
         search_bar = ctk.CTkEntry(search_frame, textvariable=search_var, height=35)
         search_bar.pack(fill='x')
@@ -97,8 +115,8 @@ class MyApp:
         self.current_buttons = []
         self.key_buttons = []
 
-        for key in keys:
-            text, x, y, width, height, layouts = key
+        for key in self.keys:
+            text, x, y, width, height = key
             key_button = ctk.CTkButton(keys_frame, text=text, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
             key_button.configure(command=lambda key_button=key_button, text=text: self.update_search_bar(key_button, text, search_bar))
             key_button.pack(side='top', fill='x', padx=0, pady=5)
@@ -209,11 +227,6 @@ class MyApp:
         print(f"Home frame size: {self.home_frame.winfo_width()}x{self.home_frame.winfo_height()}")
         print(f"Sidebar size: {self.sidebar_frame.winfo_width()}x{self.sidebar_frame.winfo_height()}")
         
-    def get_keys(self):
-        with open('Python/Layouts/Keys.ini', 'r') as file:
-            keys = ast.literal_eval(file.read())
-        return keys
-
     def toggle_sidebar(self):
         self.SIDEBAR_WIDTH_COLLAPSED = 70
         self.SIDEBAR_WIDTH_EXPANDED = 200
@@ -407,37 +420,19 @@ class MyApp:
         max_x = 0
         max_y = 0
 
-        isSixty = False
-        isTenKeyless = True
-        isFullSized = False
-
-        if isSixty:
-            current_layout = "sixty"
-        elif isTenKeyless:
-            current_layout = "tenkeyless"
-        elif isFullSized:
-            current_layout = "full"
-        else:
-            current_layout = None
-
         keys_frame = ctk.CTkFrame(self.home_frame, fg_color=self.keys_frame_colour)
         keys_frame.pack(side='top', fill='both', expand=True)
 
-        keys = self.get_keys()
-
-        for key in keys:
-            text, x, y, width, height, layouts = key
-            if current_layout in layouts:
-                if current_layout == 'sixty':
-                    y -= 60
-                button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, fg_color=self.key_button_colour, command=lambda text=text: self.draw_replace_key(text))
-                button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
-                button.place(x=x, y=y)
-                original_font_size = int(button._text_label.cget("font").split(" ")[1])
-                button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.shrink_button(button, x, y, width, height, original_font_size))
-                button.bind("<Leave>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.restore_button(button, x, y, width, height, original_font_size))
-                max_x = max(max_x, x + width)
-                max_y = max(max_y, y + height)
+        for key in self.keys:
+            text, x, y, width, height = key
+            button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, fg_color=self.key_button_colour, command=lambda text=text: self.draw_replace_key(text))
+            button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
+            button.place(x=x, y=y)
+            original_font_size = int(button._text_label.cget("font").split(" ")[1])
+            button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.shrink_button(button, x, y, width, height, original_font_size))
+            button.bind("<Leave>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.restore_button(button, x, y, width, height, original_font_size))
+            max_x = max(max_x, x + width)
+            max_y = max(max_y, y + height)
 
         keys_frame.configure(width=max_x + 10, height=max_y + 10)
         self.home_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 170) #this is a concern, I would rather not have to hardcode this
@@ -446,7 +441,6 @@ class MyApp:
         self.root.geometry(f"{max_x + self.sidebar_frame['width'] + 100}x{self.sidebar_frame['height']}")
         keys_frame.place(relx=0.5, rely=0.5, anchor='center')
         return keys_frame
-
 
     def create_macro_frame(self):
         macro_frame = ctk.CTkFrame(self.main_frame, fg_color=self.bg_colour)
