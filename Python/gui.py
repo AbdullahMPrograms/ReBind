@@ -63,12 +63,17 @@ class MyApp:
 
     def set_layout(self, layout):
         print("Setting layout:", layout)
-        self.keys = self.get_keys(layout)
+        self.keys = self.get_layout_keys(layout)
 
-    def get_keys(self, layout):
+    def get_layout_keys(self, layout):
         with open(f'Python/Layouts/{layout}.ini', 'r') as file:
             keys = ast.literal_eval(file.read())
         return keys
+
+    def get_remap_keys(self):
+        with open(f'Python/remap_keys.ini', 'r') as file:
+            remap_keys = ast.literal_eval(file.read())
+        return remap_keys
 
     def draw_replace_key(self, button_name):
         self.replace_key_window = ctk.CTkToplevel(self.root)
@@ -115,10 +120,9 @@ class MyApp:
         self.current_buttons = []
         self.key_buttons = []
 
-        for key in self.keys:
-            text, x, y, width, height = key
-            key_button = ctk.CTkButton(keys_frame, text=text, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
-            key_button.configure(command=lambda key_button=key_button, text=text: self.update_search_bar(key_button, text, search_bar))
+        for key, original_key in self.get_remap_keys():
+            key_button = ctk.CTkButton(keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
+            key_button.configure(command=lambda key_button=key_button, text=key: self.update_search_bar(key_button, text, search_bar))
             key_button.pack(side='top', fill='x', padx=0, pady=5)
             self.key_buttons.append(key_button)
 
@@ -161,7 +165,6 @@ class MyApp:
 
     def update_search_bar(self, key_button, text, search_bar):
         current_text = search_bar.get()
-        # Call the select_button function instead of selecting the button here
         self.select_button(key_button, text)
 
         # If this button is not selected
