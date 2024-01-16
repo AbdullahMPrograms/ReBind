@@ -24,8 +24,11 @@ TO DO:
 - maybe add segmented button in replace window with keys, macros, layer options
 
 - in keys.txt, add variable that holds the original button key text, for resetting keys
+  - also make it so that each key has a real name and a shown name, for instance the real name would be LShift but the shown name would be Shift
+  - or instead of pulling the keys from the keys layout files make a seperate file with all the keys of a full sized keyboard with original key and all that
 - change the method of layouts, make similar to themes?
   - add IK75 layout
+
 - add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
 - Add autocorrect to comboboxes (maybe use ctkscrollabledropdown on github)
