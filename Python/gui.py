@@ -120,49 +120,30 @@ class MyApp:
         self.current_buttons = []
         self.key_buttons = []
 
+        buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
+        buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
+        self.save_button = ctk.CTkButton(buttons_frame, width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Save", command=self.save_replaced_key)
+        self.save_button.configure(state='disabled')
+        self.save_button.pack(side='left')
+        reset_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Reset", command=self.reset_replaced_key)
+        reset_button.pack_forget()  # Hide the Reset button initially
+        cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
+        cancel_button.pack(side='right')
+
         for key, original_key in self.get_remap_keys():
             key_button = ctk.CTkButton(keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
             key_button.configure(command=lambda key_button=key_button, text=key: self.update_search_bar(key_button, text, search_bar))
             key_button.pack(side='top', fill='x', padx=0, pady=5)
             self.key_buttons.append(key_button)
 
-        def update_buttons(*args):
-            search_term = search_var.get().lower()
+            # Check if the clicked key's original value and key value are different
+            if key == self.key_to_be_replaced and key != original_key:
+                print(f"Original key: {key} does not match Remapped key: {original_key}")
+                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
+                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
+                
 
-            # If the search term ends with '+', show all buttons
-            if search_term.strip().endswith('+'):
-                for key_button in self.key_buttons:
-                    key_button.pack(side='top', fill='x', padx=0, pady=5)
-            else:
-                for key_button in self.key_buttons:
-                    key_button.pack_forget()
-
-                for key_button in self.current_buttons:
-                    key_button.pack(side='top', fill='x', padx=0, pady=5)
-
-                search_terms = search_term.split('+')
-                for term in search_terms:
-                    term = term.strip()
-                    for key_button in self.key_buttons:
-                        key_text = key_button.cget("text").lower()
-                        if term == key_text and key_button not in self.current_buttons:
-                            key_button.pack(side='top', fill='x', padx=0, pady=5)
-
-                    for key_button in self.key_buttons:
-                        key_text = key_button.cget("text").lower()
-                        if term in key_text and key_button not in self.current_buttons and term != key_text:
-                            key_button.pack(side='top', fill='x', padx=0, pady=5)
-
-        search_var.trace("w", update_buttons)
-
-        buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
-        buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
-        self.save_button = ctk.CTkButton(buttons_frame, width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Save", command=self.save_replaced_key)
-        self.save_button.configure(state='disabled')
-        self.save_button.pack(side='left')
-        cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
-        cancel_button.pack(side='right')
-
+                
     def update_search_bar(self, key_button, text, search_bar):
         current_text = search_bar.get()
         self.select_button(key_button, text)
@@ -211,9 +192,48 @@ class MyApp:
         replaced_key += f" on Layer: {layer}"
         
         print(replaced_key)
+
+        # Update the remap_keys.ini file
+        remap_keys = self.get_remap_keys()
+        for i, (key, original_key) in enumerate(remap_keys):
+            if key == self.key_to_be_replaced:
+                remap_keys[i] = (key, " + ".join(selected_keys))
+
+        with open('Python/remap_keys.ini', 'w') as file:
+            file.write("[\n")
+            for key, original_key in remap_keys:
+                # Handle the special case for "\"
+                if key == "\\":
+                    key = "\\\\"
+                if original_key == "\\":
+                    original_key = "\\\\"
+                file.write(f"    (\"{key}\", \"{original_key}\"),\n")
+            file.write("]\n")
+
         self.replace_key_window.destroy()
         self.current_buttons.clear()  # Clear the list of selected buttons
-        
+
+    def reset_replaced_key(self):
+        # Update the remap_keys.ini file
+        remap_keys = self.get_remap_keys()
+        for i, (key, original_key) in enumerate(remap_keys):
+            if key == self.key_to_be_replaced:
+                remap_keys[i] = (key, key)  # Reset the key value to the original key value
+
+        with open('Python/remap_keys.ini', 'w') as file:
+            file.write("[\n")
+            for key, original_key in remap_keys:
+                # Handle the special case for "\"
+                if key == "\\":
+                    key = "\\\\"
+                if original_key == "\\":
+                    original_key = "\\\\"
+                file.write(f"    (\"{key}\", \"{original_key}\"),\n")
+            file.write("]\n")
+
+        print(f"Key: {self.key_to_be_replaced} has been reset to its original value.")
+        self.replace_key_window.destroy()
+
     def select_button(self, key_button, text):
         print(f"{text} selected")
         if key_button in self.current_buttons:  # If this button is already selected

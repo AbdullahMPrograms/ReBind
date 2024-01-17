@@ -18,6 +18,12 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
+- remove cancel from the replace_key_window
+  - if key does not match remapped key, where the cancel used to be reset key will now appear
+  - calls function called reset key that will reset the key
+  - have save reset cancel
+
+
 - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
 - remove multiple duplicate keys in the replace key window
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
@@ -25,9 +31,7 @@ TO DO:
 
 - in keys.txt, add variable that holds the original button key text, for resetting keys
   - also make it so that each key has a real name and a shown name, for instance the real name would be LShift but the shown name would be Shift
-  - or instead of pulling the keys from the keys layout files make a seperate file with all the keys of a full sized keyboard with original key and all that
-- change the method of layouts, make similar to themes?
-  - add IK75 layout
+  - implemented this but the current key arrays will not work, will need to do proper ini file structure
 
 - add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
