@@ -20,8 +20,10 @@ TO DO LATER:
 TO DO:
 - in keys.txt, add variable that holds the original button key text, for resetting keys
   - also make it so that each key has a real name and a shown name, for instance the real name would be LShift but the shown name would be Shift
-  - implemented this but the current method is very stupid it rewrites the entire ini everytime, need to implement proper ini structure
+  - implemented this but the current method is not ideal, should make proper ini structure
+  - for modifier or program or layer keys, they should be made in the ini file when they are binded in the program
 
+- when saving a key or reset a key notification will appear at the top right similar to material
 - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
 - remove multiple duplicate keys in the replace key window
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink

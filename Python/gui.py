@@ -54,7 +54,7 @@ class MyApp:
 
     def get_available_layouts(self):
         layouts = []
-        layout_files = os.listdir("Python/Layouts")
+        layout_files = os.listdir("Python/data/layouts")
         for file in layout_files:
             if file.endswith('.ini'):
                 layouts.append(file[:-4])  # Remove the .ini extension
@@ -66,12 +66,12 @@ class MyApp:
         self.keys = self.get_layout_keys(layout)
 
     def get_layout_keys(self, layout):
-        with open(f'Python/Layouts/{layout}.ini', 'r') as file:
+        with open(f'Python/data/layouts/{layout}.ini', 'r') as file:
             keys = ast.literal_eval(file.read())
         return keys
 
     def get_remap_keys(self):
-        with open(f'Python/remap_keys.ini', 'r') as file:
+        with open(f'Python/data/remap_keys.ini', 'r') as file:
             remap_keys = ast.literal_eval(file.read())
         return remap_keys
 
@@ -138,7 +138,6 @@ class MyApp:
 
             # Check if the clicked key's original value and key value are different
             if key == self.key_to_be_replaced and key != original_key:
-                print(f"Original key: {key} does not match Remapped key: {original_key}")
                 buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
                 reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
         
@@ -338,13 +337,13 @@ class MyApp:
         return sidebar_frame
 
     def create_sidebar_buttons(self):
-        menu_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
-        home_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_home.png").resize((16,16), Image.Resampling.LANCZOS))
-        macros_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_macros.png").resize((16,16), Image.Resampling.LANCZOS))
-        save_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_save.png").resize((16,16), Image.Resampling.LANCZOS))
-        plugins_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_plugins.png").resize((16,16), Image.Resampling.LANCZOS))
-        windowsize_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_windowsize.png").resize((16,16), Image.Resampling.LANCZOS))
-        settings_image = ImageTk.PhotoImage(Image.open("Python/Images/Icons/icon_settings.png").resize((18,18), Image.Resampling.LANCZOS))
+        menu_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
+        home_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_home.png").resize((16,16), Image.Resampling.LANCZOS))
+        macros_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_macros.png").resize((16,16), Image.Resampling.LANCZOS))
+        save_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_save.png").resize((16,16), Image.Resampling.LANCZOS))
+        plugins_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_plugins.png").resize((16,16), Image.Resampling.LANCZOS))
+        windowsize_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_windowsize.png").resize((16,16), Image.Resampling.LANCZOS))
+        settings_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_settings.png").resize((18,18), Image.Resampling.LANCZOS))
 
         menu_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
         menu_frame.pack(side='top', fill='x')
