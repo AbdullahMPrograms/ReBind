@@ -20,7 +20,7 @@ TO DO LATER:
 TO DO:
 - in keys.txt, add variable that holds the original button key text, for resetting keys
   - also make it so that each key has a real name and a shown name, for instance the real name would be LShift but the shown name would be Shift
-  - implemented this but the current key arrays will not work, will need to do proper ini file structure
+  - implemented this but the current method is very stupid it rewrites the entire ini everytime, need to implement proper ini structure
 
 - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
 - remove multiple duplicate keys in the replace key window
