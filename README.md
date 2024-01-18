@@ -18,16 +18,18 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
+- make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
+  - will require proper naming for keys in layouts
+
+- when selecting a program/layer it should update the keyboard to show the keys rebound in that program/layer
+
+- when saving a key or reset a key notification will appear at the top right similar to material
+- if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
+- maybe add segmented button in replace window with keys, macros, layer options
 - eventually seperate functions massively to avoid cross and over computation (reading variables from json and computing on top of them)
   - like when saving keys or resetting or in update_buttons, they should all call a function for values
 - to speed up the replace key window async build the keys when open window
   - do later, too complicated
-
-- when saving a key or reset a key notification will appear at the top right similar to material
-- if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
-- make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
-- maybe add segmented button in replace window with keys, macros, layer options
-
 - add font theme options
 - place create sidebar buttons function inside create sidebar frame function etc
 - Add autocorrect to comboboxes (maybe use ctkscrollabledropdown on github)
