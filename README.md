@@ -20,6 +20,7 @@ TO DO LATER:
 TO DO:
 - to speed up the replace key window async build the keys when open window
   - added but need to fix errors when leaving window while thread still working
+  - also when searching while keys are generated they will be packed below the searched term because they are being added after the searched button is returned
 - add layer support, keys will go under layer such as: remapped_keys:global:layer0:keys etc
 
 
