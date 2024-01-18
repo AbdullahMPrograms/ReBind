@@ -4,7 +4,6 @@ import ast
 import os
 import configparser #will go soon, switching ini to json
 import json
-import threading
 
 class MyApp:
     def __init__(self):
@@ -135,8 +134,7 @@ class MyApp:
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
 
-        # Create a new thread for creating the buttons
-        threading.Thread(target=self.create_buttons, args=(remap_keys_frame, search_bar, buttons_frame, reset_button, program)).start()
+        self.create_buttons(remap_keys_frame, search_bar, buttons_frame, reset_button, program)
 
         def update_buttons(*args):
             search_term = search_var.get().lower()
