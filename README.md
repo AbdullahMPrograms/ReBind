@@ -22,6 +22,7 @@ TO DO:
   - also make it so that each key has a real name and a shown name, for instance the real name would be LShift but the shown name would be Shift
   - implemented this but the current method is not ideal, should make proper ini structure
   - for modifier or program or layer keys, they should be made in the ini file when they are binded in the program
+- to speed up the replace key window async build the keys to speed up the open window
 
 - when saving a key or reset a key notification will appear at the top right similar to material
 - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
@@ -36,3 +37,5 @@ TO DO:
 - fix sidebar buttons not taking whole x (Hard)
 - expanding sidebar no longer pushes home frame, will appear over and dim home frame (Hard)
 - eventually fix the button hover on corners (borderwidth, border colour matches keys frame?)
+- when toggling the sidebar maybe make like a for x=0 to 200 pixels sidebarwidth = sidebarwidth + 1 and then when it reaches 200 it stops and then when you toggle it again it does the opposite, and same for the homeframe
+- add a colour effect to the sidebar button indicating current screen (same as pydracula)
