@@ -82,6 +82,7 @@ class MyApp:
         self.key_to_be_replaced = button_name
 
         modifier = self.modifier_dropdown.get()
+        layer = "layer_" + self.layer_var.get()
 
         if modifier:
             self.key_to_be_replaced = modifier + " + " + button_name  # Append the modifier if it exists
@@ -134,7 +135,7 @@ class MyApp:
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
 
-        self.create_buttons(remap_keys_frame, search_bar, buttons_frame, reset_button, program)
+        self.create_buttons(remap_keys_frame, search_bar, buttons_frame, reset_button, program, layer)
 
         def update_buttons(*args):
             search_term = search_var.get().lower()
@@ -165,7 +166,7 @@ class MyApp:
 
         search_var.trace("w", update_buttons)
 
-    def create_buttons(self, remap_keys_frame, search_bar, buttons_frame, reset_button, program):
+    def create_buttons(self, remap_keys_frame, search_bar, buttons_frame, reset_button, program, layer=None):
         remap_keys = self.get_remap_keys()
         for key in remap_keys["keys"]:
             remappable_key = ctk.CTkButton(remap_keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
@@ -174,10 +175,10 @@ class MyApp:
             self.remappable_keys.append(remappable_key)
 
             # Check if the clicked key's original value and key value are different
-            if self.key_to_be_replaced in remap_keys["remapped_keys"]["global"] and remap_keys["remapped_keys"]["global"][self.key_to_be_replaced]["key"] != key:
+            if layer and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}) and remap_keys["remapped_keys"]["global"][layer][self.key_to_be_replaced]["key"] != key:
                 buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
                 reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
-            elif program and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}) and remap_keys["remapped_keys"][program][self.key_to_be_replaced]["key"] != key:
+            elif program and layer and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}) and remap_keys["remapped_keys"][program][layer][self.key_to_be_replaced]["key"] != key:
                 buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
                 reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
 
@@ -222,7 +223,8 @@ class MyApp:
             replaced_key += f" for {program}"
         if focus:
             replaced_key += f", Requires Focus: {focus}"
-        replaced_key += f" on Layer: {layer}"
+        if layer:
+            replaced_key += f" on Layer: {layer}"
         
         print(replaced_key)
 
@@ -239,9 +241,19 @@ class MyApp:
         if program:
             if program not in remap_keys["remapped_keys"]:
                 remap_keys["remapped_keys"][program] = {}
-            remap_keys["remapped_keys"][program][remapped_key] = {"key": " + ".join(selected_keys), "focus_modifier": focus}
+            if layer and "layer_" + layer not in remap_keys["remapped_keys"][program]:
+                remap_keys["remapped_keys"][program]["layer_" + layer] = {}
+            if layer:
+                remap_keys["remapped_keys"][program]["layer_" + layer][remapped_key] = {"key": " + ".join(selected_keys), "focus_modifier": focus}
+            else:
+                remap_keys["remapped_keys"][program][remapped_key] = {"key": " + ".join(selected_keys), "focus_modifier": focus}
         else:
-            remap_keys["remapped_keys"]["global"][remapped_key] = {"key": " + ".join(selected_keys)}
+            if layer and "layer_" + layer not in remap_keys["remapped_keys"]["global"]:
+                remap_keys["remapped_keys"]["global"]["layer_" + layer] = {}
+            if layer:
+                remap_keys["remapped_keys"]["global"]["layer_" + layer][remapped_key] = {"key": " + ".join(selected_keys)}
+            else:
+                remap_keys["remapped_keys"]["global"][remapped_key] = {"key": " + ".join(selected_keys)}
 
         # Save the updated remap_keys to the JSON file
         with open('Python/data/remap_keys.json', 'w') as file:
@@ -253,21 +265,28 @@ class MyApp:
     def reset_replaced_key(self):
         # Get the selected options
         program = self.program_dropdown.get()
+        layer = "layer_" + self.layer_var.get()  # Append "layer_" to the layer number
 
         # Load the existing JSON file
         with open('Python/data/remap_keys.json', 'r') as file:
             remap_keys = json.load(file)
 
         # Check if the key is in the global section or a program section
-        if program and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}):
+        if program and layer and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}):
             # Remove the key from the program section
-            del remap_keys["remapped_keys"][program][self.key_to_be_replaced]
+            del remap_keys["remapped_keys"][program][layer][self.key_to_be_replaced]
+            # If the layer section is now empty, remove it
+            if not remap_keys["remapped_keys"][program][layer]:
+                del remap_keys["remapped_keys"][program][layer]
             # If the program section is now empty, remove it
             if not remap_keys["remapped_keys"][program]:
                 del remap_keys["remapped_keys"][program]
-        elif self.key_to_be_replaced in remap_keys["remapped_keys"]["global"]:
+        elif layer and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}):
             # Remove the key from the global section
-            del remap_keys["remapped_keys"]["global"][self.key_to_be_replaced]
+            del remap_keys["remapped_keys"]["global"][layer][self.key_to_be_replaced]
+            # If the layer section is now empty, remove it
+            if not remap_keys["remapped_keys"]["global"][layer]:
+                del remap_keys["remapped_keys"]["global"][layer]
 
         # Save the updated remap_keys to the JSON file
         with open('Python/data/remap_keys.json', 'w') as file:
