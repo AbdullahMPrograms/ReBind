@@ -19,6 +19,7 @@ TO DO LATER:
 # ReBind GUI (Python)
 TO DO:
 - to speed up the replace key window async build the keys when open window
+  - added but need to fix errors when leaving window while thread still working
 - add layer support, keys will go under layer such as: remapped_keys:global:layer0:keys etc
 
 

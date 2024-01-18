@@ -2,8 +2,9 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 import ast
 import os
-import configparser
+import configparser #will go soon, switching ini to json
 import json
+import threading
 
 class MyApp:
     def __init__(self):
@@ -82,7 +83,7 @@ class MyApp:
         self.key_to_be_replaced = button_name
 
         modifier = self.modifier_dropdown.get()
-        
+
         if modifier:
             self.key_to_be_replaced = modifier + " + " + button_name  # Append the modifier if it exists
 
@@ -134,20 +135,8 @@ class MyApp:
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
 
-        remap_keys = self.get_remap_keys()
-        for key in remap_keys["keys"]:
-            key_button = ctk.CTkButton(keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
-            key_button.configure(command=lambda key_button=key_button, text=key: self.update_search_bar(key_button, text, search_bar))
-            key_button.pack(side='top', fill='x', padx=0, pady=5)
-            self.key_buttons.append(key_button)
-
-            # Check if the clicked key's original value and key value are different
-            if self.key_to_be_replaced in remap_keys["remapped_keys"]["global"] and remap_keys["remapped_keys"]["global"][self.key_to_be_replaced]["key"] != key:
-                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
-            elif program and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}) and remap_keys["remapped_keys"][program][self.key_to_be_replaced]["key"] != key:
-                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
+        # Create a new thread for creating the buttons
+        threading.Thread(target=self.create_buttons, args=(keys_frame, search_bar, buttons_frame, reset_button, program)).start()
 
         def update_buttons(*args):
             search_term = search_var.get().lower()
@@ -176,7 +165,23 @@ class MyApp:
                         if term in key_text and key_button not in self.current_buttons and term != key_text:
                             key_button.pack(side='top', fill='x', padx=0, pady=5)
 
-        search_var.trace("w", update_buttons)         
+        search_var.trace("w", update_buttons)
+
+    def create_buttons(self, keys_frame, search_bar, buttons_frame, reset_button, program):
+        remap_keys = self.get_remap_keys()
+        for key in remap_keys["keys"]:
+            key_button = ctk.CTkButton(keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
+            key_button.configure(command=lambda key_button=key_button, text=key: self.update_search_bar(key_button, text, search_bar))
+            key_button.pack(side='top', fill='x', padx=0, pady=5)
+            self.key_buttons.append(key_button)
+
+            # Check if the clicked key's original value and key value are different
+            if self.key_to_be_replaced in remap_keys["remapped_keys"]["global"] and remap_keys["remapped_keys"]["global"][self.key_to_be_replaced]["key"] != key:
+                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
+                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
+            elif program and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}) and remap_keys["remapped_keys"][program][self.key_to_be_replaced]["key"] != key:
+                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
+                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
 
     def update_search_bar(self, key_button, text, search_bar):
         current_text = search_bar.get()
