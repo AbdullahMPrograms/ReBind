@@ -82,6 +82,9 @@ class MyApp:
         self.key_to_be_replaced = button_name
 
         modifier = self.modifier_dropdown.get()
+        
+        if modifier:
+            self.key_to_be_replaced = modifier + " + " + button_name  # Append the modifier if it exists
 
         title = f"Replace Key: "
         if modifier:
@@ -139,13 +142,12 @@ class MyApp:
             self.key_buttons.append(key_button)
 
             # Check if the clicked key's original value and key value are different
-            if key == self.key_to_be_replaced:
-                if program and program in remap_keys["remapped_keys"] and key in remap_keys["remapped_keys"][program] and remap_keys["remapped_keys"][program][key]["key"] != key:
-                    buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                    reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
-                elif not program and key in remap_keys["remapped_keys"]["global"] and remap_keys["remapped_keys"]["global"][key]["key"] != key:
-                    buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                    reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
+            if self.key_to_be_replaced in remap_keys["remapped_keys"]["global"] and remap_keys["remapped_keys"]["global"][self.key_to_be_replaced]["key"] != key:
+                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
+                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
+            elif program and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}) and remap_keys["remapped_keys"][program][self.key_to_be_replaced]["key"] != key:
+                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
+                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
 
         def update_buttons(*args):
             search_term = search_var.get().lower()
@@ -202,14 +204,10 @@ class MyApp:
         # Get the selected options
         program = self.program_dropdown.get()
         focus = self.focus_dropdown.get()
-        modifier = self.modifier_dropdown.get()
         layer = self.layer_var.get()
 
         # Start building the print statement
-        replaced_key = ""
-        if modifier:
-            replaced_key += f"{modifier} + "
-        replaced_key += f"{self.key_to_be_replaced} has been replaced with "
+        replaced_key = self.key_to_be_replaced + " has been replaced with "
         
         # Get the names of the selected keys
         selected_keys = [button.cget('text') for button in self.current_buttons]
@@ -233,12 +231,14 @@ class MyApp:
             remap_keys = {"original_keys": {}, "remapped_keys": {"global": {}}}
 
         # Update the remap_keys
+        remapped_key = self.key_to_be_replaced
+
         if program:
             if program not in remap_keys["remapped_keys"]:
                 remap_keys["remapped_keys"][program] = {}
-            remap_keys["remapped_keys"][program][self.key_to_be_replaced] = {"key": " + ".join(selected_keys), "focus_modifier": focus}
+            remap_keys["remapped_keys"][program][remapped_key] = {"key": " + ".join(selected_keys), "focus_modifier": focus}
         else:
-            remap_keys["remapped_keys"]["global"][self.key_to_be_replaced] = {"key": " + ".join(selected_keys)}
+            remap_keys["remapped_keys"]["global"][remapped_key] = {"key": " + ".join(selected_keys)}
 
         # Save the updated remap_keys to the JSON file
         with open('Python/data/remap_keys.json', 'w') as file:
