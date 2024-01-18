@@ -25,7 +25,7 @@ class MyApp:
         self.settings_frame = self.create_settings_frame()
         self.modification_frame = self.create_modification_frame()
         self.keys_frame = self.create_keys_frame()
-        self.current_buttons = []
+        self.selected_remappable_keys = []
         self.version_frame = self.create_version_frame()
         self.create_sidebar_buttons()
         self.general_settings_frame = self.create_general_settings_frame()
@@ -119,11 +119,11 @@ class MyApp:
         search_bar = ctk.CTkEntry(search_frame, textvariable=search_var, height=35)
         search_bar.pack(fill='x')
 
-        keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
-        keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=20)
+        remap_keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
+        remap_keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=20)
 
-        self.current_buttons = []
-        self.key_buttons = []
+        self.selected_remappable_keys = []
+        self.remappable_keys = []
 
         buttons_frame = ctk.CTkFrame(self.replace_key_window, fg_color="transparent")
         buttons_frame.pack(side='top', fill='x', padx=80, pady=(10,15))
@@ -136,44 +136,44 @@ class MyApp:
         cancel_button.pack(side='right')
 
         # Create a new thread for creating the buttons
-        threading.Thread(target=self.create_buttons, args=(keys_frame, search_bar, buttons_frame, reset_button, program)).start()
+        threading.Thread(target=self.create_buttons, args=(remap_keys_frame, search_bar, buttons_frame, reset_button, program)).start()
 
         def update_buttons(*args):
             search_term = search_var.get().lower()
 
             # If the search term ends with '+', show all buttons
             if search_term.strip().endswith('+'):
-                for key_button in self.key_buttons:
-                    key_button.pack(side='top', fill='x', padx=0, pady=5)
+                for remappable_key in self.remappable_keys:
+                    remappable_key.pack(side='top', fill='x', padx=0, pady=5)
             else:
-                for key_button in self.key_buttons:
-                    key_button.pack_forget()
+                for remappable_key in self.remappable_keys:
+                    remappable_key.pack_forget()
 
-                for key_button in self.current_buttons:
-                    key_button.pack(side='top', fill='x', padx=0, pady=5)
+                for remappable_key in self.selected_remappable_keys:
+                    remappable_key.pack(side='top', fill='x', padx=0, pady=5)
 
                 search_terms = search_term.split('+')
                 for term in search_terms:
                     term = term.strip()
-                    for key_button in self.key_buttons:
-                        key_text = key_button.cget("text").lower()
-                        if term == key_text and key_button not in self.current_buttons:
-                            key_button.pack(side='top', fill='x', padx=0, pady=5)
+                    for remappable_key in self.remappable_keys:
+                        key_text = remappable_key.cget("text").lower()
+                        if term == key_text and remappable_key not in self.selected_remappable_keys:
+                            remappable_key.pack(side='top', fill='x', padx=0, pady=5)
 
-                    for key_button in self.key_buttons:
-                        key_text = key_button.cget("text").lower()
-                        if term in key_text and key_button not in self.current_buttons and term != key_text:
-                            key_button.pack(side='top', fill='x', padx=0, pady=5)
+                    for remappable_key in self.remappable_keys:
+                        key_text = remappable_key.cget("text").lower()
+                        if term in key_text and remappable_key not in self.selected_remappable_keys and term != key_text:
+                            remappable_key.pack(side='top', fill='x', padx=0, pady=5)
 
         search_var.trace("w", update_buttons)
 
-    def create_buttons(self, keys_frame, search_bar, buttons_frame, reset_button, program):
+    def create_buttons(self, remap_keys_frame, search_bar, buttons_frame, reset_button, program):
         remap_keys = self.get_remap_keys()
         for key in remap_keys["keys"]:
-            key_button = ctk.CTkButton(keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
-            key_button.configure(command=lambda key_button=key_button, text=key: self.update_search_bar(key_button, text, search_bar))
-            key_button.pack(side='top', fill='x', padx=0, pady=5)
-            self.key_buttons.append(key_button)
+            remappable_key = ctk.CTkButton(remap_keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
+            remappable_key.configure(command=lambda remappable_key=remappable_key, text=key: self.update_search_bar(remappable_key, text, search_bar))
+            remappable_key.pack(side='top', fill='x', padx=0, pady=5)
+            self.remappable_keys.append(remappable_key)
 
             # Check if the clicked key's original value and key value are different
             if self.key_to_be_replaced in remap_keys["remapped_keys"]["global"] and remap_keys["remapped_keys"]["global"][self.key_to_be_replaced]["key"] != key:
@@ -183,12 +183,12 @@ class MyApp:
                 buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
                 reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
 
-    def update_search_bar(self, key_button, text, search_bar):
+    def update_search_bar(self, remappable_key, text, search_bar):
         current_text = search_bar.get()
-        self.select_button(key_button, text)
+        self.select_button(remappable_key, text)
 
         # If this button is not selected
-        if key_button not in self.current_buttons:
+        if remappable_key not in self.selected_remappable_keys:
             # Remove the text of the button from the search bar
             parts = current_text.split(' + ')
             parts.remove(text)
@@ -215,7 +215,7 @@ class MyApp:
         replaced_key = self.key_to_be_replaced + " has been replaced with "
         
         # Get the names of the selected keys
-        selected_keys = [button.cget('text') for button in self.current_buttons]
+        selected_keys = [button.cget('text') for button in self.selected_remappable_keys]
         
         # Add the selected keys to the print statement
         replaced_key += " + ".join(selected_keys)
@@ -250,7 +250,7 @@ class MyApp:
             json.dump(remap_keys, file, indent=4)
 
         self.replace_key_window.destroy()
-        self.current_buttons.clear()  # Clear the list of selected buttons
+        self.selected_remappable_keys.clear()  # Clear the list of selected buttons
 
     def reset_replaced_key(self):
         # Get the selected options
@@ -277,17 +277,17 @@ class MyApp:
 
         print(f"Key: {self.key_to_be_replaced} has been reset to its original value.")
         self.replace_key_window.destroy()
-        self.current_buttons.clear()  # Clear the list of selected buttons
+        self.selected_remappable_keys.clear()  # Clear the list of selected buttons
 
-    def select_button(self, key_button, text):
+    def select_button(self, remappable_key, text):
         print(f"{text} selected")
-        if key_button in self.current_buttons:  # If this button is already selected
-            self.current_buttons.remove(key_button)  # Deselect it
-            key_button.configure(fg_color="transparent")
+        if remappable_key in self.selected_remappable_keys:  # If this button is already selected
+            self.selected_remappable_keys.remove(remappable_key)  # Deselect it
+            remappable_key.configure(fg_color="transparent")
         else:  # If this button is not selected
-            self.current_buttons.append(key_button)  # Select it
-            key_button.configure(fg_color=self.button_selected_colour)
-        self.save_button.configure(state='normal' if self.current_buttons else 'disabled')
+            self.selected_remappable_keys.append(remappable_key)  # Select it
+            remappable_key.configure(fg_color=self.button_selected_colour)
+        self.save_button.configure(state='normal' if self.selected_remappable_keys else 'disabled')
 
     def print_window_size(self):
         print(f"Current window size: {self.root.winfo_width()}x{self.root.winfo_height()}")
