@@ -301,16 +301,16 @@ class MyApp:
 
     def create_notification_frame(self, title, body_text):
         # Create a new frame at the top right of the window
-        self.notification_frame = ctk.CTkFrame(self.main_frame, fg_color=self.notification_frame_colour, bg_color=self.bg_colour)
+        self.notification_frame = ctk.CTkFrame(self.home_frame, fg_color=self.notification_frame_colour, bg_color=self.bg_colour)
         
         #if current frame == home, blah blah
         #these background corner colors are hardcoded, need to be changed
-        self.notification_frame.configure(background_corner_colors=("#4a4a4a", self.bg_colour, self.bg_colour, self.notification_frame_colour))
+        self.notification_frame.configure(background_corner_colors=("#4a4a4a", self.bg_colour, self.bg_colour, self.keys_frame_colour))
         self.notification_frame.place(relx=0.99, rely=0.02, anchor='ne')
 
         # Create a frame for the labels
         self.label_frame = ctk.CTkFrame(self.notification_frame, fg_color="transparent")
-        self.label_frame.pack(side='top', fill='both', expand=False, padx=20, pady=15)
+        self.label_frame.pack(side='top', fill='both', expand=False, padx=(5,20), pady=(10,0))
 
         # Add a title to the frame
         title_label = ctk.CTkLabel(self.label_frame, text=title)
@@ -321,8 +321,8 @@ class MyApp:
         body_label.pack(side='top', anchor="w")
 
         # Add a progress bar to the frame
-        self.progress_bar = ctk.CTkProgressBar(self.label_frame, progress_color=self.key_button_colour, determinate_speed=0.3, height=7)
-        self.progress_bar.pack(side="bottom", fill="x")
+        self.progress_bar = ctk.CTkProgressBar(self.notification_frame, progress_color=self.key_button_colour, determinate_speed=0.3, height=6)
+        self.progress_bar.pack(side="bottom", fill="x", pady=(10,2), padx=1)
         self.progress_bar.set(0)
         self.progress_bar.start()
 
