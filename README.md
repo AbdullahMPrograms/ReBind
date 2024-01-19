@@ -18,12 +18,11 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
+- when saving a key or reset a key notification will appear at the top right similar to material
+
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
   - will require proper naming for keys in layouts
-
 - when selecting a program/layer it should update the keyboard to show the keys rebound in that program/layer
-
-- when saving a key or reset a key notification will appear at the top right similar to material
 - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
 - maybe add segmented button in replace window with keys, macros, layer options
 - eventually seperate functions massively to avoid cross and over computation (reading variables from json and computing on top of them)

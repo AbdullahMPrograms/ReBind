@@ -105,6 +105,12 @@
         "Num .": "Num ."
     },
     "remapped_keys": {
-        "global": {}
+        "global": {
+            "layer_0": {
+                "J": {
+                    "key": "Esc"
+                }
+            }
+        }
     }
 }

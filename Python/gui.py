@@ -227,6 +227,7 @@ class MyApp:
             replaced_key += f" on Layer: {layer}"
         
         print(replaced_key)
+        self.create_notification_frame("Saving...", replaced_key)
 
         # Load the existing JSON file or create a new one if it doesn't exist
         try:
@@ -293,8 +294,42 @@ class MyApp:
             json.dump(remap_keys, file, indent=4)
 
         print(f"Key: {self.key_to_be_replaced} has been reset to its original value.")
+        self.create_notification_frame("Resetting...", f"Key: {self.key_to_be_replaced} has been reset to its original value.")
         self.replace_key_window.destroy()
         self.selected_remappable_keys.clear()  # Clear the list of selected buttons
+
+    def create_notification_frame(self, title, body_text):
+        # Create a new frame at the top right of the window
+        self.notification_frame = ctk.CTkFrame(self.root, fg_color=self.main_colour)
+        self.notification_frame.place(relx=0.99, rely=0.02, anchor='ne')
+
+        # Add a title to the frame
+        title_label = ctk.CTkLabel(self.notification_frame, text=title)
+        title_label.pack()
+
+        # Add body text to the frame
+        body_label = ctk.CTkLabel(self.notification_frame, text=body_text)
+        body_label.pack()
+
+        # Add a progress bar to the frame
+        self.progress_bar = ctk.CTkProgressBar(self.notification_frame, progress_color=self.key_button_colour, determinate_speed=0.3, height=7)
+        self.progress_bar.pack()
+        self.progress_bar.set(0)
+        self.progress_bar.start()
+
+        # Schedule a function to check the progress bar's value
+        self.check_progress()
+
+    def check_progress(self):
+        # Get the current value of the progress bar
+        value = self.progress_bar.get()
+
+        # If the progress bar is full, destroy the frame
+        if value >= 0.96:
+            self.notification_frame.destroy()
+        else:
+            # Otherwise, check again after a short delay
+            self.root.after(100, self.check_progress)
 
     def select_button(self, remappable_key, text):
         print(f"{text} selected")
