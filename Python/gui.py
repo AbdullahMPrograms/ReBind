@@ -306,11 +306,11 @@ class MyApp:
         #if current frame == home, blah blah
         #these background corner colors are hardcoded, need to be changed
         self.notification_frame.configure(background_corner_colors=("#4a4a4a", self.bg_colour, self.bg_colour, self.keys_frame_colour))
-        self.notification_frame.place(relx=0.99, rely=0.02, anchor='ne')
+        self.notification_frame.place(relx=0.99, rely=0.015, anchor='ne')
 
         # Create a frame for the labels
         self.label_frame = ctk.CTkFrame(self.notification_frame, fg_color="transparent")
-        self.label_frame.pack(side='top', fill='both', expand=False, padx=(5,20), pady=(10,0))
+        self.label_frame.pack(side='top', fill='both', expand=False, padx=(10,30), pady=(10,0))
 
         # Add a title to the frame
         title_label = ctk.CTkLabel(self.label_frame, text=title)
