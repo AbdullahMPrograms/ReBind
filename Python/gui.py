@@ -11,9 +11,9 @@ class MyApp:
         self.root.title("ReBind")
         self.root.minsize(1250, 570) #Tenkeyless size, works well with 60%
         self.themes = self.get_available_themes()
-        self.set_theme(self.themes[0])  # Set the first available theme
+        self.set_theme(self.themes[1])  # Set the first available theme
         self.layouts = self.get_available_layouts()
-        self.set_layout(self.layouts[3])  # Set the first available layout
+        self.set_layout(self.layouts[1])  # Set the first available layout
         self.sidebar_expanded = False
         self.main_frame = self.create_main_frame()
         self.sidebar_frame = self.create_sidebar_frame()
@@ -301,7 +301,7 @@ class MyApp:
 
     def create_notification_frame(self, title, body_text):
         # Create a new frame at the top right of the window
-        self.notification_frame = ctk.CTkFrame(self.home_frame, fg_color=self.notification_frame_colour, bg_color=self.bg_colour)
+        self.notification_frame = ctk.CTkFrame(self.home_frame, border_width=2, border_color=self.main_colour, fg_color=self.notification_frame_colour, bg_color=self.bg_colour)
         
         #if current frame == home, blah blah
         #these background corner colors are hardcoded, need to be changed
@@ -321,8 +321,8 @@ class MyApp:
         body_label.pack(side='top', anchor="w")
 
         # Add a progress bar to the frame
-        self.progress_bar = ctk.CTkProgressBar(self.notification_frame, progress_color=self.key_button_colour, determinate_speed=0.3, height=6)
-        self.progress_bar.pack(side="bottom", fill="x", pady=(10,2), padx=1)
+        self.progress_bar = ctk.CTkProgressBar(self.notification_frame, progress_color=self.key_button_colour, determinate_speed=0.4, height=6)
+        self.progress_bar.pack(side="bottom", fill="x", pady=(10,2), padx=3)
         self.progress_bar.set(0)
         self.progress_bar.start()
 
@@ -338,7 +338,7 @@ class MyApp:
             self.notification_frame.destroy()
         else:
             # Otherwise, check again after a short delay
-            self.root.after(100, self.check_progress)
+            self.root.after(50, self.check_progress)
 
     def select_button(self, remappable_key, text):
         print(f"{text} selected")
@@ -549,13 +549,15 @@ class MyApp:
         max_x = 0
         max_y = 0
 
-        keys_frame = ctk.CTkFrame(self.home_frame, fg_color=self.keys_frame_colour)
+        keys_frame = ctk.CTkFrame(self.home_frame, fg_color=self.keys_frame_colour, border_width=1, border_color="white")
         keys_frame.pack(side='top', fill='both', expand=True)
 
         for key in self.keys:
             text, x, y, width, height = key
             button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, fg_color=self.key_button_colour, command=lambda text=text: self.draw_replace_key(text))
             button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
+            if text == "Num Wheel":
+                button.configure(text=" ", corner_radius=20)
             button.place(x=x, y=y)
             original_font_size = int(button._text_label.cget("font").split(" ")[1])
             button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.shrink_button(button, x, y, width, height, original_font_size))
@@ -563,11 +565,10 @@ class MyApp:
             max_x = max(max_x, x + width)
             max_y = max(max_y, y + height)
 
-        keys_frame.configure(width=max_x + 10, height=max_y + 10)
-        self.home_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 170) #this is a concern, I would rather not have to hardcode this
-        self.main_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 210)
-        self.sidebar_frame.configure(width=70, height=self.main_frame['height'])
-        self.root.geometry(f"{max_x + self.sidebar_frame['width'] + 100}x{self.sidebar_frame['height']}")
+        keys_frame.configure(width=max_x + 10, height=max_y + 10) #this will go soon
+        self.home_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 170) #set as min size in home frame creation
+        self.main_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 210) #set as min size in main frame creation
+        self.sidebar_frame.configure(width=70, height=self.main_frame['height']) #move to sidebar frame creation
         keys_frame.place(relx=0.5, rely=0.5, anchor='center')
         return keys_frame
 

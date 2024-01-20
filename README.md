@@ -18,6 +18,15 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
+- for layouts several things need to be changed
+  - the keys_frame will now be called keyboard_keys_frame and placed in keyboard_frame (follow gmmk packaging)
+  - in the JSON file for the layout each button should have "key_colour_1" "key_colour_2" for proper keyboard colour layouts (like keycaps)
+  - the spacing for the keys will need to be reset to 0,0 and remove the max_x max_y code
+
+- for numwheel, add segmented button at the top of the replace_key_window to select between (press, left, right)
+- make it so that scroll bar appears only if hovering over replace buttons in replace_key_window
+- modifier shift should show the shift number keys, shift + 2 = @
+
 - to speed up the replace key window async build the keys when open window
   - do later, too complicated
 
