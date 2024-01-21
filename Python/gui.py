@@ -301,7 +301,7 @@ class MyApp:
 
     def create_notification_frame(self, title, body_text):
         # Create a new frame at the top right of the window
-        self.notification_frame = ctk.CTkFrame(self.home_frame, border_width=2, border_color=self.main_colour, fg_color=self.notification_frame_colour, bg_color=self.bg_colour)
+        self.notification_frame = ctk.CTkFrame(self.home_frame, border_width=1, border_color="white", fg_color=self.notification_frame_colour, bg_color=self.bg_colour)
         
         #if current frame == home, blah blah
         #these background corner colors are hardcoded, need to be changed
@@ -549,7 +549,7 @@ class MyApp:
         max_x = 0
         max_y = 0
 
-        keys_frame = ctk.CTkFrame(self.home_frame, fg_color=self.keys_frame_colour, border_width=1, border_color="white")
+        keys_frame = ctk.CTkFrame(self.home_frame, fg_color=self.keys_frame_colour, border_width=2, border_color="white")
         keys_frame.pack(side='top', fill='both', expand=True)
 
         for key in self.keys:

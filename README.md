@@ -23,6 +23,7 @@ TO DO:
   - in the JSON file for the layout each button should have "key_colour_1" "key_colour_2" for proper keyboard colour layouts (like keycaps)
   - the spacing for the keys will need to be reset to 0,0 and remove the max_x max_y code
 
+- fix the notification progress bar if more then 1 opened (maybe set hardcoded time using after)
 - for numwheel, add segmented button at the top of the replace_key_window to select between (press, left, right)
 - make it so that scroll bar appears only if hovering over replace buttons in replace_key_window
 - modifier shift should show the shift number keys, shift + 2 = @
