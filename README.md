@@ -30,7 +30,7 @@ TO DO:
 
 - to speed up the replace key window async build the keys when open window
   - do later, too complicated
-  - may require moving away from topwindow, maybe inputbox?
+  - USE .after for all threaded calls (does not interrupt main loop)
 
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
   - will require keyboardkeys json integration
