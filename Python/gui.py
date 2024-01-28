@@ -402,6 +402,7 @@ class MyApp:
         sidebar_frame = ctk.CTkFrame(self.main_frame, fg_color=self.main_colour)   
         sidebar_frame.pack_propagate(False)
         sidebar_frame.pack(side='left', fill='y')
+        sidebar_frame.configure(width=70, height=self.main_frame['height'])
         return sidebar_frame
     
     # yes this is stupid but it will work for now
@@ -458,15 +459,26 @@ class MyApp:
             self.draw_frame('settings')
 
     def toggle_sidebar(self):
-        self.SIDEBAR_WIDTH_COLLAPSED = 70
-        self.SIDEBAR_WIDTH_EXPANDED = 200
+        self.sidebar_width = self.sidebar_frame.winfo_width()
         
         if self.sidebar_expanded:
-            self.sidebar_frame.configure(width=self.SIDEBAR_WIDTH_COLLAPSED)
+            self.expand_sidebar()
             self.sidebar_expanded = False
         else:
-            self.sidebar_frame.configure(width=self.SIDEBAR_WIDTH_EXPANDED)
+            self.contract_sidebar()
             self.sidebar_expanded = True
+
+    def expand_sidebar(self):
+        self.sidebar_width += 5
+        if self.sidebar_width <= 200:
+            self.sidebar_frame.configure(width=self.sidebar_width)
+            self.root.after(3, self.expand_sidebar)
+    
+    def contract_sidebar(self):
+        self.sidebar_width -= 5
+        if self.sidebar_width >= 70:
+            self.sidebar_frame.configure(width=self.sidebar_width)
+            self.root.after(3, self.contract_sidebar)
 
     def create_sidebar_buttons(self):
         menu_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
@@ -627,7 +639,6 @@ class MyApp:
         keys_frame.configure(width=max_x + 10, height=max_y + 10) #this will go soon
         self.home_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 170) #set as min size in home frame creation
         self.main_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 210) #set as min size in main frame creation
-        self.sidebar_frame.configure(width=70, height=self.main_frame['height']) #move to sidebar frame creation
         keys_frame.place(relx=0.5, rely=0.5, anchor='center')
         return keys_frame
 
