@@ -53,7 +53,8 @@ class MyApp:
         self.dropdown_colour = colours['dropdown']
         self.keys_frame_colour = colours['keys_frame']
         self.key_button_colour = colours['key_button']
-        self.notification_frame_colour = colours['notification_frame']  
+        self.notification_frame_colour = colours['notification_frame']
+        self.selected_frame_indicator_colour = colours['selected_frame_indicator']  
 
     def get_available_layouts(self):
         layouts = []
@@ -361,7 +362,7 @@ class MyApp:
         try:
             self.selected_frame_indicator.place_forget()
         except AttributeError:
-            self.selected_frame_indicator = ctk.CTkLabel(self.sidebar_frame, width=3, height=50, fg_color="white", text="")
+            self.selected_frame_indicator = ctk.CTkLabel(self.sidebar_frame, width=2, height=50, fg_color=self.selected_frame_indicator_colour, text="")
 
         self.home_frame.pack_forget()
         self.macro_frame.pack_forget()
