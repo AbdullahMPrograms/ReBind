@@ -30,12 +30,13 @@ TO DO:
 
 - to speed up the replace key window async build the keys when open window
   - do later, too complicated
+  - USE .after for all threaded calls (does not interrupt main loop)
 
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
-  - will require proper naming for keys in layouts
+  - will require keyboardkeys json integration
 - when selecting a program/layer it should update the keyboard to show the keys rebound in that program/layer
 - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
-- maybe add segmented button in replace window with keys, macros, layer options
+- maybe add segmented button in replace window with keys, macros
 - eventually seperate functions massively to avoid cross and over computation (reading variables from json and computing on top of them)
   - like when saving keys or resetting or in update_buttons, they should all call a function for values
 - add font theme options
@@ -47,3 +48,4 @@ TO DO:
 - eventually fix the button hover on corners (borderwidth, border colour matches keys frame?)
 - when toggling the sidebar maybe make like a for x=0 to 200 pixels sidebarwidth = sidebarwidth + 1 and then when it reaches 200 it stops and then when you toggle it again it does the opposite, and same for the homeframe
 - add a colour effect to the sidebar button indicating current screen (same as pydracula)
+ - use place to create a vertical spacer with colour set to theme, placed on current tab, swapped using a call from draw frame
