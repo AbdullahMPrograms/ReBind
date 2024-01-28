@@ -304,10 +304,6 @@ class MyApp:
     def create_notification_frame(self, title, body_text):
         # Create a new frame at the top right of the window
         self.notification_frame = ctk.CTkFrame(self.home_frame, border_width=1, border_color="white", fg_color=self.notification_frame_colour, bg_color=self.bg_colour)
-        
-        #if current frame == home, blah blah
-        #these background corner colors are hardcoded, need to be changed
-        self.notification_frame.configure(background_corner_colors=("#4a4a4a", self.bg_colour, self.bg_colour, self.keys_frame_colour))
         self.notification_frame.place(relx=0.99, rely=0.015, anchor='ne')
 
         # Create a frame for the labels
@@ -398,11 +394,10 @@ class MyApp:
         version_label.pack(side='right')
         return version_frame
     
-    def create_sidebar_frame(self):
-        sidebar_frame = ctk.CTkFrame(self.main_frame, fg_color=self.main_colour)   
+    def create_sidebar_frame(self): 
+        sidebar_frame = ctk.CTkFrame(self.main_frame, width=70, fg_color=self.main_colour)   
         sidebar_frame.pack_propagate(False)
         sidebar_frame.pack(side='left', fill='y')
-        sidebar_frame.configure(width=70, height=self.main_frame['height'])
         return sidebar_frame
     
     # yes this is stupid but it will work for now
