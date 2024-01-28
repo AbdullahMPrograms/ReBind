@@ -50,6 +50,7 @@ class MyApp:
         self.button_press_colour = colours['button_press']
         self.button_selected_colour = colours['button_selected']
         self.segmented_button_hover_colour = colours['segmented_button_hover']
+        self.dropdown_colour = colours['dropdown']
         self.keys_frame_colour = colours['keys_frame']
         self.key_button_colour = colours['key_button']
         self.notification_frame_colour = colours['notification_frame']  
@@ -493,7 +494,7 @@ class MyApp:
 
         program_label = ctk.CTkLabel(program_focus_frame, text="Program Name:")
         program_label.pack(side='left', padx=(0, 10))
-        self.program_dropdown = ctk.CTkComboBox(program_focus_frame, variable=self.program_var, values=["", "Option 1", "Option 2", "Option 3"])
+        self.program_dropdown = ctk.CTkComboBox(program_focus_frame, variable=self.program_var, fg_color=self.bg_colour, border_color=self.dropdown_colour, button_color=self.dropdown_colour, values=["", "Option 1", "Option 2", "Option 3"])
         self.program_dropdown.set("")
         self.program_dropdown.pack(side='left', pady=5)
 
@@ -504,20 +505,20 @@ class MyApp:
         self.focus_label = ctk.CTkLabel(program_focus_frame, text="Requires Focus:")
         self.focus_label.pack(side='left')
         self.focus_label.pack_forget()
-        self.focus_dropdown = ctk.CTkComboBox(program_focus_frame, variable=self.focus_var, values=["Yes", "No"])
+        self.focus_dropdown = ctk.CTkComboBox(program_focus_frame, variable=self.focus_var, fg_color=self.bg_colour, border_color=self.dropdown_colour, button_color=self.dropdown_colour, values=["Yes", "No"])
         self.focus_dropdown.set("")
         self.focus_dropdown.pack(side='left')
         self.focus_dropdown.pack_forget()
 
         modifier_label = ctk.CTkLabel(modification_frame, text="Modifier Key:")
         modifier_label.pack(side='left', padx=(50, 10))
-        self.modifier_dropdown = ctk.CTkComboBox(modification_frame, variable=self.modifier_var, values=["", "Option 1", "Option 2", "Option 3"])
+        self.modifier_dropdown = ctk.CTkComboBox(modification_frame, variable=self.modifier_var, fg_color=self.bg_colour, border_color=self.dropdown_colour, button_color=self.dropdown_colour, values=["", "Option 1", "Option 2", "Option 3"])
         self.modifier_dropdown.set("")
         self.modifier_dropdown.pack(side='left', pady=5)
 
         layer_label = ctk.CTkLabel(modification_frame, text="Layer:")
         layer_label.pack(side='left', padx=(50, 10))
-        layer_segbutton = ctk.CTkSegmentedButton(modification_frame, variable=self.layer_var, selected_color=self.button_selected_colour, selected_hover_color=self.button_hover_colour, unselected_hover_color=self.segmented_button_hover_colour, values=["0","1", "2", "3"])
+        layer_segbutton = ctk.CTkSegmentedButton(modification_frame, variable=self.layer_var, selected_color=self.button_selected_colour, selected_hover_color=self.button_hover_colour, unselected_hover_color=self.segmented_button_hover_colour, fg_color=self.dropdown_colour, unselected_color=self.dropdown_colour, values=["0","1", "2", "3"])
         layer_segbutton.set("0")
         layer_segbutton.pack(side='left', pady=5) 
         return modification_frame

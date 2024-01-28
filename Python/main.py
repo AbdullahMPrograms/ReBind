@@ -2,7 +2,7 @@ from pathlib import *
 from ahkunwrapped import *
 import keyboard
 
-ahk = Script.from_file(Path('ReBindFunc.ahk'))
+ahk = Script.from_file(Path('AHK/ReBind.ahk'))
 def send_space(key):
     ahk.call('SendKey', 'key')
     print("Sent Key")
