@@ -26,6 +26,7 @@ TO DO:
 - fix the notification progress bar if more then 1 opened (maybe set hardcoded time using after)
 - for numwheel, add segmented button at the top of the replace_key_window to select between (press, left, right)
 - make it so that scroll bar appears only if hovering over replace buttons in replace_key_window
+  - can be done with frame enter/leave + sidebar_button_color
 - modifier shift should show the shift number keys, shift + 2 = @
 
 - to speed up the replace key window async build the keys when open window

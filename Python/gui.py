@@ -415,6 +415,59 @@ class MyApp:
         sidebar_frame.pack_propagate(False)
         sidebar_frame.pack(side='left', fill='y')
         return sidebar_frame
+    
+    # yes this is stupid but it will work for now
+    def bind_widgets(self, parent, frame_name):
+        parent.bind("<Enter>", lambda event, self=self: self.enter_sidebar_button_frame(event, frame_name))
+        parent.bind("<Leave>", lambda event, self=self: self.leave_sidebar_button_frame(event, frame_name))
+        parent.bind("<Button-1>", lambda event, self=self: self.click_sidebar_button_frame(event, frame_name))
+        for child in parent.winfo_children():
+            child.bind("<Enter>", lambda event, self=self: self.enter_sidebar_button_frame(event, frame_name))
+            child.bind("<Leave>", lambda event, self=self: self.leave_sidebar_button_frame(event, frame_name))
+            child.bind("<Button-1>", lambda event, self=self: self.click_sidebar_button_frame(event, frame_name))
+            self.bind_widgets(child, frame_name)
+
+    def enter_sidebar_button_frame(self, event, frame_name):
+        if frame_name == 'menu':
+            self.sidebar_menu_frame.configure(fg_color=self.button_hover_colour)
+        elif frame_name == 'home':
+            self.sidebar_home_frame.configure(fg_color=self.button_hover_colour)
+        elif frame_name == 'macro':
+            self.sidebar_macro_frame.configure(fg_color=self.button_hover_colour)
+        elif frame_name == 'plugin':
+            self.sidebar_plugin_frame.configure(fg_color=self.button_hover_colour)
+        elif frame_name == 'profile':
+            self.sidebar_profile_frame.configure(fg_color=self.button_hover_colour)
+        elif frame_name == 'settings':
+            self.sidebar_settings_frame.configure(fg_color=self.button_hover_colour)
+
+    def leave_sidebar_button_frame(self, event, frame_name):
+        if frame_name == 'menu':
+            self.sidebar_menu_frame.configure(fg_color=self.main_colour)
+        elif frame_name == 'home':
+            self.sidebar_home_frame.configure(fg_color=self.main_colour)
+        elif frame_name == 'macro':
+            self.sidebar_macro_frame.configure(fg_color=self.main_colour)
+        elif frame_name == 'plugin':
+            self.sidebar_plugin_frame.configure(fg_color=self.main_colour)
+        elif frame_name == 'profile':
+            self.sidebar_profile_frame.configure(fg_color=self.main_colour) 
+        elif frame_name == 'settings':
+            self.sidebar_settings_frame.configure(fg_color=self.main_colour)
+            
+    def click_sidebar_button_frame(self, event, frame_name):
+        if frame_name == 'menu':
+            self.toggle_sidebar()
+        elif frame_name == 'home':
+            self.draw_frame('home')
+        elif frame_name == 'macro':
+            self.draw_frame('macro')
+        elif frame_name == 'plugin':
+            self.draw_frame('plugin')
+        elif frame_name == 'profile':
+            self.draw_frame('profile')
+        elif frame_name == 'settings':
+            self.draw_frame('settings')
 
     def create_sidebar_buttons(self):
         menu_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
@@ -425,54 +478,60 @@ class MyApp:
         windowsize_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_windowsize.png").resize((16,16), Image.Resampling.LANCZOS))
         settings_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_settings.png").resize((18,18), Image.Resampling.LANCZOS))
 
-        menu_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
-        menu_frame.pack(side='top', fill='x')
-        self.menu_button = ctk.CTkButton(menu_frame, image=menu_image, text = "", width=70, height=50, fg_color="transparent", hover_color=self.button_hover_colour, command=self.toggle_sidebar)
+        self.sidebar_menu_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
+        self.sidebar_menu_frame.pack(side='top', fill='x')
+        self.menu_button = ctk.CTkButton(self.sidebar_menu_frame, image=menu_image, text = "", width=70, height=50, fg_color="transparent", hover_color=self.main_colour)
         self.menu_button.pack(side='left')
-        self.menu_label = ctk.CTkLabel(menu_frame, text="")
+        self.menu_label = ctk.CTkLabel(self.sidebar_menu_frame, text="")
         self.menu_label.pack(side='left')
+        self.bind_widgets(self.sidebar_menu_frame, 'menu')
 
-        home_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
-        home_frame.pack(side='top', fill='x')
-        self.home_button = ctk.CTkButton(home_frame, image=home_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.button_hover_colour, command=lambda: self.draw_frame('home'))
+        self.sidebar_home_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
+        self.sidebar_home_frame.pack(side='top', fill='x')
+        self.home_button = ctk.CTkButton(self.sidebar_home_frame, image=home_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.home_button.pack(side='left')
-        self.home_label = ctk.CTkLabel(home_frame, text="")
+        self.home_label = ctk.CTkLabel(self.sidebar_home_frame, text="")
         self.home_label.pack(side='left')
+        self.bind_widgets(self.sidebar_home_frame, 'home')
 
-        macros_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
-        macros_frame.pack(side='top', fill='x')
-        self.macros_button = ctk.CTkButton(macros_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.button_hover_colour, command=lambda: self.draw_frame('macro'))
+        self.sidebar_macro_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
+        self.sidebar_macro_frame.pack(side='top', fill='x')
+        self.macros_button = ctk.CTkButton(self.sidebar_macro_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.macros_button.pack(side='left')
-        self.macros_label = ctk.CTkLabel(macros_frame, text="")
+        self.macros_label = ctk.CTkLabel(self.sidebar_macro_frame, text="")
         self.macros_label.pack(side='left')
+        self.bind_widgets(self.sidebar_macro_frame, 'macro')
 
-        plugin_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
-        plugin_frame.pack(side='top', fill='x')
-        self.plugin_button = ctk.CTkButton(plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.button_hover_colour, command=lambda: self.draw_frame('plugin'))
+        self.sidebar_plugin_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
+        self.sidebar_plugin_frame.pack(side='top', fill='x')
+        self.plugin_button = ctk.CTkButton(self.sidebar_plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.plugin_button.pack(side='left')
-        self.plugin_label = ctk.CTkLabel(plugin_frame, text="")
+        self.plugin_label = ctk.CTkLabel(self.sidebar_plugin_frame, text="")
         self.plugin_label.pack(side='left')
+        self.bind_widgets(self.sidebar_plugin_frame, 'plugin')
 
-        profile_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
-        profile_frame.pack(side='top', fill='x')
-        self.profile_button = ctk.CTkButton(profile_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.button_hover_colour, command=lambda: self.draw_frame('profile'))
+        self.sidebar_profile_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
+        self.sidebar_profile_frame.pack(side='top', fill='x')
+        self.profile_button = ctk.CTkButton(self.sidebar_profile_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.profile_button.pack(side='left')
-        self.profile_label = ctk.CTkLabel(profile_frame, text="")
+        self.profile_label = ctk.CTkLabel(self.sidebar_profile_frame, text="")
         self.profile_label.pack(side='left')
+        self.bind_widgets(self.sidebar_profile_frame, 'profile')
         
-        window_size_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
+        window_size_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
         window_size_frame.pack(side='top', fill='x')
         self.window_size_button = ctk.CTkButton(window_size_frame, image=windowsize_image ,text = "", width=70, height=50, fg_color = "transparent", hover_color=self.button_hover_colour, command=self.print_window_size)
         self.window_size_button.pack(side='left')   
         self.window_size_label = ctk.CTkLabel(window_size_frame, text="")
         self.window_size_label.pack(side='left')
 
-        settings_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
-        settings_frame.pack(side='bottom', fill='x')
-        self.settings_button = ctk.CTkButton(settings_frame, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.button_hover_colour, command=lambda: self.draw_frame('settings'))
+        self.sidebar_settings_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
+        self.sidebar_settings_frame.pack(side='bottom', fill='x')
+        self.settings_button = ctk.CTkButton(self.sidebar_settings_frame, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.settings_button.pack(side='left')
-        self.settings_label = ctk.CTkLabel(settings_frame, text="")
+        self.settings_label = ctk.CTkLabel(self.sidebar_settings_frame, text="")
         self.settings_label.pack(side='left')
+        self.bind_widgets(self.sidebar_settings_frame, 'settings')
     
     def create_home_frame(self):
         home_frame = ctk.CTkFrame(self.main_frame, fg_color=self.bg_colour)
