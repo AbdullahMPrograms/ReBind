@@ -4,6 +4,7 @@ import ast
 import os
 import configparser #will go soon, switching ini to json
 import json
+import threading
 
 class MyApp:
     def __init__(self):
@@ -384,7 +385,7 @@ class MyApp:
         
     def create_main_frame(self):
         main_frame = ctk.CTkFrame(self.root, fg_color=self.main_colour)
-        main_frame.pack(side='left', fill='both', expand=True)
+        main_frame.pack(side='left', fill='both', expand=True, padx=(70,0))
         return main_frame
         
     def create_version_frame(self):
@@ -395,9 +396,14 @@ class MyApp:
         return version_frame
     
     def create_sidebar_frame(self): 
-        sidebar_frame = ctk.CTkFrame(self.main_frame, width=70, fg_color=self.main_colour)   
+        sidebar_frame = ctk.CTkFrame(self.root, width=70, fg_color=self.main_colour)   
         sidebar_frame.pack_propagate(False)
-        sidebar_frame.pack(side='left', fill='y')
+        sidebar_frame.place(x=0, y=0, relheight=1, anchor='nw')
+
+        # Print the x and y location of the sidebar_frame
+        print("sidebar_frame x location:", sidebar_frame.winfo_x())
+        print("sidebar_frame y location:", sidebar_frame.winfo_y())
+
         return sidebar_frame
     
     # yes this is stupid but it will work for now
