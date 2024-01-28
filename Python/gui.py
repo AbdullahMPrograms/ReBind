@@ -4,7 +4,6 @@ import ast
 import os
 import configparser #will go soon, switching ini to json
 import json
-import threading
 
 class MyApp:
     def __init__(self):
@@ -385,7 +384,7 @@ class MyApp:
         
     def create_main_frame(self):
         main_frame = ctk.CTkFrame(self.root, fg_color=self.main_colour)
-        main_frame.pack(side='left', fill='both', expand=True, padx=(70,0))
+        main_frame.pack(side='left', fill='both', expand=True)
         return main_frame
         
     def create_version_frame(self):
@@ -395,15 +394,10 @@ class MyApp:
         version_label.pack(side='right')
         return version_frame
     
-    def create_sidebar_frame(self): 
-        sidebar_frame = ctk.CTkFrame(self.root, width=70, fg_color=self.main_colour)   
+    def create_sidebar_frame(self):
+        sidebar_frame = ctk.CTkFrame(self.main_frame, width=70, fg_color=self.main_colour)   
         sidebar_frame.pack_propagate(False)
-        sidebar_frame.place(x=0, y=0, relheight=1, anchor='nw')
-
-        # Print the x and y location of the sidebar_frame
-        print("sidebar_frame x location:", sidebar_frame.winfo_x())
-        print("sidebar_frame y location:", sidebar_frame.winfo_y())
-
+        sidebar_frame.pack(side='left', fill='y')
         return sidebar_frame
     
     # yes this is stupid but it will work for now
@@ -460,26 +454,15 @@ class MyApp:
             self.draw_frame('settings')
 
     def toggle_sidebar(self):
-        self.sidebar_width = self.sidebar_frame.winfo_width()
-
+        self.SIDEBAR_WIDTH_COLLAPSED = 70
+        self.SIDEBAR_WIDTH_EXPANDED = 200
+        
         if self.sidebar_expanded:
-            self.contract_sidebar()
+            self.sidebar_frame.configure(width=self.SIDEBAR_WIDTH_COLLAPSED)
             self.sidebar_expanded = False
         else:
-            self.expand_sidebar()
+            self.sidebar_frame.configure(width=self.SIDEBAR_WIDTH_EXPANDED)
             self.sidebar_expanded = True
-
-    def expand_sidebar(self):
-        self.sidebar_width += 7
-        if self.sidebar_width <= 200:
-            self.sidebar_frame.configure(width=self.sidebar_width)
-            self.root.after(3, self.expand_sidebar)
-    
-    def contract_sidebar(self):
-        self.sidebar_width -= 7
-        if self.sidebar_width >= 70:
-            self.sidebar_frame.configure(width=self.sidebar_width)
-            self.root.after(3, self.contract_sidebar)
 
     def create_sidebar_buttons(self):
         menu_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
