@@ -460,22 +460,22 @@ class MyApp:
 
     def toggle_sidebar(self):
         self.sidebar_width = self.sidebar_frame.winfo_width()
-        
+
         if self.sidebar_expanded:
-            self.expand_sidebar()
+            self.contract_sidebar()
             self.sidebar_expanded = False
         else:
-            self.contract_sidebar()
+            self.expand_sidebar()
             self.sidebar_expanded = True
 
     def expand_sidebar(self):
-        self.sidebar_width += 5
+        self.sidebar_width += 7
         if self.sidebar_width <= 200:
             self.sidebar_frame.configure(width=self.sidebar_width)
             self.root.after(3, self.expand_sidebar)
     
     def contract_sidebar(self):
-        self.sidebar_width -= 5
+        self.sidebar_width -= 7
         if self.sidebar_width >= 70:
             self.sidebar_frame.configure(width=self.sidebar_width)
             self.root.after(3, self.contract_sidebar)
