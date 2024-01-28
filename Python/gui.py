@@ -477,7 +477,7 @@ class MyApp:
 
         self.sidebar_home_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
         self.sidebar_home_frame.pack(side='top', fill='x')
-        self.home_button = ctk.CTkButton(self.sidebar_home_frame, image=home_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
+        self.home_button = ctk.CTkButton(self.sidebar_home_frame, image=home_image, text = "", width=70, height=50, fg_color="transparent", hover_color=self.main_colour)
         self.home_button.pack(side='left')
         self.home_label = ctk.CTkLabel(self.sidebar_home_frame, text="Home")
         self.home_label.pack(side='left')
@@ -485,7 +485,7 @@ class MyApp:
 
         self.sidebar_macro_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
         self.sidebar_macro_frame.pack(side='top', fill='x')
-        self.macros_button = ctk.CTkButton(self.sidebar_macro_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
+        self.macros_button = ctk.CTkButton(self.sidebar_macro_frame, image=macros_image, text = "", width=70, height=50, fg_color="transparent", hover_color=self.main_colour)
         self.macros_button.pack(side='left')
         self.macros_label = ctk.CTkLabel(self.sidebar_macro_frame, text="Macros")
         self.macros_label.pack(side='left')
@@ -493,7 +493,7 @@ class MyApp:
 
         self.sidebar_plugin_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
         self.sidebar_plugin_frame.pack(side='top', fill='x')
-        self.plugin_button = ctk.CTkButton(self.sidebar_plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
+        self.plugin_button = ctk.CTkButton(self.sidebar_plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color="transparent", hover_color=self.main_colour)
         self.plugin_button.pack(side='left')
         self.plugin_label = ctk.CTkLabel(self.sidebar_plugin_frame, text="Plugins")
         self.plugin_label.pack(side='left')
@@ -501,7 +501,7 @@ class MyApp:
 
         self.sidebar_profile_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
         self.sidebar_profile_frame.pack(side='top', fill='x')
-        self.profile_button = ctk.CTkButton(self.sidebar_profile_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
+        self.profile_button = ctk.CTkButton(self.sidebar_profile_frame, image=save_image, text = "", width=70, height=50, fg_color="transparent", hover_color=self.main_colour)
         self.profile_button.pack(side='left')
         self.profile_label = ctk.CTkLabel(self.sidebar_profile_frame, text="Profiles")
         self.profile_label.pack(side='left')
@@ -509,14 +509,14 @@ class MyApp:
         
         window_size_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
         window_size_frame.pack(side='top', fill='x')
-        self.window_size_button = ctk.CTkButton(window_size_frame, image=windowsize_image ,text = "", width=70, height=50, fg_color = "transparent", hover_color=self.button_hover_colour, command=self.print_window_size)
+        self.window_size_button = ctk.CTkButton(window_size_frame, image=windowsize_image ,text = "", width=70, height=50, fg_color="transparent", hover_color=self.button_hover_colour, command=self.print_window_size)
         self.window_size_button.pack(side='left')   
         self.window_size_label = ctk.CTkLabel(window_size_frame, text="")
         self.window_size_label.pack(side='left')
 
         self.sidebar_settings_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
         self.sidebar_settings_frame.pack(side='bottom', fill='x')
-        self.settings_button = ctk.CTkButton(self.sidebar_settings_frame, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
+        self.settings_button = ctk.CTkButton(self.sidebar_settings_frame, image=settings_image, text = "", width=70, height=50, fg_color="transparent", hover_color=self.main_colour)
         self.settings_button.pack(side='left')
         self.settings_label = ctk.CTkLabel(self.sidebar_settings_frame, text="Settings")
         self.settings_label.pack(side='left')
