@@ -356,29 +356,6 @@ class MyApp:
         print(f"Main frame size: {self.main_frame.winfo_width()}x{self.main_frame.winfo_height()}")
         print(f"Home frame size: {self.home_frame.winfo_width()}x{self.home_frame.winfo_height()}")
         print(f"Sidebar size: {self.sidebar_frame.winfo_width()}x{self.sidebar_frame.winfo_height()}")
-        
-    def toggle_sidebar(self):
-        self.SIDEBAR_WIDTH_COLLAPSED = 70
-        self.SIDEBAR_WIDTH_EXPANDED = 200
-        
-        if self.sidebar_expanded:
-            self.sidebar_frame.configure(width=self.SIDEBAR_WIDTH_COLLAPSED)
-            self.menu_label.configure(text="", width=0)
-            self.home_label.configure(text="", width=0)
-            self.macros_label.configure(text="", width=0)
-            self.plugin_label.configure(text="", width=0)
-            self.profile_label.configure(text="", width=0)
-            self.settings_label.configure(text="", width=0)
-            self.sidebar_expanded = False
-        else:
-            self.sidebar_frame.configure(width=self.SIDEBAR_WIDTH_EXPANDED)
-            self.menu_label.configure(text="Hide")
-            self.home_label.configure(text="Home")
-            self.macros_label.configure(text="Macros")
-            self.plugin_label.configure(text="Plugins")
-            self.profile_label.configure(text="Profiles")
-            self.settings_label.configure(text="Settings")  
-            self.sidebar_expanded = True
 
     def draw_frame(self, frame_name):
         self.home_frame.pack_forget()
@@ -388,6 +365,7 @@ class MyApp:
         self.settings_frame.pack_forget()
 
         if frame_name == 'home':
+            #place the colour bar here as well
             self.home_frame.pack(side='top', fill='both', expand=True)
         elif frame_name == 'macro':
             self.macro_frame.pack(side='top', fill='both', expand=True)
@@ -469,6 +447,17 @@ class MyApp:
         elif frame_name == 'settings':
             self.draw_frame('settings')
 
+    def toggle_sidebar(self):
+        self.SIDEBAR_WIDTH_COLLAPSED = 70
+        self.SIDEBAR_WIDTH_EXPANDED = 200
+        
+        if self.sidebar_expanded:
+            self.sidebar_frame.configure(width=self.SIDEBAR_WIDTH_COLLAPSED)
+            self.sidebar_expanded = False
+        else:
+            self.sidebar_frame.configure(width=self.SIDEBAR_WIDTH_EXPANDED)
+            self.sidebar_expanded = True
+
     def create_sidebar_buttons(self):
         menu_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_menu.png").resize((18,18), Image.Resampling.LANCZOS))
         home_image = ImageTk.PhotoImage(Image.open("Python/data/icons/icon_home.png").resize((16,16), Image.Resampling.LANCZOS))
@@ -482,7 +471,7 @@ class MyApp:
         self.sidebar_menu_frame.pack(side='top', fill='x')
         self.menu_button = ctk.CTkButton(self.sidebar_menu_frame, image=menu_image, text = "", width=70, height=50, fg_color="transparent", hover_color=self.main_colour)
         self.menu_button.pack(side='left')
-        self.menu_label = ctk.CTkLabel(self.sidebar_menu_frame, text="")
+        self.menu_label = ctk.CTkLabel(self.sidebar_menu_frame, text="Hide")
         self.menu_label.pack(side='left')
         self.bind_widgets(self.sidebar_menu_frame, 'menu')
 
@@ -490,7 +479,7 @@ class MyApp:
         self.sidebar_home_frame.pack(side='top', fill='x')
         self.home_button = ctk.CTkButton(self.sidebar_home_frame, image=home_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.home_button.pack(side='left')
-        self.home_label = ctk.CTkLabel(self.sidebar_home_frame, text="")
+        self.home_label = ctk.CTkLabel(self.sidebar_home_frame, text="Home")
         self.home_label.pack(side='left')
         self.bind_widgets(self.sidebar_home_frame, 'home')
 
@@ -498,7 +487,7 @@ class MyApp:
         self.sidebar_macro_frame.pack(side='top', fill='x')
         self.macros_button = ctk.CTkButton(self.sidebar_macro_frame, image=macros_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.macros_button.pack(side='left')
-        self.macros_label = ctk.CTkLabel(self.sidebar_macro_frame, text="")
+        self.macros_label = ctk.CTkLabel(self.sidebar_macro_frame, text="Macros")
         self.macros_label.pack(side='left')
         self.bind_widgets(self.sidebar_macro_frame, 'macro')
 
@@ -506,7 +495,7 @@ class MyApp:
         self.sidebar_plugin_frame.pack(side='top', fill='x')
         self.plugin_button = ctk.CTkButton(self.sidebar_plugin_frame, image=plugins_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.plugin_button.pack(side='left')
-        self.plugin_label = ctk.CTkLabel(self.sidebar_plugin_frame, text="")
+        self.plugin_label = ctk.CTkLabel(self.sidebar_plugin_frame, text="Plugins")
         self.plugin_label.pack(side='left')
         self.bind_widgets(self.sidebar_plugin_frame, 'plugin')
 
@@ -514,7 +503,7 @@ class MyApp:
         self.sidebar_profile_frame.pack(side='top', fill='x')
         self.profile_button = ctk.CTkButton(self.sidebar_profile_frame, image=save_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.profile_button.pack(side='left')
-        self.profile_label = ctk.CTkLabel(self.sidebar_profile_frame, text="")
+        self.profile_label = ctk.CTkLabel(self.sidebar_profile_frame, text="Profiles")
         self.profile_label.pack(side='left')
         self.bind_widgets(self.sidebar_profile_frame, 'profile')
         
@@ -529,7 +518,7 @@ class MyApp:
         self.sidebar_settings_frame.pack(side='bottom', fill='x')
         self.settings_button = ctk.CTkButton(self.sidebar_settings_frame, image=settings_image, text = "", width=70, height=50, fg_color = "transparent", hover_color=self.main_colour)
         self.settings_button.pack(side='left')
-        self.settings_label = ctk.CTkLabel(self.sidebar_settings_frame, text="")
+        self.settings_label = ctk.CTkLabel(self.sidebar_settings_frame, text="Settings")
         self.settings_label.pack(side='left')
         self.bind_widgets(self.sidebar_settings_frame, 'settings')
     
