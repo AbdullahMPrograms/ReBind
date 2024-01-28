@@ -358,6 +358,11 @@ class MyApp:
         print(f"Sidebar size: {self.sidebar_frame.winfo_width()}x{self.sidebar_frame.winfo_height()}")
 
     def draw_frame(self, frame_name):
+        try:
+            self.selected_frame_indicator.place_forget()
+        except AttributeError:
+            self.selected_frame_indicator = ctk.CTkLabel(self.sidebar_frame, width=3, height=50, fg_color="white", text="")
+
         self.home_frame.pack_forget()
         self.macro_frame.pack_forget()
         self.plugin_frame.pack_forget()
@@ -365,15 +370,19 @@ class MyApp:
         self.settings_frame.pack_forget()
 
         if frame_name == 'home':
-            #place the colour bar here as well
+            self.selected_frame_indicator.place(x=0, y=50)
             self.home_frame.pack(side='top', fill='both', expand=True)
         elif frame_name == 'macro':
+            self.selected_frame_indicator.place(x=0, y=100)
             self.macro_frame.pack(side='top', fill='both', expand=True)
         elif frame_name == 'plugin':
+            self.selected_frame_indicator.place(x=0, y=150)
             self.plugin_frame.pack(side='top', fill='both', expand=True)
         elif frame_name == 'profile':
+            self.selected_frame_indicator.place(x=0, y=200)
             self.profile_frame.pack(side='top', fill='both', expand=True)   
         elif frame_name == 'settings':
+            self.selected_frame_indicator.place(x=0, y=(self.root.winfo_height()-50))
             self.settings_frame.pack(side='top', fill='both', expand=True)
         
     def create_main_frame(self):
