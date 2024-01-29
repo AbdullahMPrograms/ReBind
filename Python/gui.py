@@ -67,7 +67,7 @@ class MyApp:
 
     def set_layout(self, layout):
         print("Setting layout:", layout)
-        self.keys = self.get_layout_keys(layout)
+        self.keyboard_keys = self.get_layout_keys(layout)
 
     def get_layout_keys(self, layout):
         with open(f'Python/data/layouts/{layout}.ini', 'r') as file:
@@ -82,6 +82,7 @@ class MyApp:
     def draw_replace_key(self, button_name):
         self.replace_key_window = ctk.CTkToplevel(self.root)
         self.replace_key_window.geometry('400x460')
+        #self.replace_key_window.resizable(False, False)
         self.key_to_be_replaced = button_name
 
         modifier = self.modifier_dropdown.get()
@@ -180,16 +181,15 @@ class MyApp:
             # Check if the clicked key's original value and key value are different
             if layer and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}) and remap_keys["remapped_keys"]["global"][layer][self.key_to_be_replaced]["key"] != key:
                 buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
+                reset_button.pack(anchor='center', expand=True)
             elif program and layer and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}) and remap_keys["remapped_keys"][program][layer][self.key_to_be_replaced]["key"] != key:
                 buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)  # Show the Reset button in the center
+                reset_button.pack(anchor='center', expand=True)
 
     def update_search_bar(self, remappable_key, text, search_bar):
         current_text = search_bar.get()
-        self.select_button(remappable_key, text)
+        self.select_button(remappable_key, text) 
 
-        # If this button is not selected
         if remappable_key not in self.selected_remappable_keys:
             # Remove the text of the button from the search bar
             parts = current_text.split(' + ')
@@ -604,27 +604,27 @@ class MyApp:
         max_x = 0
         max_y = 0
 
-        keys_frame = ctk.CTkFrame(self.home_frame, fg_color=self.keys_frame_colour, border_width=2, border_color="white")
-        keys_frame.pack(side='top', fill='both', expand=True)
+        keyboard_keys_frame = ctk.CTkFrame(self.home_frame, fg_color=self.keys_frame_colour, border_width=2, border_color="white")
+        keyboard_keys_frame.pack(side='top', fill='both', expand=True)
 
-        for key in self.keys:
-            text, x, y, width, height = key
-            button = ctk.CTkButton(keys_frame, text=text, width=width, height=height, fg_color=self.key_button_colour, command=lambda text=text: self.draw_replace_key(text))
-            button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
+        for keyboard_key in self.keyboard_keys:
+            text, x, y, width, height = keyboard_key
+            key_button = ctk.CTkButton(keyboard_keys_frame, text=text, width=width, height=height, fg_color=self.key_button_colour, command=lambda text=text: self.draw_replace_key(text))
+            key_button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
             if text == "Num Wheel":
-                button.configure(text=" ", corner_radius=20)
-            button.place(x=x, y=y)
-            original_font_size = int(button._text_label.cget("font").split(" ")[1])
-            button.bind("<Enter>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.shrink_button(button, x, y, width, height, original_font_size))
-            button.bind("<Leave>", lambda event, button=button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.restore_button(button, x, y, width, height, original_font_size))
+                key_button.configure(text=" ", corner_radius=20)
+            key_button.place(x=x, y=y)
+            original_font_size = int(key_button._text_label.cget("font").split(" ")[1])
+            key_button.bind("<Enter>", lambda event, key_button=key_button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.shrink_button(key_button, x, y, width, height, original_font_size))
+            key_button.bind("<Leave>", lambda event, key_button=key_button, x=x, y=y, width=width, height=height, original_font_size=original_font_size: self.restore_button(key_button, x, y, width, height, original_font_size))
             max_x = max(max_x, x + width)
             max_y = max(max_y, y + height)
 
-        keys_frame.configure(width=max_x + 10, height=max_y + 10) #this will go soon
+        keyboard_keys_frame.configure(width=max_x + 10, height=max_y + 10) #this will go soon
         self.home_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 170) #set as min size in home frame creation
         self.main_frame.configure(width=self.sidebar_frame['width'] + self.home_frame['width'], height=max_y + 210) #set as min size in main frame creation
-        keys_frame.place(relx=0.5, rely=0.5, anchor='center')
-        return keys_frame
+        keyboard_keys_frame.place(relx=0.5, rely=0.5, anchor='center')
+        return keyboard_keys_frame
 
     def create_macro_frame(self):
         macro_frame = ctk.CTkFrame(self.main_frame, fg_color=self.bg_colour)

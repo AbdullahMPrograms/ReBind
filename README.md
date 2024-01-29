@@ -33,6 +33,8 @@ TO DO:
   - do later, too complicated
   - USE .after for all threaded calls (does not interrupt main loop)
 
+- maybe make the keyboard frame update only after the sidebar has been expanded in the animation ver
+
 - make it so that when a modifier key is selected it will shrink the corresponding modifier key like in the shrink function, if that text exists shrink
   - will require keyboardkeys json integration
 - when selecting a program/layer it should update the keyboard to show the keys rebound in that program/layer
