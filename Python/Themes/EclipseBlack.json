@@ -1,0 +1,19 @@
+{
+    "colours": {
+        "main": "#141414",
+        "background": "gray10",
+        "button_hover": "gray10",
+        "button_press": "#3c8dbc",
+        "button_selected": "gray8",
+        "segmented_button_hover": "gray10",
+        "dropdown": "gray20",
+        "keys_frame": "#050505",
+        "key_button": "#272727",
+        "notification_frame": "gray20",
+        "selected_frame_indicator": "white"
+    },
+    "fonts": {
+        "font": "Roboto",
+        "font_colour": "#000000"
+    }
+}

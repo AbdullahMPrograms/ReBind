@@ -2,18 +2,17 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 import ast
 import os
-import configparser #will go soon, switching ini to json
 import json
 
 class MyApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("ReBind")
-        self.root.minsize(1250, 570) #Tenkeyless size, works well with 60%
+        self.root.minsize(1250, 570)
         self.themes = self.get_available_themes()
-        self.set_theme(self.themes[1])  # Set the first available theme
+        self.set_theme(self.themes[1])
         self.layouts = self.get_available_layouts()
-        self.set_layout(self.layouts[1])  # Set the first available layout
+        self.set_layout(self.layouts[1])
         self.sidebar_expanded = False
         self.main_frame = self.create_main_frame()
         self.sidebar_frame = self.create_sidebar_frame()
@@ -34,15 +33,15 @@ class MyApp:
         themes = []
         theme_files = os.listdir("Python/Themes")
         for file in theme_files:
-            if file.endswith('.ini'):
-                themes.append(file[:-4])  # Remove the .ini extension
+            if file.endswith('.json'):  # Look for .json files instead of .ini
+                themes.append(file[:-5])  # Remove the .json extension
         print('Detected themes:', themes)
         return themes
 
     def set_theme(self, theme):
         print("Setting theme:", theme)
-        config = configparser.ConfigParser()
-        config.read(f'Python/Themes/{theme}.ini')
+        with open(f'Python/Themes/{theme}.json', 'r') as f:  # Open the .json file
+            config = json.load(f)  # Parse the JSON
         colours = config['colours']
         self.bg_colour = colours['background']
         self.main_colour = colours['main']
@@ -54,14 +53,14 @@ class MyApp:
         self.keys_frame_colour = colours['keys_frame']
         self.key_button_colour = colours['key_button']
         self.notification_frame_colour = colours['notification_frame']
-        self.selected_frame_indicator_colour = colours['selected_frame_indicator']  
+        self.selected_frame_indicator_colour = colours['selected_frame_indicator']
 
     def get_available_layouts(self):
         layouts = []
         layout_files = os.listdir("Python/data/layouts")
         for file in layout_files:
-            if file.endswith('.ini'):
-                layouts.append(file[:-4])  # Remove the .ini extension
+            if file.endswith('.json'):  # Look for .json files instead of .ini
+                layouts.append(file[:-5])  # Remove the .json extension
         print('Detected layouts:', layouts)
         return layouts
 
