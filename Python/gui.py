@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
-import ast
 import os
 import json
 
@@ -69,8 +68,8 @@ class MyApp:
         self.keyboard_keys = self.get_layout_keys(layout)
 
     def get_layout_keys(self, layout):
-        with open(f'Python/data/layouts/{layout}.ini', 'r') as file:
-            keys = ast.literal_eval(file.read())
+        with open(f'Python/data/layouts/{layout}.json', 'r') as file:  # Open the .json file
+            keys = json.load(file)  # Parse the JSON
         return keys
 
     def get_remap_keys(self):
@@ -607,7 +606,7 @@ class MyApp:
         keyboard_keys_frame.pack(side='top', fill='both', expand=True)
 
         for keyboard_key in self.keyboard_keys:
-            text, x, y, width, height = keyboard_key
+            text, x, y, width, height = keyboard_key.values()  # Get the values from the dictionary
             key_button = ctk.CTkButton(keyboard_keys_frame, text=text, width=width, height=height, fg_color=self.key_button_colour, command=lambda text=text: self.draw_replace_key(text))
             key_button._text_label.configure(wraplength=width*0.8)  # Configure word wrap
             if text == "Num Wheel":
