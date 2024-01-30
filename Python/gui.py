@@ -2,7 +2,7 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 import os
 import json
-#
+
 class MyApp:
     def __init__(self):
         self.root = ctk.CTk()
