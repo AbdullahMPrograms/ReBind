@@ -29,18 +29,19 @@ class MyApp:
         self.draw_frame('home')
 
     def get_available_themes(self):
-        themes = []
+        self.available_themes = []
         theme_files = os.listdir("Python/Themes")
         for file in theme_files:
             if file.endswith('.json'):  # Look for .json files instead of .ini
-                themes.append(file[:-5])  # Remove the .json extension
-        print('Detected themes:', themes)
-        return themes
+                self.available_themes.append(file[:-5])  # Remove the .json extension
+        print('Detected themes:', self.available_themes)
+        return self.available_themes
 
     def set_theme(self, theme):
         print("Setting theme:", theme)
         with open(f'Python/Themes/{theme}.json', 'r') as f:  # Open the .json file
             config = json.load(f)  # Parse the JSON
+        self.current_theme = theme
         colours = config['colours']
         self.bg_colour = colours['background']
         self.main_colour = colours['main']
@@ -55,16 +56,17 @@ class MyApp:
         self.selected_frame_indicator_colour = colours['selected_frame_indicator']
 
     def get_available_layouts(self):
-        layouts = []
+        self.available_layouts = []
         layout_files = os.listdir("Python/data/layouts")
         for file in layout_files:
             if file.endswith('.json'):  # Look for .json files instead of .ini
-                layouts.append(file[:-5])  # Remove the .json extension
-        print('Detected layouts:', layouts)
-        return layouts
+                self.available_layouts.append(file[:-5])  # Remove the .json extension
+        print('Detected layouts:', self.available_layouts)
+        return self.available_layouts
 
     def set_layout(self, layout):
         print("Setting layout:", layout)
+        self.current_layout = layout
         self.keyboard_keys = self.get_layout_keys(layout)
 
     def get_layout_keys(self, layout):
@@ -656,21 +658,25 @@ class MyApp:
         general_settings_label = ctk.CTkLabel(general_settings_frame, text="GENERAL", font=('Bold', 22))
         general_settings_label.pack(side='top', pady=(10,50))
         
-        theme_frame = ctk.CTkFrame(general_settings_frame, bg_color="transparent", height=45)
-        theme_frame.pack(side='top', fill='x', padx=165, pady=(0,5))
-        theme_frame.pack_propagate(False)
-        theme_label = ctk.CTkLabel(theme_frame, text="Theme")
-        theme_label.pack(side='left')
-        theme_dropdown = ctk.CTkOptionMenu(theme_frame)
-        theme_dropdown.pack(side='right')
+        settings_theme_frame = ctk.CTkFrame(general_settings_frame, fg_color="transparent", height=45)
+        settings_theme_frame.pack(side='top', fill='x', padx=225, pady=(0,5))
+        settings_theme_frame.pack_propagate(False)
+        settings_theme_label = ctk.CTkLabel(settings_theme_frame, text="Theme")
+        settings_theme_label.pack(side='left')
+        settings_theme_dropdown = ctk.CTkOptionMenu(settings_theme_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour)
+        settings_theme_dropdown.configure(values=self.available_themes)
+        settings_theme_dropdown.set(self.current_theme)
+        settings_theme_dropdown.pack(side='right')
         
-        key_tester_frame = ctk.CTkFrame(general_settings_frame, bg_color="transparent", height=45)
-        key_tester_frame.pack(side='top', fill='x', padx=165)
-        key_tester_frame.pack_propagate(False)
-        key_tester_label = ctk.CTkLabel(key_tester_frame, text="Enable Key Tester")
-        key_tester_label.pack(side='left')
-        key_tester_switch = ctk.CTkSwitch(key_tester_frame, text="")
-        key_tester_switch.pack(side='right')
+        settings_layout_frame = ctk.CTkFrame(general_settings_frame, fg_color="transparent", height=45)
+        settings_layout_frame.pack(side='top', fill='x', padx=225, pady=(0,5))
+        settings_layout_frame.pack_propagate(False)
+        settings_layout_label = ctk.CTkLabel(settings_layout_frame, text="Layout")
+        settings_layout_label.pack(side='left')
+        settings_layout_dropdown = ctk.CTkOptionMenu(settings_layout_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour)
+        settings_layout_dropdown.configure(values=self.available_layouts)
+        settings_layout_dropdown.set(self.current_layout)
+        settings_layout_dropdown.pack(side='right')
         
         return general_settings_frame
     
