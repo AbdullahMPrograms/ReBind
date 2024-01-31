@@ -18,6 +18,7 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
+- program and modifier dropdown values should read from remapped_keys in json to populate options
 - fix being able to reset global bind when in program bind
 
 - for layouts several things need to be changed

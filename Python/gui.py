@@ -329,33 +329,26 @@ class MyApp:
         self.selected_remappable_keys.clear()  # Clear the list of selected buttons
 
     def create_notification_frame(self, title, body_text):
-        # Create a new frame at the top right of the window
         self.notification_frame = ctk.CTkFrame(self.home_frame, border_width=1, border_color="white", fg_color=self.notification_frame_colour, bg_color=self.bg_colour)
         self.notification_frame.place(relx=0.99, rely=0.015, anchor='ne')
-
-        # Create a frame for the labels
+        
         self.label_frame = ctk.CTkFrame(self.notification_frame, fg_color="transparent")
         self.label_frame.pack(side='top', fill='both', expand=False, padx=(10,30), pady=(10,0))
 
-        # Add a title to the frame
         title_label = ctk.CTkLabel(self.label_frame, text=title)
         title_label.pack(side='top', anchor="w")
 
-        # Add body text to the frame
         body_label = ctk.CTkLabel(self.label_frame, text=body_text)
         body_label.pack(side='top', anchor="w")
 
-        # Add a progress bar to the frame
         self.progress_bar = ctk.CTkProgressBar(self.notification_frame, progress_color=self.key_button_colour, determinate_speed=0.4, height=6)
         self.progress_bar.pack(side="bottom", fill="x", pady=(10,2), padx=3)
         self.progress_bar.set(0)
         self.progress_bar.start()
 
-        # Schedule a function to check the progress bar's value
         self.check_progress()
 
     def check_progress(self):
-        # Get the current value of the progress bar
         value = self.progress_bar.get()
 
         # If the progress bar is full, destroy the frame
