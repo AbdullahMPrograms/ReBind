@@ -21,7 +21,6 @@ class MyApp:
         self.set_layout(self.current_layout)
         
     def initialize_frames(self):
-        self.sidebar_expanded = False
         self.main_frame = self.create_main_frame()
         self.sidebar_frame = self.create_sidebar_frame()
         self.home_frame = self.create_home_frame()
@@ -426,6 +425,7 @@ class MyApp:
         sidebar_frame = ctk.CTkFrame(self.main_frame, width=70, fg_color=self.main_colour)   
         sidebar_frame.pack_propagate(False)
         sidebar_frame.pack(side='left', fill='y')
+        self.sidebar_expanded = False
         return sidebar_frame
     
     # yes this is stupid but it will work for now
