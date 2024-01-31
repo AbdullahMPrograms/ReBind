@@ -18,6 +18,8 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
+- fix being able to reset global bind when in program bind
+
 - for layouts several things need to be changed
   - the keys_frame will now be called keyboard_keys_frame and placed in keyboard_frame (follow gmmk packaging)
   - in the JSON file for the layout each button should have "key_colour_1" "key_colour_2" for proper keyboard colour layouts (like keycaps)

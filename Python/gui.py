@@ -205,10 +205,10 @@ class MyApp:
             self.remappable_keys.append(remappable_key)
 
             # Check if the clicked key's original value and key value are different
-            if layer and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}) and remap_keys["remapped_keys"]["global"][layer][self.key_to_be_replaced]["key"] != key:
+            if layer and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}) and remap_keys["remapped_keys"]["global"][layer][self.key_to_be_replaced] != key:
                 buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
                 reset_button.pack(anchor='center', expand=True)
-            elif program and layer and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}) and remap_keys["remapped_keys"][program][layer][self.key_to_be_replaced]["key"] != key:
+            elif program and layer and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}) and remap_keys["remapped_keys"][program][layer][self.key_to_be_replaced] != key:
                 buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
                 reset_button.pack(anchor='center', expand=True)
 
