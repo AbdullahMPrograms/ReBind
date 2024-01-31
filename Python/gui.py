@@ -10,6 +10,17 @@ class MyApp:
         self.root.title("ReBind")
         self.root.minsize(1250, 570)
         self.initialize_settings()
+        self.initialize_frames()
+
+    def initialize_settings(self):
+        self.settings_file = "Python/data/settings.json"
+        self.load_settings()
+        self.themes = self.get_available_themes()
+        self.set_theme(self.current_theme)
+        self.layouts = self.get_available_layouts()
+        self.set_layout(self.current_layout)
+        
+    def initialize_frames(self):
         self.sidebar_expanded = False
         self.main_frame = self.create_main_frame()
         self.sidebar_frame = self.create_sidebar_frame()
@@ -20,19 +31,10 @@ class MyApp:
         self.settings_frame = self.create_settings_frame()
         self.modification_frame = self.create_modification_frame()
         self.keys_frame = self.create_keys_frame()
-        self.selected_remappable_keys = []
         self.version_frame = self.create_version_frame()
         self.create_sidebar_buttons()
         self.general_settings_frame = self.create_general_settings_frame()
         self.draw_frame('home')
-
-    def initialize_settings(self):
-        self.settings_file = "Python/data/settings.json"
-        self.load_settings()
-        self.themes = self.get_available_themes()
-        self.set_theme(self.current_theme)
-        self.layouts = self.get_available_layouts()
-        self.set_layout(self.current_layout)
 
     def load_settings(self):
         try:
