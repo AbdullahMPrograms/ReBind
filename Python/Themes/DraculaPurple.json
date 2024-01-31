@@ -6,9 +6,11 @@
         "button_press": "#bd93f9",
         "button_selected": "#51527c",
         "segmented_button_hover": "#696969",
+        "dropdown": "gray20",
         "keys_frame": "#21252b",
         "key_button": "#51527c",
-        "notification_frame": "#353C46"
+        "notification_frame": "#353C46",
+        "selected_frame_indicator": "white"
     },
     "fonts": {
         "font": "Roboto",

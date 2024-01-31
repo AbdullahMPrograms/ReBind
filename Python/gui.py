@@ -8,10 +8,7 @@ class MyApp:
         self.root = ctk.CTk()
         self.root.title("ReBind")
         self.root.minsize(1250, 570)
-        self.themes = self.get_available_themes()
-        self.set_theme(self.themes[1])
-        self.layouts = self.get_available_layouts()
-        self.set_layout(self.layouts[1])
+        self.initialize_settings()
         self.sidebar_expanded = False
         self.main_frame = self.create_main_frame()
         self.sidebar_frame = self.create_sidebar_frame()
@@ -28,6 +25,32 @@ class MyApp:
         self.general_settings_frame = self.create_general_settings_frame()
         self.draw_frame('home')
 
+    def initialize_settings(self):
+        self.settings_file = "Python/data/settings.json"
+        self.load_settings()
+        self.themes = self.get_available_themes()
+        self.set_theme(self.current_theme)
+        self.layouts = self.get_available_layouts()
+        self.set_layout(self.current_layout)
+
+    def load_settings(self):
+        try:
+            with open(self.settings_file, 'r') as f:
+                settings = json.load(f)
+                self.current_theme = settings['theme']
+                self.current_layout = settings['layout']
+        except (FileNotFoundError, json.JSONDecodeError, KeyError):
+            self.current_theme = 'EclipseBlack'
+            self.current_layout = 'IK75'
+
+    def save_settings(self):
+        settings = {
+            'theme': self.current_theme,
+            'layout': self.current_layout
+        }
+        with open(self.settings_file, 'w') as f:
+            json.dump(settings, f, indent=4)
+
     def get_available_themes(self):
         self.available_themes = []
         theme_files = os.listdir("Python/Themes")
@@ -41,7 +64,6 @@ class MyApp:
         print("Setting theme:", theme)
         with open(f'Python/Themes/{theme}.json', 'r') as f:  # Open the .json file
             config = json.load(f)  # Parse the JSON
-        self.current_theme = theme
         colours = config['colours']
         self.bg_colour = colours['background']
         self.main_colour = colours['main']
@@ -54,6 +76,8 @@ class MyApp:
         self.key_button_colour = colours['key_button']
         self.notification_frame_colour = colours['notification_frame']
         self.selected_frame_indicator_colour = colours['selected_frame_indicator']
+        self.current_theme = theme
+        self.save_settings()
 
     def get_available_layouts(self):
         self.available_layouts = []
@@ -67,6 +91,7 @@ class MyApp:
     def set_layout(self, layout):
         print("Setting layout:", layout)
         self.current_layout = layout
+        self.save_settings()
         self.keyboard_keys = self.get_layout_keys(layout)
 
     def get_layout_keys(self, layout):
@@ -663,7 +688,7 @@ class MyApp:
         settings_theme_frame.pack_propagate(False)
         settings_theme_label = ctk.CTkLabel(settings_theme_frame, text="Theme")
         settings_theme_label.pack(side='left')
-        settings_theme_dropdown = ctk.CTkOptionMenu(settings_theme_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour)
+        settings_theme_dropdown = ctk.CTkOptionMenu(settings_theme_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour, command=lambda theme: self.set_theme(theme))
         settings_theme_dropdown.configure(values=self.available_themes)
         settings_theme_dropdown.set(self.current_theme)
         settings_theme_dropdown.pack(side='right')
@@ -673,11 +698,10 @@ class MyApp:
         settings_layout_frame.pack_propagate(False)
         settings_layout_label = ctk.CTkLabel(settings_layout_frame, text="Layout")
         settings_layout_label.pack(side='left')
-        settings_layout_dropdown = ctk.CTkOptionMenu(settings_layout_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour)
+        settings_layout_dropdown = ctk.CTkOptionMenu(settings_layout_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour, command=lambda layout: self.set_layout(layout))
         settings_layout_dropdown.configure(values=self.available_layouts)
         settings_layout_dropdown.set(self.current_layout)
         settings_layout_dropdown.pack(side='right')
-        
         return general_settings_frame
     
     def run(self):
