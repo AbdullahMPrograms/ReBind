@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
 import os
+import sys
 import json
 
 class MyApp:
@@ -688,7 +689,7 @@ class MyApp:
         settings_theme_frame.pack_propagate(False)
         settings_theme_label = ctk.CTkLabel(settings_theme_frame, text="Theme")
         settings_theme_label.pack(side='left')
-        settings_theme_dropdown = ctk.CTkOptionMenu(settings_theme_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour, command=lambda theme: self.set_theme(theme))
+        settings_theme_dropdown = ctk.CTkOptionMenu(settings_theme_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour, command=lambda theme: [self.set_theme(theme), self.refresh()])
         settings_theme_dropdown.configure(values=self.available_themes)
         settings_theme_dropdown.set(self.current_theme)
         settings_theme_dropdown.pack(side='right')
@@ -698,11 +699,16 @@ class MyApp:
         settings_layout_frame.pack_propagate(False)
         settings_layout_label = ctk.CTkLabel(settings_layout_frame, text="Layout")
         settings_layout_label.pack(side='left')
-        settings_layout_dropdown = ctk.CTkOptionMenu(settings_layout_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour, command=lambda layout: self.set_layout(layout))
+        settings_layout_dropdown = ctk.CTkOptionMenu(settings_layout_frame, fg_color=self.main_colour, button_color=self.dropdown_colour, button_hover_color=self.button_hover_colour, command=lambda layout: [self.set_layout(layout), self.refresh()])
         settings_layout_dropdown.configure(values=self.available_layouts)
         settings_layout_dropdown.set(self.current_layout)
         settings_layout_dropdown.pack(side='right')
         return general_settings_frame
+    
+    def refresh(self):
+        print("Refreshing...")
+        python = sys.executable
+        os.execl(python, python, * sys.argv)
     
     def run(self):
         self.root.resizable(False, False)
