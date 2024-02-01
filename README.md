@@ -19,6 +19,8 @@ TO DO LATER:
 # ReBind GUI (Python)
 TO DO:
 - program and modifier dropdown values should read from remapped_keys in json to populate options
+  - modifier is currently added as test to key_to_be_replaced, should rather be the same way as program/layer
+  - new remappedkeys format should be: Program(if it exists)/global -> layer -> modifer(if it exists) -> key
 - fix being able to reset global bind when in program bind
 
 - for layouts several things need to be changed

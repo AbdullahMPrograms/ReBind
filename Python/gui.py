@@ -98,8 +98,11 @@ class MyApp:
         return keys
 
     def get_remap_keys(self):
-        with open('Python/data/remap_keys.json', 'r') as file:
-            remap_keys = json.load(file)
+        try:
+            with open('Python/data/remap_keys.json', 'r') as file:
+                remap_keys = json.load(file)
+        except FileNotFoundError:
+            remap_keys = {"original_keys": {}, "remapped_keys": {"global": {}}}
         return remap_keys
 
     def draw_replace_key(self, button_name):
@@ -231,17 +234,14 @@ class MyApp:
         search_bar.insert(0, new_text.strip())
 
     def save_replaced_key(self):
-        # Get the selected options
         program = self.program_dropdown.get()
         focus = self.focus_dropdown.get()
         layer = self.layer_var.get()
 
         # Start building the print statement
         replaced_key = self.key_to_be_replaced + " has been replaced with "
-        
         # Get the names of the selected keys
         selected_keys = [button.cget('text') for button in self.selected_remappable_keys]
-        
         # Add the selected keys to the print statement
         replaced_key += " + ".join(selected_keys)
         
@@ -254,13 +254,8 @@ class MyApp:
         
         self.create_notification_frame("Saving...", replaced_key)
 
-        # Load the existing JSON file or create a new one if it doesn't exist
-        try:
-            with open('Python/data/remap_keys.json', 'r') as file:
-                remap_keys = json.load(file)
-        except FileNotFoundError:
-            remap_keys = {"original_keys": {}, "remapped_keys": {"global": {}}}
-
+        remap_keys = self.get_remap_keys()
+        
         # Update the remap_keys
         remapped_key = self.key_to_be_replaced
 
