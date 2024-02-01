@@ -105,6 +105,44 @@
         "Num ."
     ],
     "remapped_keys": {
-        "global": {}
+        "global": {
+            "layer_0": {
+                "LShift": {
+                    "K": {
+                        "key": "Esc"
+                    },
+                    "N": {
+                        "key": "Esc"
+                    }
+                },
+                "H": {
+                    "key": "Esc"
+                }
+            }
+        },
+        "Youtube": {
+            "layer_0": {
+                "RAlt": {
+                    "Right": {
+                        "key": "LShift + N",
+                        "focus_modifier": "Yes"
+                    }
+                }
+            }
+        },
+        "Stremio": {
+            "layer_0": {
+                "RAlt": {
+                    "Down": {
+                        "key": "Space",
+                        "focus_modifier": "Yes"
+                    }
+                },
+                "L": {
+                    "key": "F2",
+                    "focus_modifier": "Yes"
+                }
+            }
+        }
     }
 }

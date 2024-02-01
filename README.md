@@ -21,7 +21,9 @@ TO DO:
 - program and modifier dropdown values should read from remapped_keys in json to populate options
   - modifier is currently added as test to key_to_be_replaced, should rather be the same way as program/layer
   - new remappedkeys format should be: Program(if it exists)/global -> layer -> modifer(if it exists) -> key
-- fix being able to reset global bind when in program bind
+  - maybe make it so that it will be "modifier: ____" like it is "key: ___"
+- fix being able to reset global bind when in program bind (create_button function handles this)
+- re-add x to notification frame, now if click on notification frame it will close
 
 - for layouts several things need to be changed
   - the keys_frame will now be called keyboard_keys_frame and placed in keyboard_frame (follow gmmk packaging)
