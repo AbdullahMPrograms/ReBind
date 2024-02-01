@@ -59,11 +59,9 @@ class MyApp:
         for file in theme_files:
             if file.endswith('.json'):  # Look for .json files instead of .ini
                 self.available_themes.append(file[:-5])  # Remove the .json extension
-        print('Detected themes:', self.available_themes)
         return self.available_themes
 
     def set_theme(self, theme):
-        print("Setting theme:", theme)
         with open(f'Python/Themes/{theme}.json', 'r') as f:  # Open the .json file
             config = json.load(f)  # Parse the JSON
         colours = config['colours']
@@ -87,11 +85,9 @@ class MyApp:
         for file in layout_files:
             if file.endswith('.json'):  # Look for .json files instead of .ini
                 self.available_layouts.append(file[:-5])  # Remove the .json extension
-        print('Detected layouts:', self.available_layouts)
         return self.available_layouts
 
     def set_layout(self, layout):
-        print("Setting layout:", layout)
         self.current_layout = layout
         self.save_settings()
         self.keyboard_keys = self.get_layout_keys(layout)
@@ -256,7 +252,6 @@ class MyApp:
         if layer:
             replaced_key += f" on Layer: {layer}"
         
-        print(replaced_key)
         self.create_notification_frame("Saving...", replaced_key)
 
         # Load the existing JSON file or create a new one if it doesn't exist
@@ -323,7 +318,6 @@ class MyApp:
         with open('Python/data/remap_keys.json', 'w') as file:
             json.dump(remap_keys, file, indent=4)
 
-        print(f"Key: {self.key_to_be_replaced} has been reset to its original value.")
         self.create_notification_frame("Resetting...", f"Key: {self.key_to_be_replaced} has been reset to its original value.")
         self.replace_key_window.destroy()
         self.selected_remappable_keys.clear()  # Clear the list of selected buttons
@@ -359,7 +353,6 @@ class MyApp:
             self.root.after(50, self.check_progress)
 
     def select_button(self, remappable_key, text):
-        print(f"{text} selected")
         if remappable_key in self.selected_remappable_keys:  # If this button is already selected
             self.selected_remappable_keys.remove(remappable_key)  # Deselect it
             remappable_key.configure(fg_color="transparent")
