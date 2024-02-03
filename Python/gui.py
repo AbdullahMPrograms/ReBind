@@ -112,7 +112,7 @@ class MyApp:
         self.key_to_be_replaced = button_name
 
         modifier = self.modifier_dropdown.get()
-        layer = "layer_" + self.layer_var.get()
+        layer = self.layer_var.get()
 
         title = f"Replace Key: "
         if modifier:
@@ -162,7 +162,8 @@ class MyApp:
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
 
-        self.create_buttons(remap_keys_frame, search_bar, buttons_frame, reset_button, program, modifier, layer)
+        self.create_remappable_buttons(remap_keys_frame, search_bar)
+        self.create_reset_button(buttons_frame, reset_button, program, modifier, button_name, layer)
 
         def update_buttons(*args):
             search_term = search_var.get().lower()
@@ -192,8 +193,28 @@ class MyApp:
                             remappable_key.pack(side='top', fill='x', padx=0, pady=5)
 
         search_var.trace("w", update_buttons)
+        
+    def is_key_remapped(self, key, layer, program=None, modifier=None):
+        remapped_keys = self.get_remap_keys()
+        if program:
+            if program in remapped_keys["remapped_keys"]:
+                if layer in remapped_keys["remapped_keys"][program]:
+                    if modifier:
+                        if modifier in remapped_keys["remapped_keys"][program][layer]:
+                            if key in remapped_keys["remapped_keys"][program][layer][modifier]:
+                                return True
+                    elif key in remapped_keys["remapped_keys"][program][layer]:
+                        return True
+        elif 'global' in remapped_keys["remapped_keys"] and layer in remapped_keys["remapped_keys"]['global']:
+            if modifier:
+                if modifier in remapped_keys["remapped_keys"]['global'][layer]:
+                    if key in remapped_keys["remapped_keys"]['global'][layer][modifier]:
+                        return True
+            elif key in remapped_keys["remapped_keys"]['global'][layer]:
+                return True
+        return False
 
-    def create_buttons(self, remap_keys_frame, search_bar, buttons_frame, reset_button, program, modifier, layer=None):
+    def create_remappable_buttons(self, remap_keys_frame, search_bar):
         remap_keys = self.get_remap_keys()
         for key in remap_keys["keys"]:
             remappable_key = ctk.CTkButton(remap_keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
@@ -201,22 +222,10 @@ class MyApp:
             remappable_key.pack(side='top', fill='x', padx=0, pady=5)
             self.remappable_keys.append(remappable_key)
 
-            # Check if the clicked key's original value and key value are different
-            if program and layer and modifier and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}).get(modifier, {}) and remap_keys["remapped_keys"][program][layer][modifier][self.key_to_be_replaced]["key"] != key:
-                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)
-            elif program and layer and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}) and remap_keys["remapped_keys"][program][layer][self.key_to_be_replaced]["key"] != key:
-                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)
-            elif layer and modifier and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}).get(modifier, {}) and remap_keys["remapped_keys"]["global"][layer][modifier][self.key_to_be_replaced]["key"] != key:
-                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)
-            elif layer and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}) and remap_keys["remapped_keys"]["global"][layer][self.key_to_be_replaced]["key"] != key:
-                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)
-            elif self.key_to_be_replaced in remap_keys["remapped_keys"]["global"] and remap_keys["remapped_keys"]["global"][self.key_to_be_replaced]["key"] != key:
-                buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
-                reset_button.pack(anchor='center', expand=True)
+    def create_reset_button(self, buttons_frame, reset_button, program, modifier, key, layer=None):
+        if self.is_key_remapped(key, layer, program, modifier):
+            buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
+            reset_button.pack(anchor='center', expand=True)
 
     def update_search_bar(self, remappable_key, text, search_bar):
         current_text = search_bar.get()
@@ -242,7 +251,7 @@ class MyApp:
     def save_replaced_key(self):
         program = self.program_dropdown.get()
         focus = self.focus_dropdown.get()
-        layer = "layer_" + self.layer_var.get()  # Add "layer_" here
+        layer = self.layer_var.get()
         modifier = self.modifier_dropdown.get()
         
         # Start building the print statement
@@ -300,7 +309,7 @@ class MyApp:
     def reset_replaced_key(self):
         # Get the selected options
         program = self.program_dropdown.get()
-        layer = "layer_" + self.layer_var.get()  # Append "layer_" to the layer number
+        layer = self.layer_var.get()
 
         # Load the existing JSON file
         with open('Python/data/remap_keys.json', 'r') as file:
