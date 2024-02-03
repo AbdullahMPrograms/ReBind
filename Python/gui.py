@@ -306,28 +306,41 @@ class MyApp:
         self.replace_key_window.destroy()
         self.selected_remappable_keys.clear()
 
+    # possibly use the is_key_remapped function here as it already checks if the key is remapped
     def reset_replaced_key(self):
         # Get the selected options
         program = self.program_dropdown.get()
         layer = self.layer_var.get()
+        modifier = self.modifier_dropdown.get()
 
         # Load the existing JSON file
-        with open('Python/data/remap_keys.json', 'r') as file:
-            remap_keys = json.load(file)
+        remap_keys = self.get_remap_keys()
 
         # Check if the key is in the global section or a program section
-        if program and layer and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}):
-            # Remove the key from the program section
-            del remap_keys["remapped_keys"][program][layer][self.key_to_be_replaced]
+        if program and layer:
+            if modifier and self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}).get(modifier, {}):
+                # Remove the key from the program section
+                del remap_keys["remapped_keys"][program][layer][modifier][self.key_to_be_replaced]
+                # If the modifier section is now empty, remove it
+                if not remap_keys["remapped_keys"][program][layer][modifier]:
+                    del remap_keys["remapped_keys"][program][layer][modifier]
+            elif self.key_to_be_replaced in remap_keys["remapped_keys"].get(program, {}).get(layer, {}):
+                del remap_keys["remapped_keys"][program][layer][self.key_to_be_replaced]
             # If the layer section is now empty, remove it
             if not remap_keys["remapped_keys"][program][layer]:
                 del remap_keys["remapped_keys"][program][layer]
             # If the program section is now empty, remove it
             if not remap_keys["remapped_keys"][program]:
                 del remap_keys["remapped_keys"][program]
-        elif layer and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}):
-            # Remove the key from the global section
-            del remap_keys["remapped_keys"]["global"][layer][self.key_to_be_replaced]
+        elif layer:
+            if modifier and self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}).get(modifier, {}):
+                # Remove the key from the global section
+                del remap_keys["remapped_keys"]["global"][layer][modifier][self.key_to_be_replaced]
+                # If the modifier section is now empty, remove it
+                if not remap_keys["remapped_keys"]["global"][layer][modifier]:
+                    del remap_keys["remapped_keys"]["global"][layer][modifier]
+            elif self.key_to_be_replaced in remap_keys["remapped_keys"]["global"].get(layer, {}):
+                del remap_keys["remapped_keys"]["global"][layer][self.key_to_be_replaced]
             # If the layer section is now empty, remove it
             if not remap_keys["remapped_keys"]["global"][layer]:
                 del remap_keys["remapped_keys"]["global"][layer]
