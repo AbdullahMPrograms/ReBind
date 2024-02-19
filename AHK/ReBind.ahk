@@ -56,6 +56,16 @@ RapidFire() {
 	}
 }
 
+FastLoot() {
+	While(GetKeyState("XButton2","P")) 
+	{
+		send {e}
+		Sleep 7
+		send {e}
+		Sleep 7
+	}
+}
+
 CheckPrograms:
 	if (WinExist("YouTube") and !WinExist("Stremio"))
 	{
@@ -231,6 +241,10 @@ TriggerVolumeOSD() {
 	^!a::MsgBox Stremio Detected
 #If
 ;-------------------------------------------------------------
+#If WinExist("Apex Legends") 
+{
+	*XButton2::FastLoot()
+}
 ;< ---------------- Preflight Check ---------------- >
 PreFlightCheck:
 {

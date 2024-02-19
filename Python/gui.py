@@ -4,6 +4,7 @@ import os
 import sys
 import json
 
+# ALL GUI AND UI FUNCTIONS
 class MyApp:
     def __init__(self):
         self.root = ctk.CTk()
@@ -194,7 +195,7 @@ class MyApp:
 
         search_var.trace("w", update_buttons)
         
-    def is_key_remapped(self, key, layer, program=None, modifier=None):
+    def is_key_remapped(self, key, layer, program, modifier):
         remapped_keys = self.get_remap_keys()
         if program:
             if program in remapped_keys["remapped_keys"]:
@@ -467,6 +468,8 @@ class MyApp:
             self.sidebar_plugin_frame.configure(fg_color=self.button_hover_colour)
         elif frame_name == 'profile':
             self.sidebar_profile_frame.configure(fg_color=self.button_hover_colour)
+        elif frame_name == 'debug':
+            self.window_size_frame.configure(fg_color=self.button_hover_colour)
         elif frame_name == 'settings':
             self.sidebar_settings_frame.configure(fg_color=self.button_hover_colour)
 
@@ -481,6 +484,8 @@ class MyApp:
             self.sidebar_plugin_frame.configure(fg_color=self.main_colour)
         elif frame_name == 'profile':
             self.sidebar_profile_frame.configure(fg_color=self.main_colour) 
+        elif frame_name == 'debug':
+            self.window_size_frame.configure(fg_color=self.main_colour)
         elif frame_name == 'settings':
             self.sidebar_settings_frame.configure(fg_color=self.main_colour)
             
@@ -495,6 +500,8 @@ class MyApp:
             self.draw_frame('plugin')
         elif frame_name == 'profile':
             self.draw_frame('profile')
+        elif frame_name == 'debug':
+            self.print_window_size()
         elif frame_name == 'settings':
             self.draw_frame('settings')
 
@@ -558,12 +565,13 @@ class MyApp:
         self.profile_label.pack(side='left')
         self.bind_widgets(self.sidebar_profile_frame, 'profile')
         
-        window_size_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
-        window_size_frame.pack(side='top', fill='x')
-        self.window_size_button = ctk.CTkButton(window_size_frame, image=windowsize_image ,text = "", width=70, height=50, fg_color="transparent", hover_color=self.button_hover_colour, command=self.print_window_size)
+        self.window_size_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
+        self.window_size_frame.pack(side='top', fill='x')
+        self.window_size_button = ctk.CTkButton(self.window_size_frame, image=windowsize_image ,text = "", width=70, height=50, fg_color="transparent", hover_color=self.button_hover_colour, command=self.print_window_size)
         self.window_size_button.pack(side='left')   
-        self.window_size_label = ctk.CTkLabel(window_size_frame, text="")
+        self.window_size_label = ctk.CTkLabel(self.window_size_frame, text="Debug")
         self.window_size_label.pack(side='left')
+        self.bind_widgets(self.window_size_frame, 'debug')
 
         self.sidebar_settings_frame = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent", cursor="hand2")
         self.sidebar_settings_frame.pack(side='bottom', fill='x')

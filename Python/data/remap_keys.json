@@ -105,6 +105,60 @@
         "Num ."
     ],
     "remapped_keys": {
-        "global": {}
+        "global": {
+            "0": {
+                "K": {
+                    "key": "Esc"
+                },
+                "LShift": {
+                    "N": {
+                        "key": "B"
+                    }
+                },
+                "N": {
+                    "key": "Delete"
+                }
+            }
+        },
+        "YouTube": {
+            "0": {
+                "RAlt": {
+                    "Right": {
+                        "key": "LShift + N",
+                        "focus_modifier": "No"
+                    },
+                    "Left": {
+                        "key": "LAlt + Left",
+                        "focus_modifier": "No"
+                    }
+                },
+                "RShift": {
+                    "Page Up": {
+                        "key": "F",
+                        "focus_modifier": "No"
+                    },
+                    "Page Down": {
+                        "key": "I",
+                        "focus_modifier": "No"
+                    }
+                }
+            }
+        },
+        "Stremio": {
+            "0": {
+                "RAlt": {
+                    "Right": {
+                        "key": "LShift + N",
+                        "focus_modifier": "No"
+                    }
+                },
+                "RShift": {
+                    "Page Up": {
+                        "key": "F",
+                        "focus_modifier": "No"
+                    }
+                }
+            }
+        }
     }
 }
