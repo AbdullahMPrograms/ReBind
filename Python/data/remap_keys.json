@@ -159,6 +159,14 @@
                     }
                 }
             }
+        },
+        "Edge": {
+            "0": {
+                "End": {
+                    "key": "D",
+                    "focus_modifier": "Yes"
+                }
+            }
         }
     }
 }
