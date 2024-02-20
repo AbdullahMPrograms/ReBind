@@ -165,6 +165,10 @@
                 "End": {
                     "key": "D",
                     "focus_modifier": "Yes"
+                },
+                "K": {
+                    "key": "S",
+                    "focus_modifier": "No"
                 }
             }
         }

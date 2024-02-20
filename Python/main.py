@@ -15,17 +15,30 @@ def generate_ahk_core():
 
     ahk_core = ""
     for program, layers in remap_keys["remapped_keys"].items():
-        ahk_core += f'\nProgram: {program}\n'
+        focus_yes = ""
+        focus_no = ""
         for layer, modifiers in layers.items():
             for modifier, keys in modifiers.items():
                 if isinstance(keys, dict) and "key" in keys:  # We're at the key level without a modifier
                     remapped_key = keys.get("key")
-                    ahk_core += f'{modifier}::{remapped_key}\n'
+                    focus_modifier = keys.get("focus_modifier", "No")
+                    if focus_modifier == "Yes":
+                        focus_yes += f'{modifier}::{remapped_key}\n'
+                    else:
+                        focus_no += f'{modifier}::{remapped_key}\n'
                 else:  # We're at the modifier level or key level with a modifier
                     for key, key_info in keys.items():
                         if isinstance(key_info, dict) and "key" in key_info:
                             remapped_key = key_info.get("key")
-                            ahk_core += f'{modifier} & {key}::{remapped_key}\n'
+                            focus_modifier = key_info.get("focus_modifier", "No")
+                            if focus_modifier == "Yes":
+                                focus_yes += f'{modifier} & {key}::{remapped_key}\n'
+                            else:
+                                focus_no += f'{modifier} & {key}::{remapped_key}\n'
+        if focus_no:
+            ahk_core += f'\nProgram: {program} (Focus: No)\n' + focus_no
+        if focus_yes:
+            ahk_core += f'\nProgram: {program} (Focus: Yes)\n' + focus_yes
 
     return ahk_core
 
