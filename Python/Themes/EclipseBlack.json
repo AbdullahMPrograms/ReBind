@@ -3,7 +3,6 @@
         "main": "#141414",
         "background": "gray10",
         "button_hover": "gray10",
-        "button_press": "#3c8dbc",
         "button_selected": "gray8",
         "segmented_button_hover": "gray10",
         "dropdown": "gray20",

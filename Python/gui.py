@@ -69,7 +69,6 @@ class MyApp:
         self.bg_colour = colours['background']
         self.main_colour = colours['main']
         self.button_hover_colour = colours['button_hover']
-        self.button_press_colour = colours['button_press']
         self.button_selected_colour = colours['button_selected']
         self.segmented_button_hover_colour = colours['segmented_button_hover']
         self.dropdown_colour = colours['dropdown']
@@ -141,14 +140,22 @@ class MyApp:
         self.replace_key_window.geometry(f"+{pos_x}+{pos_y}")
 
         search_frame = ctk.CTkFrame(self.replace_key_window)
-        search_frame.pack(side='top', fill='x', padx=40, pady=(40,0))
+        search_frame.pack(side='top', fill='x', padx=40, pady=(30,0))
 
         search_var = ctk.StringVar()
         search_bar = ctk.CTkEntry(search_frame, textvariable=search_var, height=35)
         search_bar.pack(fill='x')
 
+        replace_key_selector_frame = ctk.CTkFrame(self.replace_key_window, border_width=2, border_color="#949a9f")
+        replace_key_selector_frame.pack(side='top', fill='x', padx=40, pady=(5,0))
+        
+        replace_key_selector = ctk.CTkSegmentedButton(replace_key_selector_frame, fg_color="#242424", bg_color="#242424", text_color=("gray10", "#DCE4EE"), values=["Keys", "Macros", "Options"])
+        replace_key_selector.configure(unselected_color="#242424", selected_color="#3B3B3B", selected_hover_color="#696969")
+        replace_key_selector.pack(fill='both', expand=True, padx=2, pady=2)
+        replace_key_selector.set("Keys")
+
         remap_keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
-        remap_keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=20)
+        remap_keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=(0,10))
 
         self.selected_remappable_keys = []
         self.remappable_keys = []

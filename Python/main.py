@@ -19,14 +19,14 @@ def generate_ahk_core():
         focus_no = ""
         for layer, modifiers in layers.items():
             for modifier, keys in modifiers.items():
-                if isinstance(keys, dict) and "key" in keys:  # We're at the key level without a modifier
+                if isinstance(keys, dict) and "key" in keys:
                     remapped_key = keys.get("key")
                     focus_modifier = keys.get("focus_modifier", "No")
                     if focus_modifier == "Yes":
                         focus_yes += f'{modifier}::{remapped_key}\n'
                     else:
                         focus_no += f'{modifier}::{remapped_key}\n'
-                else:  # We're at the modifier level or key level with a modifier
+                else:
                     for key, key_info in keys.items():
                         if isinstance(key_info, dict) and "key" in key_info:
                             remapped_key = key_info.get("key")
