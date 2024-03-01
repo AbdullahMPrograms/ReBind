@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 import os
 import sys
 import json
+import threading
 
 # ALL GUI AND UI FUNCTIONS
 class MyApp:
@@ -231,20 +232,40 @@ class MyApp:
             widget.destroy()
 
         if value == "Keys":
-            self.create_remappable_buttons(remap_keys_frame, search_bar)
+            # Get the remap keys
+            self.remap_keys = self.get_remap_keys()["keys"]
+
+            # Create the initial buttons
+            self.create_remappable_buttons(remap_keys_frame, search_bar, initial_count=20)
+
+            # Bind the scroll event to the create_more_buttons function
+            remap_keys_frame.bind("<MouseWheel>", lambda event: self.create_more_buttons(remap_keys_frame, search_bar))
         elif value == "Options":
             self.create_options(remap_keys_frame)
         elif value == "Macros":
             self.create_macro_buttons(remap_keys_frame, search_bar)
 
-    def create_remappable_buttons(self, remap_keys_frame, search_bar):
-        remap_keys = self.get_remap_keys()
-        for key in remap_keys["keys"]:
-            remappable_key = ctk.CTkButton(remap_keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
-            remappable_key.configure(command=lambda remappable_key=remappable_key, text=key: self.update_search_bar(remappable_key, text, search_bar))
-            remappable_key.pack(side='top', fill='x', padx=0, pady=5)
-            self.remappable_keys.append(remappable_key)
-    
+    def create_remappable_buttons(self, remap_keys_frame, search_bar, initial_count):
+        # Create the initial buttons
+        for key in self.remap_keys[:initial_count]:
+            self.create_button(key, remap_keys_frame, search_bar)
+        # Remove the keys that have been used
+        self.remap_keys = self.remap_keys[initial_count:]
+
+    def create_more_buttons(self, remap_keys_frame, search_bar):
+        # Create more buttons when the user scrolls down
+        for key in self.remap_keys[:10]:
+            self.create_button(key, remap_keys_frame, search_bar)
+        # Remove the keys that have been used
+        self.remap_keys = self.remap_keys[10:]
+
+    def create_button(self, key, remap_keys_frame, search_bar):
+        # Create a single button
+        remappable_key = ctk.CTkButton(remap_keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
+        remappable_key.configure(command=lambda remappable_key=remappable_key, text=key: self.update_search_bar(remappable_key, text, search_bar))
+        remappable_key.pack(side='top', fill='x', padx=0, pady=5)
+        self.remappable_keys.append(remappable_key)
+        
     def create_macro_buttons(self, remap_keys_frame, search_bar):
         macro_label = ctk.CTkLabel(remap_keys_frame, text="Macros")
         macro_label.pack()
