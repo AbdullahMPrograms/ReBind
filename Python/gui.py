@@ -151,9 +151,12 @@ class MyApp:
         
         replace_key_selector = ctk.CTkSegmentedButton(replace_key_selector_frame, fg_color="#242424", bg_color="#242424", text_color=("gray10", "#DCE4EE"), values=["Keys", "Macros", "Options"])
         replace_key_selector.configure(unselected_color="#242424", selected_color="#3B3B3B", selected_hover_color="#696969")
-        replace_key_selector.pack(fill='both', expand=True, padx=2, pady=2)
+        replace_key_selector.pack(fill='both', expand=True, padx=0, pady=0)
         replace_key_selector.set("Keys")
-
+        
+        replace_key_selector_value = ctk.StringVar(value="Keys")
+        replace_key_selector.configure(command=lambda value: self.replace_key_selector_command(remap_keys_frame, search_bar, value), variable=replace_key_selector_value)    
+           
         remap_keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
         remap_keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=(0,10))
 
@@ -169,8 +172,8 @@ class MyApp:
         reset_button.pack_forget()  # Hide the Reset button initially
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
-
-        self.create_remappable_buttons(remap_keys_frame, search_bar)
+        
+        self.replace_key_selector_command(remap_keys_frame, search_bar, "Keys") 
         self.create_reset_button(buttons_frame, reset_button, program, modifier, button_name, layer)
 
         def update_buttons(*args):
@@ -222,6 +225,18 @@ class MyApp:
                 return True
         return False
 
+    def replace_key_selector_command(self, remap_keys_frame, search_bar, value):
+        # Clear all elements in the frame
+        for widget in remap_keys_frame.winfo_children():
+            widget.destroy()
+
+        if value == "Keys":
+            self.create_remappable_buttons(remap_keys_frame, search_bar)
+        elif value == "Options":
+            self.create_options(remap_keys_frame)
+        elif value == "Macros":
+            self.create_macro_buttons(remap_keys_frame, search_bar)
+
     def create_remappable_buttons(self, remap_keys_frame, search_bar):
         remap_keys = self.get_remap_keys()
         for key in remap_keys["keys"]:
@@ -229,6 +244,16 @@ class MyApp:
             remappable_key.configure(command=lambda remappable_key=remappable_key, text=key: self.update_search_bar(remappable_key, text, search_bar))
             remappable_key.pack(side='top', fill='x', padx=0, pady=5)
             self.remappable_keys.append(remappable_key)
+    
+    def create_macro_buttons(self, remap_keys_frame, search_bar):
+        macro_label = ctk.CTkLabel(remap_keys_frame, text="Macros")
+        macro_label.pack()
+        # Insert function for macro buttons
+        
+    def create_options(self, remap_keys_frame):
+        option_label = ctk.CTkLabel(remap_keys_frame, text="Options")
+        option_label.pack()
+        # Insert code for options
 
     def create_reset_button(self, buttons_frame, reset_button, program, modifier, key, layer=None):
         if self.is_key_remapped(key, layer, program, modifier):
@@ -261,6 +286,7 @@ class MyApp:
         focus = self.focus_dropdown.get()
         layer = self.layer_var.get()
         modifier = self.modifier_dropdown.get()
+        # wildcard_modifier = self.wildcard_modifier_dropdown.get()
         
         # Start building the print statement
         replaced_key = self.key_to_be_replaced + " has been replaced with "
