@@ -3,7 +3,6 @@ from PIL import Image, ImageTk
 import os
 import sys
 import json
-import time
 
 # ALL GUI AND UI FUNCTIONS
 class MyApp:
@@ -174,10 +173,7 @@ class MyApp:
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
         
-        start_time = time.time()
         self.replace_key_selector_command(remap_keys_frame, search_bar, "Keys") 
-        elapsed_time = time.time() - start_time
-        print(f"Elapsed Startup time: {elapsed_time} seconds")
         self.create_reset_button(buttons_frame, reset_button, program, modifier, button_name, layer)
 
         def update_buttons(*args):
@@ -242,8 +238,6 @@ class MyApp:
             self.create_macro_buttons(remap_keys_frame, search_bar)
 
     def create_remappable_buttons(self, remap_keys_frame, search_bar):
-        self.start_time = time.time()
-        
         remap_keys = self.get_remap_keys()
         keys = remap_keys["keys"]
         keys_generator = self.chunked(keys, 2)
@@ -266,8 +260,6 @@ class MyApp:
             self.remappable_keys.append(remappable_key)
         # Schedule the creation of the next part of buttons
         self.replace_key_window.after(1, lambda: self.create_buttons_part(remap_keys_frame, search_bar, keys_generator))
-        elapsed_time = time.time() - self.start_time
-        print(f"Elapsed Key Generation time: {elapsed_time} seconds")
     
     def create_macro_buttons(self, remap_keys_frame, search_bar):
         macro_label = ctk.CTkLabel(remap_keys_frame, text="Macros")
