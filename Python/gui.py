@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 import os
 import sys
 import json
-import threading
+import time
 
 # ALL GUI AND UI FUNCTIONS
 class MyApp:
@@ -174,7 +174,10 @@ class MyApp:
         cancel_button = ctk.CTkButton(buttons_frame,width=100, height=35, border_width=2, fg_color="transparent", hover_color=self.button_hover_colour, text_color=("gray10", "#DCE4EE"), text="Cancel", command=self.replace_key_window.destroy)
         cancel_button.pack(side='right')
         
+        start_time = time.time()
         self.replace_key_selector_command(remap_keys_frame, search_bar, "Keys") 
+        elapsed_time = time.time() - start_time
+        print(f"Elapsed Startup time: {elapsed_time} seconds")
         self.create_reset_button(buttons_frame, reset_button, program, modifier, button_name, layer)
 
         def update_buttons(*args):
@@ -232,40 +235,40 @@ class MyApp:
             widget.destroy()
 
         if value == "Keys":
-            # Get the remap keys
-            self.remap_keys = self.get_remap_keys()["keys"]
-
-            # Create the initial buttons
-            self.create_remappable_buttons(remap_keys_frame, search_bar, initial_count=20)
-
-            # Bind the scroll event to the create_more_buttons function
-            remap_keys_frame.bind("<MouseWheel>", lambda event: self.create_more_buttons(remap_keys_frame, search_bar))
+            self.create_remappable_buttons(remap_keys_frame, search_bar)
         elif value == "Options":
             self.create_options(remap_keys_frame)
         elif value == "Macros":
             self.create_macro_buttons(remap_keys_frame, search_bar)
 
-    def create_remappable_buttons(self, remap_keys_frame, search_bar, initial_count):
-        # Create the initial buttons
-        for key in self.remap_keys[:initial_count]:
-            self.create_button(key, remap_keys_frame, search_bar)
-        # Remove the keys that have been used
-        self.remap_keys = self.remap_keys[initial_count:]
-
-    def create_more_buttons(self, remap_keys_frame, search_bar):
-        # Create more buttons when the user scrolls down
-        for key in self.remap_keys[:10]:
-            self.create_button(key, remap_keys_frame, search_bar)
-        # Remove the keys that have been used
-        self.remap_keys = self.remap_keys[10:]
-
-    def create_button(self, key, remap_keys_frame, search_bar):
-        # Create a single button
-        remappable_key = ctk.CTkButton(remap_keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
-        remappable_key.configure(command=lambda remappable_key=remappable_key, text=key: self.update_search_bar(remappable_key, text, search_bar))
-        remappable_key.pack(side='top', fill='x', padx=0, pady=5)
-        self.remappable_keys.append(remappable_key)
+    def create_remappable_buttons(self, remap_keys_frame, search_bar):
+        self.start_time = time.time()
         
+        remap_keys = self.get_remap_keys()
+        keys = remap_keys["keys"]
+        keys_generator = self.chunked(keys, 2)
+        self.create_buttons_part(remap_keys_frame, search_bar, keys_generator)
+
+    def chunked(self, iterable, n):
+        """Yield successive n-sized chunks from iterable."""
+        for i in range(0, len(iterable), n):
+            yield iterable[i:i + n]
+
+    def create_buttons_part(self, remap_keys_frame, search_bar, keys_generator):
+        try:
+            keys_part = next(keys_generator)
+        except StopIteration:
+            return
+        for key in keys_part:
+            remappable_key = ctk.CTkButton(remap_keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
+            remappable_key.configure(command=lambda remappable_key=remappable_key, text=key: self.update_search_bar(remappable_key, text, search_bar))
+            remappable_key.pack(side='top', fill='x', padx=0, pady=5)
+            self.remappable_keys.append(remappable_key)
+        # Schedule the creation of the next part of buttons
+        self.replace_key_window.after(1, lambda: self.create_buttons_part(remap_keys_frame, search_bar, keys_generator))
+        elapsed_time = time.time() - self.start_time
+        print(f"Elapsed Key Generation time: {elapsed_time} seconds")
+    
     def create_macro_buttons(self, remap_keys_frame, search_bar):
         macro_label = ctk.CTkLabel(remap_keys_frame, text="Macros")
         macro_label.pack()
