@@ -18,27 +18,20 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
-- program and modifier dropdown values should read from remapped_keys in json to populate options
-  - modifier is currently added as test to key_to_be_replaced, should rather be the same way as program/layer
-  - new remappedkeys format should be: Program(if it exists)/global -> layer -> modifer(if it exists) -> key
-  - maybe make it so that it will be "modifier: ____" like it is "key: ___"
-- fix being able to reset global bind when in program bind (create_button function handles this)
+- disable buttons, search, segmented button untill create_remappable_buttons finishes (avoids generation of buttons in results)
+
 - re-add x to notification frame, now if click on notification frame it will close
+- fix the notification progress bar if more then 1 opened (maybe set hardcoded time using after)
 
 - for layouts several things need to be changed
   - the keys_frame will now be called keyboard_keys_frame and placed in keyboard_frame (follow gmmk packaging)
   - in the JSON file for the layout each button should have "key_colour_1" "key_colour_2" for proper keyboard colour layouts (like keycaps)
   - the spacing for the keys will need to be reset to 0,0 and remove the max_x max_y code
 
-- fix the notification progress bar if more then 1 opened (maybe set hardcoded time using after)
 - for numwheel, add segmented button at the top of the replace_key_window to select between (press, left, right)
 - make it so that scroll bar appears only if hovering over replace buttons in replace_key_window
   - can be done with frame enter/leave + sidebar_button_color
 - modifier shift should show the shift number keys, shift + 2 = @
-
-- to speed up the replace key window async build the keys when open window
-  - do later, too complicated
-  - USE .after for all threaded calls (does not interrupt main loop)
 
 - maybe make the keyboard frame update only after the sidebar has been expanded in the animation ver
 
@@ -46,16 +39,12 @@ TO DO:
   - will require keyboardkeys json integration
 - when selecting a program/layer it should update the keyboard to show the keys rebound in that program/layer
 - if a key is written in text then + is added select that key as you would normally with click (if the text == lowercase of a key autofill and select it)
-- maybe add segmented button in replace window with keys, macros
 - eventually seperate functions massively to avoid cross and over computation (reading variables from json and computing on top of them)
   - like when saving keys or resetting or in update_buttons, they should all call a function for values
 - add font theme options
-- place create sidebar buttons function inside create sidebar frame function etc
+
 - Add autocorrect to comboboxes (maybe use ctkscrollabledropdown on github)
 - pull combobox modifier options and program combobox options from file or function
-- fix sidebar buttons not taking whole x (Hard)
-- expanding sidebar no longer pushes home frame, will appear over and dim home frame (Hard)
+
 - eventually fix the button hover on corners (borderwidth, border colour matches keys frame?)
 - when toggling the sidebar maybe make like a for x=0 to 200 pixels sidebarwidth = sidebarwidth + 1 and then when it reaches 200 it stops and then when you toggle it again it does the opposite, and same for the homeframe
-- add a colour effect to the sidebar button indicating current screen (same as pydracula)
- - use place to create a vertical spacer with colour set to theme, placed on current tab, swapped using a call from draw frame
