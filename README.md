@@ -18,7 +18,8 @@ TO DO LATER:
 
 # ReBind GUI (Python)
 TO DO:
-- disable buttons, search, segmented button untill create_remappable_buttons finishes (avoids generation of buttons in results)
+- Macros should have id (1, 2, 3)
+  - will be used for showing M1, M2, M3 (Macro 1, Macro 2, Macro 3) on keyboard when rebound
 
 - re-add x to notification frame, now if click on notification frame it will close
 - fix the notification progress bar if more then 1 opened (maybe set hardcoded time using after)
@@ -48,3 +49,11 @@ TO DO:
 
 - eventually fix the button hover on corners (borderwidth, border colour matches keys frame?)
 - when toggling the sidebar maybe make like a for x=0 to 200 pixels sidebarwidth = sidebarwidth + 1 and then when it reaches 200 it stops and then when you toggle it again it does the opposite, and same for the homeframe
+
+- for eventual mouse support make it work like the ghub ui
+  - mouse in middle with boxes around the various mouse buttons/mouse buttons selectable
+  - requires drawing
+  - swap mouse/keyboard with toggle switch in the modification bar
+    - left side of toggle is keyboard (default), right side of toggle is mouse
+    - toggling right will move the label to the right and say "Mouse" and viceversa
+- QMK/VIA support (just for fun)?

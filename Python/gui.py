@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 import os
 import sys
 import json
+import time
 
 # ALL GUI AND UI FUNCTIONS
 class MyApp:
@@ -149,13 +150,13 @@ class MyApp:
         replace_key_selector_frame = ctk.CTkFrame(self.replace_key_window, border_width=2, border_color="#949a9f")
         replace_key_selector_frame.pack(side='top', fill='x', padx=40, pady=(5,0))
         
-        replace_key_selector = ctk.CTkSegmentedButton(replace_key_selector_frame, fg_color="#242424", bg_color="#242424", text_color=("gray10", "#DCE4EE"), values=["Keys", "Macros", "Options"])
-        replace_key_selector.configure(unselected_color="#242424", selected_color="#3B3B3B", selected_hover_color="#696969")
-        replace_key_selector.pack(fill='both', expand=True, padx=0, pady=0)
-        replace_key_selector.set("Keys")
+        self.replace_key_selector = ctk.CTkSegmentedButton(replace_key_selector_frame, fg_color="#242424", bg_color="#242424", text_color=("gray10", "#DCE4EE"), values=["Keys", "Macros", "Options"])
+        self.replace_key_selector.configure(unselected_color="#242424", selected_color="#3B3B3B", selected_hover_color="#696969")
+        self.replace_key_selector.pack(fill='both', expand=True, padx=0, pady=0)
+        self.replace_key_selector.set("Keys")
         
         replace_key_selector_value = ctk.StringVar(value="Keys")
-        replace_key_selector.configure(command=lambda value: self.replace_key_selector_command(remap_keys_frame, search_bar, value), variable=replace_key_selector_value)    
+        self.replace_key_selector.configure(command=lambda value: self.replace_key_selector_command(remap_keys_frame, search_bar, value), variable=replace_key_selector_value)    
            
         remap_keys_frame = ctk.CTkScrollableFrame(self.replace_key_window, fg_color="transparent")
         remap_keys_frame.pack(side='top', fill='both', expand=True, padx=40, pady=(0,10))
@@ -226,18 +227,27 @@ class MyApp:
         return False
 
     def replace_key_selector_command(self, remap_keys_frame, search_bar, value):
-        # Clear all elements in the frame
+        search_bar.configure(state='disabled')
+        self.replace_key_selector.configure(state='disabled')
+
         for widget in remap_keys_frame.winfo_children():
             widget.destroy()
 
         if value == "Keys":
             self.create_remappable_buttons(remap_keys_frame, search_bar)
-        elif value == "Options":
-            self.create_options(remap_keys_frame)
         elif value == "Macros":
             self.create_macro_buttons(remap_keys_frame, search_bar)
+            search_bar.configure(state='normal')
+            self.replace_key_selector.configure(state='normal')
+        elif value == "Options":
+            self.create_options(remap_keys_frame)
+            search_bar.configure(state='normal')
+            self.replace_key_selector.configure(state='normal')
 
     def create_remappable_buttons(self, remap_keys_frame, search_bar):
+        #self.start_time = time.time()
+        
+        self.remappable_keys.clear()
         remap_keys = self.get_remap_keys()
         keys = remap_keys["keys"]
         keys_generator = self.chunked(keys, 2)
@@ -252,25 +262,50 @@ class MyApp:
         try:
             keys_part = next(keys_generator)
         except StopIteration:
+            print("Completed Key Generation")
+            search_bar.configure(state='normal')
+            self.replace_key_selector.configure(state='normal')
+            #for remappable_key in self.remappable_keys:
+            #    remappable_key.configure(state='normal')
             return
         for key in keys_part:
             remappable_key = ctk.CTkButton(remap_keys_frame, text=key, height=45, fg_color="transparent", hover_color=self.button_hover_colour, border_width=2, text_color=("gray10", "#DCE4EE"))
             remappable_key.configure(command=lambda remappable_key=remappable_key, text=key: self.update_search_bar(remappable_key, text, search_bar))
             remappable_key.pack(side='top', fill='x', padx=0, pady=5)
+            #remappable_key.configure(state='disabled')
             self.remappable_keys.append(remappable_key)
-        # Schedule the creation of the next part of buttons
+
         self.replace_key_window.after(1, lambda: self.create_buttons_part(remap_keys_frame, search_bar, keys_generator))
+        
+        #elapsed_time = time.time() - self.start_time
+        #print(f"Elapsed Key Generation time: {elapsed_time} seconds")
     
     def create_macro_buttons(self, remap_keys_frame, search_bar):
-        macro_label = ctk.CTkLabel(remap_keys_frame, text="Macros")
-        macro_label.pack()
-        # Insert function for macro buttons
+        option_1 = ctk.CTkFrame(remap_keys_frame, height=45, border_width=2, border_color="#949a9f", fg_color="transparent")
+        option_1.pack(side='top', fill='x', padx=0, pady=5)
+        
+        option_2 = ctk.CTkFrame(remap_keys_frame, height=45, border_width=2, border_color="#949a9f", fg_color="transparent")
+        option_2.pack(side='top', fill='x', padx=0, pady=5)
+        
+        option_3 = ctk.CTkFrame(remap_keys_frame, height=45, border_width=2, border_color="#949a9f", fg_color="transparent")
+        option_3.pack(side='top', fill='x', padx=0, pady=5)
+        
+        option_4 = ctk.CTkFrame(remap_keys_frame, height=45, border_width=2, border_color="#949a9f", fg_color="transparent")
+        option_4.pack(side='top', fill='x', padx=0, pady=5)
+        
+        option_5 = ctk.CTkFrame(remap_keys_frame, height=45, border_width=2, border_color="#949a9f", fg_color="transparent")
+        option_5.pack(side='top', fill='x', padx=0, pady=5)
+        
+        option_6 = ctk.CTkFrame(remap_keys_frame, height=45, border_width=2, border_color="#949a9f", fg_color="transparent")
+        option_6.pack(side='top', fill='x', padx=0, pady=5)
         
     def create_options(self, remap_keys_frame):
-        option_label = ctk.CTkLabel(remap_keys_frame, text="Options")
-        option_label.pack()
-        # Insert code for options
-
+        wildcard_modifier = ctk.CTkFrame(remap_keys_frame, height=60, border_width=2, border_color="#949a9f", fg_color="transparent")
+        wildcard_modifier.pack(side='top', fill='x', padx=0, pady=5)
+        
+        option_1 = ctk.CTkFrame(remap_keys_frame, height=60, border_width=2, border_color="#949a9f", fg_color="transparent")
+        option_1.pack(side='top', fill='x', padx=0, pady=5)
+        
     def create_reset_button(self, buttons_frame, reset_button, program, modifier, key, layer=None):
         if self.is_key_remapped(key, layer, program, modifier):
             buttons_frame.pack(side='top', fill='x', padx=30, pady=(10,15))
@@ -303,6 +338,7 @@ class MyApp:
         layer = self.layer_var.get()
         modifier = self.modifier_dropdown.get()
         # wildcard_modifier = self.wildcard_modifier_dropdown.get()
+        # Additional option = self.additional_option.get()
         
         # Start building the print statement
         replaced_key = self.key_to_be_replaced + " has been replaced with "
