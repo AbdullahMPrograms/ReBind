@@ -245,6 +245,14 @@ TriggerVolumeOSD() {
 {
 	*XButton2::FastLoot()
 }
+
+#If WinExist("Google Slides") 
+{
+	*pgdn::
+	WinActivate, "Google Slides"
+	Send {PgDn} 
+	return
+}
 ;< ---------------- Preflight Check ---------------- >
 PreFlightCheck:
 {

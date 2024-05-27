@@ -56,4 +56,6 @@ TO DO:
   - swap mouse/keyboard with toggle switch in the modification bar
     - left side of toggle is keyboard (default), right side of toggle is mouse
     - toggling right will move the label to the right and say "Mouse" and viceversa
+- eventual toggle gui that will show the glyph of the program, kind of opaque in top left
+  - or maybe show a osd like modernflyout that shows programs to toggle between listed vertically
 - QMK/VIA support (just for fun)?

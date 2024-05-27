@@ -141,6 +141,12 @@
                         "key": "I",
                         "focus_modifier": "No"
                     }
+                },
+                "Ralt": {
+                    "K": {
+                        "key": "Esc",
+                        "focus_modifier": "Yes"
+                    }
                 }
             }
         },
