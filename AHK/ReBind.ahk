@@ -1,6 +1,3 @@
-;THIS WORKS
-;this dynamically changes activeProgram every 5 seconds super simple logic but it works
-
 ; Initial setup
 global programs := ["Stremio", "YouTube"]
 global currentProgramIndex := 1  ; start with the first program in the list
@@ -59,6 +56,16 @@ RapidFire() {
 	}
 }
 
+FastLoot() {
+	While(GetKeyState("XButton2","P")) 
+	{
+		send {e}
+		Sleep 7
+		send {e}
+		Sleep 7
+	}
+}
+
 CheckPrograms:
 	if (WinExist("YouTube") and !WinExist("Stremio"))
 	{
@@ -90,7 +97,6 @@ SendKey(Key) {
     Return  ; clear buffer
 }
 
-; Define UpdateGUI function
 UpdateGUI(program) {
     Gui, Destroy  ; Destroy any existing GUI
     Gui, +AlwaysOnTop +ToolWindow -Caption ; Make the GUI always on top and style it as an overlay
@@ -127,16 +133,13 @@ TriggerVolumeOSD() {
 ; Macros
 ;-------------------------------------------------------------
 ;Rapid Fire 
-~XButton1 & LButton::
-{
-	RapidFire()
-	Return
-}	
+~XButton1 & LButton::RapidFire()
 ;-------------------------------------------------------------
 ; App specific keybinds
 ;-------------------------------------------------------------
 ; YouTube
 #If (activeProgram = "YouTube")
+
 	*Volume_Up::
 	{
 
@@ -238,6 +241,18 @@ TriggerVolumeOSD() {
 	^!a::MsgBox Stremio Detected
 #If
 ;-------------------------------------------------------------
+#If WinExist("Apex Legends") 
+{
+	*XButton2::FastLoot()
+}
+
+#If WinExist("Google Slides") 
+{
+	*pgdn::
+	WinActivate, "Google Slides"
+	Send {PgDn} 
+	return
+}
 ;< ---------------- Preflight Check ---------------- >
 PreFlightCheck:
 {
@@ -268,12 +283,10 @@ LoopMicVolume:
 				Break ; Break out of the loop if it is
 			SoundSet, 70, MASTER, VOLUME, 7 ; Set the volume to 70%, 8 corresponds to AT2020 Mic
 			Sleep, 600000   ;10 minute delay
-		}
-		
+		}	
 	} 
 	else 
 	{
-		;Msgbox "Toggled Off"
 		Menu, Tray, UnCheck, Set Microphone Volume
 		running := false ; Set the variable to false to stop the loop
 		IniWrite, %toggleLoopMicVolume%, %A_ScriptDir%\config.ini, Settings, ToggleLoopMicVolume
@@ -288,14 +301,12 @@ FKeyRebind:
 		Menu, Tray, Check, F-Key Rebind
 		IniWrite, %toggleFKeyRebind%, %A_ScriptDir%\config.ini, Settings, ToggleFKeyRebind
 		RemapToggle := true
-		;Msgbox "Toggled On"
 	} 
 	else 
 	{
 		Menu, Tray, UnCheck, F-Key Rebind
 		IniWrite, %toggleFKeyRebind%, %A_ScriptDir%\config.ini, Settings, ToggleFKeyRebind
 		RemapToggle := false
-		;Msgbox "Toggled Off"
 	}
 	return
 }
